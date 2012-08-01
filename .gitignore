@@ -31,3 +31,4 @@ obj/
 _ReSharper*/
 *.sdf
 *.opensdf
+*.ipch
