@@ -15,8 +15,8 @@ private:
 	void ProcessInput();
 	void Update();
 public:
-	ScionEngine() = default;
-	~ScionEngine() = default;
+	ScionEngine();
+	~ScionEngine();
 
 	void Go();
 };

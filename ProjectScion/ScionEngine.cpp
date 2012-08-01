@@ -1,8 +1,16 @@
 #include "ScionEngine.h"
 
+ScionEngine::ScionEngine()
+{
+}
+
+ScionEngine::~ScionEngine()
+{
+}
+
 void ScionEngine::Init()
 {
-	window = std::unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(640, 480, 32), "Project Scion");												
+	window = std::unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(640, 480, 32), "Project Scion"));												
 }
 
 void ScionEngine::RenderFrame()
