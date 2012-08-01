@@ -8,6 +8,8 @@ class Engine
 {
 private:
 	std::unique_ptr<sf::RenderWindow> window;
+
+	bool Init();
 };
 
 #endif
