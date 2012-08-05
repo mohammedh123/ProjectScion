@@ -1,0 +1,13 @@
+#ifndef _SOUND_BUFFER_MANAGER_H
+#define _SOUNDBUFFER_MANAGER_H
+ 
+#include <SFML/Audio.hpp>
+ 
+#include "ResourceManager.h"
+ 
+class SoundBufferManager : public ResourceManager< sf::SoundBuffer > {
+
+};
+
+#endif
+
