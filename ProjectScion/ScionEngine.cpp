@@ -12,12 +12,14 @@ ScionEngine::~ScionEngine()
 
 void ScionEngine::Init()
 {
-	window = std::unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(640, 480, 32), "Project Scion"));												
+	window = std::unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(640, 480, 32), "Project Scion"));		
+	
 	imgManager = std::unique_ptr<ImageManager>(new ImageManager());
 	camera = std::unique_ptr<Camera>(new Camera(640, 480, 0.2f));
 
 	currentLevel = new Level(20, 10);
 	for(int y = 0; y < currentLevel->GetHeight(); y++)
+	{
 		for(int x = 0; x < currentLevel->GetWidth(); x++)
 		{
 			if(y % 4 == 0)
@@ -25,7 +27,8 @@ void ScionEngine::Init()
 			else
 				currentLevel->AddTile(x, y, new Tile(imgManager->GetImage("tiles2.png")));
 		}
-
+	}
+	
 	LoadImages();
 }
 
@@ -37,17 +40,20 @@ void ScionEngine::RenderFrame()
 	auto camOffsetX = camera->GetTileOffset().x;
 	auto camOffsetY = camera->GetTileOffset().y;
 
-	for(int y = 0, tileY = bounds.top; y < bounds.height && tileY < currentLevel->GetHeight(); y++, tileY++)
+	for(int y = 0, tileY = 0; y < bounds.height && tileY < currentLevel->GetHeight(); y++, tileY++)
 	{
 		if(tileY < 0) continue;
 
-		for(int x = 0, tileX = bounds.left; x < bounds.width && tileX < currentLevel->GetWidth(); x++, tileX++)
+		for(int x = 0, tileX = 0; x < bounds.width && tileX < currentLevel->GetWidth(); x++, tileX++)
 		{
 		if(tileX < 0) continue;
 
-			currentLevel->GetTile(tileX, tileY)->Draw(x*Tile::SIZE - camOffsetX, y*Tile::SIZE - camOffsetY, window.get());
+			currentLevel->GetTile(tileX, tileY)->Draw(x*Tile::SIZE, y*Tile::SIZE, window.get());
 		}
 	}
+	
+	
+	window->setView(*camera->view.get());
 
 	window->display();
 }
@@ -63,10 +69,39 @@ void ScionEngine::ProcessInput()
 		case sf::Event::Closed:
 			window->close();
 			break;
-		case sf::Event::MouseButtonPressed:
-			auto pos = sf::Mouse::getPosition(*window);
-			camera->GoToCenter(pos.x + camera->GetPosition().x, pos.y + camera->GetPosition().y);
+		case sf::Event::MouseWheelMoved:
+			camera->Zoom((evt.mouseWheel.delta > 0)?.5f:2.0f);
 			break;
+		case sf::Event::KeyPressed:
+			switch(evt.key.code)
+			{
+			case sf::Keyboard::PageUp:
+				camera->Zoom(0.5f);
+				break;
+			case sf::Keyboard::PageDown:
+				camera->Zoom(2.0f);
+				break;
+			case sf::Keyboard::Left:
+				camera->Move(-5.0f,0);
+				break;
+			case sf::Keyboard::Right:
+				camera->Move(5.0f,0);
+				break;
+			case sf::Keyboard::Up:
+				camera->Move(0,-5.0f);
+				break;
+			case sf::Keyboard::Down:
+				camera->Move(0,5.0f);
+				break;
+			}
+			break;
+		case sf::Event::MouseButtonPressed:
+			sf::Vector2f MousePos = window->convertCoords( sf::Vector2i( evt.mouseButton.x,  evt.mouseButton.y), *camera->view.get());
+			camera->GoToCenter(MousePos.x, MousePos.y);
+			
+			
+			break;
+		
 		}
 	}
 } 

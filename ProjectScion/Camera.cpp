@@ -2,7 +2,7 @@
 #include <math.h>
 #include "Camera.h"
 
-Camera::Camera(int w, int h, float speed) : speed(speed)
+Camera::Camera(int w, int h, float speed, float depth) : speed(speed), depth(depth)
 {
 	size.x = w;
 	size.y = h;
@@ -11,13 +11,17 @@ Camera::Camera(int w, int h, float speed) : speed(speed)
 		speed = 0.0;
 	if(speed > 1.0)
 		speed = 1.0;
+
+	sf::Vector2f Center(0, 0);
+    sf::Vector2f HalfSize(320, 240);
+	view = std::unique_ptr<sf::View>(new sf::View(Center, HalfSize));
 }
 
 Camera::~Camera()
 {
 }
 
-void Camera::Move(int x, int y)
+void Camera::Move(float x, float y)
 {
 	position.x = (float)x;
 	position.y = (float)y;
@@ -25,7 +29,7 @@ void Camera::Move(int x, int y)
 	target.y = (float)y;
 }
 
-void Camera::MoveCenter(int x, int y)
+void Camera::MoveCenter(float x, float y)
 {
 	x = x - (size.x / 2);
 	y = y - (size.y / 2);
@@ -36,16 +40,26 @@ void Camera::MoveCenter(int x, int y)
 	target.y = (float)y;
 }
 
-void Camera::GoTo(int x, int y)
+void Camera::GoTo(float x, float y)
 {
 	target.x = (float)x;
 	target.y = (float)y;
 }
 
-void Camera::GoToCenter(int x, int y)
+void Camera::Zoom(float z)
 {
-	x = x - (size.x / 2);
-	y = y - (size.y / 2);
+	view->zoom(z);
+}
+
+void Camera::MoveRelative(float x, float y)
+{
+	view->move(x, y);
+}
+
+void Camera::GoToCenter(float x, float y)
+{
+	x = x;
+	y = y;
 
 	target.x = (float)x;
 	target.y = (float)y;
@@ -79,6 +93,7 @@ void Camera::Update()
 		position.x += vx;
 		position.y += vy;
 	}
+	view->setCenter(position.x, position.y);
 }
 
 sf::IntRect Camera::GetTileBounds() const

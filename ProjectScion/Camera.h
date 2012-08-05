@@ -10,19 +10,27 @@ private:
 	sf::Vector2f position;
 	sf::Vector2f target;
 	sf::Vector2i size;
-
+	
+	float depth;
 	float speed;
+	
 public:
-	Camera(int w, int h, float speed);
+
+	std::unique_ptr<sf::View> view;
+
+	Camera(int w, int h, float speed, float depth = 1.0f);
 	~Camera();
 
 	//goes to position immediately
-	void Move(int x, int y);
-	void MoveCenter(int x, int y);
+	void Move(float x, float y);
+	void MoveCenter(float x, float y);
 
 	//'walks' to position
-	void GoTo(int x, int y);
-	void GoToCenter(int x, int y);
+	void GoTo(float x, float y);
+	void GoToCenter(float x, float y);
+
+	void Zoom(float z);
+	void MoveRelative(float x, float y);
 
 	void Update();
 
