@@ -21,6 +21,7 @@ public:
 
 	//goes to position immediately
 	void Move(float x, float y);
+	void MoveBy(float x, float y);
 	void MoveCenter(float x, float y);
 
 	//'walks' to position

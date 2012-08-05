@@ -82,16 +82,16 @@ void ScionEngine::ProcessInput()
 				camera->Zoom(2.0f);
 				break;
 			case sf::Keyboard::Left:
-				camera->Move(-5.0f,0);
+				camera->MoveBy(-5.0f,0);
 				break;
 			case sf::Keyboard::Right:
-				camera->Move(5.0f,0);
+				camera->MoveBy(5.0f,0);
 				break;
 			case sf::Keyboard::Up:
-				camera->Move(0,-5.0f);
+				camera->MoveBy(0,-5.0f);
 				break;
 			case sf::Keyboard::Down:
-				camera->Move(0,5.0f);
+				camera->MoveBy(0,5.0f);
 				break;
 			}
 			break;
