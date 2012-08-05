@@ -2,20 +2,22 @@
 #define _IMAGE_MANAGER_H
 
 #include <memory>
-#include <vector>
+#include <map>
 #include <string>
 #include <SFML\Graphics.hpp>
 
 class ImageManager
 {
 private:
-	std::vector<std::unique_ptr<sf::Texture>> imageList;
+	std::map<std::string, std::unique_ptr<sf::Texture>> imageMap;
+	
+	ImageManager(const ImageManager&);
+	ImageManager& operator=(const ImageManager&);
 public:
 	ImageManager();
 	~ImageManager();
 
-	void AddImage(const std::string& filename);
-	sf::Texture* ImageManager::GetImage(int index) const;
+	sf::Texture* ImageManager::GetImage(const std::string& filename);
 };
 
 #endif

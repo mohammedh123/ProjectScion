@@ -12,15 +12,24 @@ ImageManager::~ImageManager()
 
 }
 
-void ImageManager::AddImage(const std::string& filename)
+sf::Texture* ImageManager::GetImage(const std::string& filename)
 {
-	std::unique_ptr<sf::Texture> tex(new sf::Texture);
-	tex->loadFromFile(filename);
+	sf::Texture* retVal = nullptr;
 
-	imageList.push_back(std::move(tex));
-}
+	for(auto it = begin(imageMap); it != end(imageMap); it++)
+	{
+		if(it->first == filename)
+			retVal = it->second.get();
+	}
 
-sf::Texture* ImageManager::GetImage(int index) const
-{
-	return imageList[index].get();
+	if(!retVal) //load new image and add it, then turn it
+	{
+		std::unique_ptr<sf::Texture> tex(new sf::Texture);
+		tex->loadFromFile(filename);
+		imageMap[filename] = std::move(tex);
+
+		retVal = imageMap[filename].get();
+	}
+
+	return retVal;
 }
