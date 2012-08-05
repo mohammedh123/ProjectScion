@@ -53,7 +53,7 @@ void ScionEngine::RenderFrame()
 	}
 	
 	
-	window->setView(*camera->view.get());
+	window->setView(*camera->GetView());
 
 	window->display();
 }
@@ -96,7 +96,7 @@ void ScionEngine::ProcessInput()
 			}
 			break;
 		case sf::Event::MouseButtonPressed:
-			sf::Vector2f MousePos = window->convertCoords( sf::Vector2i( evt.mouseButton.x,  evt.mouseButton.y), *camera->view.get());
+			sf::Vector2f MousePos = window->convertCoords( sf::Vector2i( evt.mouseButton.x,  evt.mouseButton.y), *camera->GetView());
 			camera->GoToCenter(MousePos.x, MousePos.y);
 			
 			

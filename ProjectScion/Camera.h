@@ -13,11 +13,9 @@ private:
 	
 	float depth;
 	float speed;
-	
+
+	std::unique_ptr<sf::View> view;	
 public:
-
-	std::unique_ptr<sf::View> view;
-
 	Camera(int w, int h, float speed, float depth = 1.0f);
 	~Camera();
 
@@ -33,6 +31,8 @@ public:
 	void MoveRelative(float x, float y);
 
 	void Update();
+
+	inline sf::View const* GetView() const { return view.get();}
 
 	inline sf::Vector2i GetPosition() const { return sf::Vector2i((int)position.x, (int)position.y); }
 	inline sf::Vector2i GetTileOffset() const { return sf::Vector2i((int)(position.x) % Tile::SIZE, (int)(position.y) % Tile::SIZE); }
