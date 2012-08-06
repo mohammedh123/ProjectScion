@@ -66,9 +66,11 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="FontManager.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="ImageManager.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ScionEngine.cpp" />
     <ClCompile Include="SoundBufferManager.cpp" />
@@ -77,8 +79,10 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="FontManager.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="ImageManager.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ScionEngine.h" />
     <ClInclude Include="SoundBufferManager.h" />
