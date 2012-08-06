@@ -37,6 +37,9 @@
     <Filter Include="Resource Files\Music">
       <UniqueIdentifier>{c158d821-9d94-4b84-a3b8-53211e2e3c53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\State Management">
+      <UniqueIdentifier>{76d8ef95-d1be-4d80-a4fd-d58393bedc86}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -72,8 +75,11 @@
     <ClCompile Include="UIScreen.cpp">
       <Filter>Source Files\Screens</Filter>
     </ClCompile>
-    <ClCompile Include="SoundBufferManager2.cpp">
-      <Filter>Source Files\Manager</Filter>
+    <ClCompile Include="State.cpp">
+      <Filter>Header Files\State Management</Filter>
+    </ClCompile>
+    <ClCompile Include="StateManager.cpp">
+      <Filter>Header Files\State Management</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,19 +113,22 @@
     <ClInclude Include="SplashScreen.h">
       <Filter>Header Files\Screens</Filter>
     </ClInclude>
-    <ClInclude Include="SoundBufferManager2.h">
-      <Filter>Header Files\Manager</Filter>
+    <ClInclude Include="State.h">
+      <Filter>Header Files\State Management</Filter>
+    </ClInclude>
+    <ClInclude Include="StateManager.h">
+      <Filter>Header Files\State Management</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="arial.ttf">
+    <None Include="Resources\Fonts\arial.ttf">
       <Filter>Resource Files\Fonts</Filter>
-    </None>
-    <None Include="splashscreen.png">
-      <Filter>Resource Files\Images</Filter>
     </None>
     <None Include="Sound\splash_sound.wav">
       <Filter>Resource Files\Sound</Filter>
+    </None>
+    <None Include="Images\splashscreen.png">
+      <Filter>Resource Files\Images</Filter>
     </None>
   </ItemGroup>
 </Project>

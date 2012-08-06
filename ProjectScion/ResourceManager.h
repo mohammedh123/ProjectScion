@@ -17,10 +17,10 @@ class ResourceManager
 private:
 	
 	std::map<std::string, std::unique_ptr<T>> contentMap;
-	/*
+	
 	ResourceManager(const ResourceManager&);
 	ResourceManager& operator=(const ResourceManager&);
-	*/
+	
 public:
 	ResourceManager<T>(){}
 	~ResourceManager<T>(){}

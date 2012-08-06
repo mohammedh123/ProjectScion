@@ -12,6 +12,7 @@ class UIScreen
 {
 private:
 	UIScreenState screenState;
+	sf::RectangleShape _transitionRect;
 public:
 	UIScreen();
 	virtual void Update(float delta) = 0;
