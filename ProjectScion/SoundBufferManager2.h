@@ -1,5 +1,5 @@
-#ifndef _RESOURCE_MANAGER_H
-#define _RESOURCE_MANAGER_H
+#ifndef _SOUND_BUFFER_MANAGER2_H
+#define _SOUND_BUFFER_MANAGER2_H
 
 #include <memory>
 #include <map>
@@ -9,25 +9,21 @@
 #include <SFML\Audio.hpp>
 #include <SFML\Audio\SoundBuffer.hpp>
 
-using namespace std;
-
-template<class T>
-class ResourceManager
+class SoundBufferManager2
 {
 private:
 	
-	std::map<std::string, std::unique_ptr<T>> contentMap;
+	std::map<std::string, std::unique_ptr<sf::SoundBuffer>> contentMap;
 	/*
 	ResourceManager(const ResourceManager&);
 	ResourceManager& operator=(const ResourceManager&);
 	*/
 public:
-	ResourceManager<T>(){}
-	~ResourceManager<T>(){}
+	SoundBufferManager2(){}
 
-	virtual T* LoadFromFile(const std::string& filename)
+	sf::SoundBuffer* LoadFromFile(const std::string& filename)
 	{
-		T* retVal = nullptr;
+		sf::SoundBuffer* retVal = nullptr;
 
 		for(auto it = begin(contentMap); it != end(contentMap); it++)
 		{
@@ -37,7 +33,7 @@ public:
 
 		if(!retVal)
 		{
-			std::unique_ptr<T> tex(new T);
+			std::unique_ptr<sf::SoundBuffer> tex(new sf::SoundBuffer);
 			tex->loadFromFile(filename);
 			contentMap[filename] = std::move(tex);
 

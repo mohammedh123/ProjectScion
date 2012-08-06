@@ -6,7 +6,8 @@
 #include "ResourceManager.h"
  
 class SoundBufferManager : public ResourceManager< sf::SoundBuffer > {
-
+public:
+	SoundBufferManager():ResourceManager<sf::SoundBuffer>(){}
 };
 
 #endif

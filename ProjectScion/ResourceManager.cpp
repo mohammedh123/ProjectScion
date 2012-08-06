@@ -1,11 +1,10 @@
 #include "ResourceManager.h"
-#include <vector>
-#include <SFML\Graphics.hpp>
 
+/*
 template<class T>
 ResourceManager<T>::ResourceManager()
 {
-
+	contentMap = new std::map<std::string, std::unique_ptr<T>>();
 }
 template<class T>
 ResourceManager<T>::~ResourceManager()
@@ -14,7 +13,7 @@ ResourceManager<T>::~ResourceManager()
 }
 
 template<class T>
-T* ResourceManager<T>::Load(const std::string& filename)
+T* ResourceManager<T>::LoadFromFile(const std::string& filename)
 {
 	T* retVal = nullptr;
 
@@ -35,3 +34,5 @@ T* ResourceManager<T>::Load(const std::string& filename)
 
 	return retVal;
 }
+
+*/

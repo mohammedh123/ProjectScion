@@ -1,4 +1,3 @@
-//HI
 #include "ScionEngine.h"
 
 ScionEngine::ScionEngine()
@@ -15,6 +14,10 @@ void ScionEngine::Init()
 	window = std::unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(640, 480, 32), "Project Scion"));		
 	
 	imgManager = std::unique_ptr<ImageManager>(new ImageManager());
+	soundBufferManager = std::unique_ptr<SoundBufferManager>(new SoundBufferManager());
+	fontManager = std::unique_ptr<FontManager>(new FontManager());
+	
+	fonts["mainFont"] = fontManager->LoadFromFile("Fonts/arial.ttf");
 	camera = std::unique_ptr<Camera>(new Camera(640, 480, 0.2f));
 
 	currentLevel = new Level(20, 10);
@@ -28,32 +31,65 @@ void ScionEngine::Init()
 				currentLevel->AddTile(x, y, new Tile(imgManager->GetImage("tiles2.png")));
 		}
 	}
-	
+	splashScreen = std::unique_ptr<SplashScreen>(new SplashScreen(4.0f, imgManager->GetImage("Images/splashscreen.png"), soundBufferManager->LoadFromFile("Sound/splash_sound.wav")));
+	currentGameState = GS_SPLASH_SCREEN;
+
 	LoadImages();
+	clock = std::unique_ptr<sf::Clock>(new sf::Clock());
+	clock->restart();
 }
 
 void ScionEngine::RenderFrame()
 {
 	window->clear();
 	
-	auto bounds = camera->GetTileBounds();
-	auto camOffsetX = camera->GetTileOffset().x;
-	auto camOffsetY = camera->GetTileOffset().y;
-
-	for(int y = 0, tileY = 0; y < bounds.height && tileY < currentLevel->GetHeight(); y++, tileY++)
+	switch(currentGameState)
 	{
-		if(tileY < 0) continue;
+	case GS_SPLASH_SCREEN:
+		splashScreen->Draw(*window);
+		break;
+	case GS_GAME:
+		//Set the View that the game will be drawn in
+		window->setView(*camera->GetView());
 
-		for(int x = 0, tileX = 0; x < bounds.width && tileX < currentLevel->GetWidth(); x++, tileX++)
+		auto bounds = camera->GetTileBounds();
+		auto camOffsetX = camera->GetTileOffset().x;
+		auto camOffsetY = camera->GetTileOffset().y;
+
+		for(int y = 0, tileY = 0; y < bounds.height && tileY < currentLevel->GetHeight(); y++, tileY++)
 		{
-		if(tileX < 0) continue;
+			if(tileY < 0) continue;
 
-			currentLevel->GetTile(tileX, tileY)->Draw(x*Tile::SIZE, y*Tile::SIZE, window.get());
+			for(int x = 0, tileX = 0; x < bounds.width && tileX < currentLevel->GetWidth(); x++, tileX++)
+			{
+			if(tileX < 0) continue;
+
+				currentLevel->GetTile(tileX, tileY)->Draw(x*Tile::SIZE, y*Tile::SIZE, window.get());
+			}
 		}
+	
+		// Set the default view back
+		sf::View defaultView = window->getDefaultView();
+		window->setView(window->getDefaultView());
+	
+		//Draw the UI
+		//Needs to be encapsulated and thought out
+
+		sf::RectangleShape rectangle;
+		rectangle.setSize(sf::Vector2f(defaultView.getSize().x, 100));
+		rectangle.setPosition(0, defaultView.getSize().y - 100);
+		window->draw(rectangle);
+
+		sf::Text text("UI");
+		text.setFont(*fonts["mainFont"]);
+		text.setCharacterSize(30);
+		text.setStyle(sf::Text::Bold);
+		text.setColor(sf::Color::Red);
+		text.setPosition(defaultView.getSize().x/2, defaultView.getSize().y - 50);
+		//Does not have a built in alignment option =/
+		window->draw(text);
+		break;
 	}
-	
-	
-	window->setView(*camera->GetView());
 
 	window->display();
 }
@@ -114,7 +150,22 @@ void ScionEngine::LoadImages()
 
 void ScionEngine::Update()
 {
-	camera->Update();
+	float delta = clock->getElapsedTime().asSeconds();
+	clock->restart();
+
+	switch(currentGameState)
+	{
+	case GS_SPLASH_SCREEN:
+		splashScreen->Update(delta);
+		if(splashScreen->Finished())
+		{
+			currentGameState = GS_GAME;
+		}
+		
+		break;
+	case GS_GAME:
+		camera->Update();
+	}
 }
 
 void ScionEngine::GameLoop()

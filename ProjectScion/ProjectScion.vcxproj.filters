@@ -19,6 +19,24 @@
     <Filter Include="Source Files\Manager">
       <UniqueIdentifier>{816c10a9-bc65-4e2e-9e63-cdf99efb103f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Screens">
+      <UniqueIdentifier>{c6aea0ae-b750-46dc-834f-4314b67643bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Screens">
+      <UniqueIdentifier>{25e9d837-c685-4af6-b511-00a2c2efd06e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Images">
+      <UniqueIdentifier>{9772d86d-fb26-4b2c-851b-7ed27c8dbdc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Fonts">
+      <UniqueIdentifier>{ee051c9a-5754-46c5-90fc-ac47cb9380c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Sound">
+      <UniqueIdentifier>{57e2e062-0ce0-45b9-9f02-08f23706a7c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Music">
+      <UniqueIdentifier>{c158d821-9d94-4b84-a3b8-53211e2e3c53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -48,6 +66,15 @@
     <ClCompile Include="FontManager.cpp">
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="SplashScreen.cpp">
+      <Filter>Source Files\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="UIScreen.cpp">
+      <Filter>Source Files\Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundBufferManager2.cpp">
+      <Filter>Source Files\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ScionEngine.h">
@@ -74,5 +101,25 @@
     <ClInclude Include="FontManager.h">
       <Filter>Header Files\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="UIScreen.h">
+      <Filter>Header Files\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="SplashScreen.h">
+      <Filter>Header Files\Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundBufferManager2.h">
+      <Filter>Header Files\Manager</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="arial.ttf">
+      <Filter>Resource Files\Fonts</Filter>
+    </None>
+    <None Include="splashscreen.png">
+      <Filter>Resource Files\Images</Filter>
+    </None>
+    <None Include="Sound\splash_sound.wav">
+      <Filter>Resource Files\Sound</Filter>
+    </None>
   </ItemGroup>
 </Project>
