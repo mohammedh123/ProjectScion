@@ -1,4 +1,4 @@
 ProjectScion
 ============
 
-Dungeon crawler with a top-down perspective, utilizing modern C++.
+Essentially a real-time roguelike with a top-down perspective a la Zelda, Bomberman, etc, utilizing modern C++ practices.
