@@ -4,7 +4,10 @@
 #include <memory>
 #include <map>
 #include <string>
+#include <vector>
 #include <SFML\Graphics.hpp>
+#include <SFML\Audio.hpp>
+#include <SFML\Audio\SoundBuffer.hpp>
 
 using namespace std;
 
@@ -17,11 +20,32 @@ private:
 	
 	ResourceManager(const ResourceManager&);
 	ResourceManager& operator=(const ResourceManager&);
+	
 public:
-	ResourceManager();
-	~ResourceManager();
+	ResourceManager<T>(){}
+	~ResourceManager<T>(){}
 
-	virtual T* Load(const std::string& filename);
+	virtual T* LoadFromFile(const std::string& filename)
+	{
+		T* retVal = nullptr;
+
+		for(auto it = begin(contentMap); it != end(contentMap); it++)
+		{
+			if(it->first == filename)
+				retVal = it->second.get();
+		}
+
+		if(!retVal)
+		{
+			std::unique_ptr<T> tex(new T);
+			tex->loadFromFile(filename);
+			contentMap[filename] = std::move(tex);
+
+			retVal = contentMap[filename].get();
+		}
+
+		return retVal;
+	}
 };
 
 #endif

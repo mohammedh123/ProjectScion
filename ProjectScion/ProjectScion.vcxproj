@@ -47,7 +47,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\SFML-2.0-rc\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-audio-s-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -74,7 +74,11 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ScionEngine.cpp" />
     <ClCompile Include="SoundBufferManager.cpp" />
+    <ClCompile Include="SplashScreen.cpp" />
+    <ClCompile Include="State.cpp" />
+    <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="UIScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -86,7 +90,16 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ScionEngine.h" />
     <ClInclude Include="SoundBufferManager.h" />
+    <ClInclude Include="SplashScreen.h" />
+    <ClInclude Include="State.h" />
+    <ClInclude Include="StateManager.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="UIScreen.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\splashscreen.png" />
+    <None Include="Resources\Fonts\arial.ttf" />
+    <None Include="Sound\splash_sound.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
