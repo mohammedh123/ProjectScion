@@ -19,12 +19,6 @@
     <Filter Include="Source Files\Manager">
       <UniqueIdentifier>{816c10a9-bc65-4e2e-9e63-cdf99efb103f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Screens">
-      <UniqueIdentifier>{c6aea0ae-b750-46dc-834f-4314b67643bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Screens">
-      <UniqueIdentifier>{25e9d837-c685-4af6-b511-00a2c2efd06e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\Images">
       <UniqueIdentifier>{9772d86d-fb26-4b2c-851b-7ed27c8dbdc7}</UniqueIdentifier>
     </Filter>
@@ -39,6 +33,15 @@
     </Filter>
     <Filter Include="Header Files\State Management">
       <UniqueIdentifier>{76d8ef95-d1be-4d80-a4fd-d58393bedc86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\States">
+      <UniqueIdentifier>{8ff038ff-0433-40b5-a2aa-e70c4c74486b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\State Management">
+      <UniqueIdentifier>{0da40f9a-1822-4a2b-a5de-fa1449ee852c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States">
+      <UniqueIdentifier>{36ac2b15-57dd-44e0-b310-d000f0f5ed34}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -69,23 +72,25 @@
     <ClCompile Include="FontManager.cpp">
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="SplashScreen.cpp">
-      <Filter>Source Files\Screens</Filter>
-    </ClCompile>
-    <ClCompile Include="UIScreen.cpp">
-      <Filter>Source Files\Screens</Filter>
-    </ClCompile>
-    <ClCompile Include="State.cpp">
-      <Filter>Header Files\State Management</Filter>
-    </ClCompile>
-    <ClCompile Include="StateManager.cpp">
-      <Filter>Header Files\State Management</Filter>
-    </ClCompile>    <ClCompile Include="GameObject.cpp">
+    <ClCompile Include="GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Header Files</Filter>
-    </ClCompile>  </ItemGroup>
+    </ClCompile>
+    <ClCompile Include="State.cpp">
+      <Filter>Source Files\State Management</Filter>
+    </ClCompile>
+    <ClCompile Include="StateManager.cpp">
+      <Filter>Source Files\State Management</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="SplashScreenState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ScionEngine.h">
       <Filter>Header Files</Filter>
@@ -111,23 +116,25 @@
     <ClInclude Include="FontManager.h">
       <Filter>Header Files\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="UIScreen.h">
-      <Filter>Header Files\Screens</Filter>
-    </ClInclude>
-    <ClInclude Include="SplashScreen.h">
-      <Filter>Header Files\Screens</Filter>
-    </ClInclude>
     <ClInclude Include="State.h">
       <Filter>Header Files\State Management</Filter>
     </ClInclude>
     <ClInclude Include="StateManager.h">
       <Filter>Header Files\State Management</Filter>
-    </ClInclude>    <ClInclude Include="GameObject.h">
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
-    </ClInclude>  </ItemGroup>
+    </ClInclude>
+    <ClInclude Include="SplashScreenState.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Fonts\arial.ttf">
       <Filter>Resource Files\Fonts</Filter>

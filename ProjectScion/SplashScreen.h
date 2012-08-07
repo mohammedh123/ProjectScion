@@ -15,7 +15,7 @@ private:
 public:
 	SplashScreen(float duration, sf::Texture* image, sf::SoundBuffer* soundBuffer, bool clickToSkip = false);
 	virtual void Update(float delta);
-	virtual void Draw(sf::RenderWindow& window);
+	virtual void Draw(sf::RenderWindow* window);
 	bool Finished(){return runTime >= duration;}
 };
 

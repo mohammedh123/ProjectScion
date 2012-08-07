@@ -1,4 +1,5 @@
 #include "State.h"
+#include "StateManager.h"
 
 float State::GetTransitionAlpha() const
 {
@@ -15,6 +16,13 @@ VisibleState State::getCurrentState() const
 	return currentState;
 }
 
+void State::LoadResourceManager(ImageManager* iM, SoundBufferManager* sBM, FontManager* fM)
+{
+	imgManager = iM;
+	soundBufferManager = sBM;
+	fontManager = fM;
+}
+
 void State::Initialize() 
 { 
 	transitionOnTime = 0;
@@ -22,7 +30,8 @@ void State::Initialize()
 	transitionPosition = 1;
 	totalTime = 0;
 	isPopup = false;
-	currentState = TransitionOn;         
+	isExiting = false;
+	currentState = TransitionOn;
 }
 
 void State::Update(double delta, bool isGameActive, bool isCoveredByOtherState)
@@ -35,7 +44,7 @@ void State::Update(double delta, bool isGameActive, bool isCoveredByOtherState)
 		if (!UpdateTransition(delta, transitionOffTime, 1))
 		{
 			// When the transition finishes, remove the screen.
-			//stateManager.RemoveState(this);
+			stateManager->RemoveState(this);
 		}
 	}
 	else if (isCoveredByOtherState)

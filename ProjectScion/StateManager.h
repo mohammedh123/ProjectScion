@@ -1,37 +1,30 @@
-#include "State.h"
 #include <list>
 #include "SFML/Graphics.hpp"
+#include "SoundBufferManager.h"
+#include "FontManager.h"
+#include "ImageManager.h"
+
+class State;
 
 class StateManager
 {
 private:
 	std::list<State*>* States;
 	std::list<State*>* statesToUpdate;
-	
-	static StateManager *instance;
 
-	StateManager();
-	~StateManager();
+	ImageManager* imgManager; 
+	SoundBufferManager* soundBufferManager; 
+	FontManager* fontManager;
+	
 	StateManager(const StateManager&);
 	StateManager& operator=(const StateManager&);
 	//GameManager game = null;
-	//Texture2D blankTexture;
+	sf::RectangleShape rect;
 
 public:
-	//access StateManager via StateManager.Instance
-	static StateManager* Instance()
-	{
-		if (instance == 0)
-		{
-			instance = new StateManager();
-		}
-
-		return instance;
-	}
-
-	//to avoid accidental construction
-	
-
+	StateManager();
+	~StateManager();
+	void LoadResourceManager(ImageManager* iM, SoundBufferManager* sBM, FontManager* fM);
 	//State[] GetStates();
 
 	void PushState(State* state);
@@ -42,9 +35,9 @@ public:
 
 	void PopAll();
 
-	void Update(double delta, sf::Event evt);
+	void Update(double delta, sf::Event evt, sf::RenderWindow* window);
 
-	void Draw(sf::RenderWindow& window);
+	void Draw(sf::RenderWindow* window);
 
-	void DrawSolidColor(sf::Color color, float alpha, sf::RenderWindow& window);
+	void DrawSolidColor(sf::Color color, float alpha, sf::RenderWindow* window);
 };

@@ -18,7 +18,7 @@ void SplashScreen::Update(float delta)
 	runTime += delta;
 }
 
-void SplashScreen::Draw(sf::RenderWindow& renderWindow)
+void SplashScreen::Draw(sf::RenderWindow* renderWindow)
 {
-	renderWindow.draw(rect);
+	renderWindow->draw(rect);
 }

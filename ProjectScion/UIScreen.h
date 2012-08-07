@@ -16,7 +16,7 @@ private:
 public:
 	UIScreen();
 	virtual void Update(float delta) = 0;
-	virtual void Draw(sf::RenderWindow& window) = 0;
+	virtual void Draw(sf::RenderWindow* window) = 0;
 	virtual void OnEnter();
 	virtual void OnExit();
 };

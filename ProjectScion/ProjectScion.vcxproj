@@ -67,6 +67,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="ImageManager.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -74,27 +75,26 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ScionEngine.cpp" />
     <ClCompile Include="SoundBufferManager.cpp" />
-    <ClCompile Include="SplashScreen.cpp" />
+    <ClCompile Include="SplashScreenState.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="Tile.cpp" />
-    <ClCompile Include="UIScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="FontManager.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="ImageManager.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ScionEngine.h" />
     <ClInclude Include="SoundBufferManager.h" />
-    <ClInclude Include="SplashScreen.h" />
+    <ClInclude Include="SplashScreenState.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="Tile.h" />
-    <ClInclude Include="UIScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\splashscreen.png" />

@@ -6,34 +6,25 @@ ScionEngine::ScionEngine()
 
 ScionEngine::~ScionEngine()
 {
-	delete currentLevel;
+	
 }
 
 void ScionEngine::Init()
 {
-	window = std::unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(640, 480, 32), "Project Scion"));		
-	
+	window = std::unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(800, 600, 32), "Project Scion"));		
+
 	imgManager = std::unique_ptr<ImageManager>(new ImageManager());
 	soundBufferManager = std::unique_ptr<SoundBufferManager>(new SoundBufferManager());
 	fontManager = std::unique_ptr<FontManager>(new FontManager());
+	stateManager = std::unique_ptr<StateManager>(new StateManager());
+	stateManager->LoadResourceManager(imgManager.get(), soundBufferManager.get(), fontManager.get());
 	
 	fonts["mainFont"] = fontManager->LoadFromFile("Fonts/arial.ttf");
-	camera = std::unique_ptr<Camera>(new Camera(640, 480, 0.2f));
-
-	currentLevel = new Level(20, 10);
-	for(int y = 0; y < currentLevel->GetHeight(); y++)
-	{
-		for(int x = 0; x < currentLevel->GetWidth(); x++)
-		{
-			if(y % 4 == 0)
-				currentLevel->AddTile(x, y, new Tile(imgManager->GetImage("tiles.png")));
-			else
-				currentLevel->AddTile(x, y, new Tile(imgManager->GetImage("tiles2.png")));
-		}
-	}
-	splashScreen = std::unique_ptr<SplashScreen>(new SplashScreen(4.0f, imgManager->GetImage("Images/splashscreen.png"), soundBufferManager->LoadFromFile("Sound/splash_sound.wav")));
-	currentGameState = GS_SPLASH_SCREEN;
-
+	stateManager->PushState(new GameState());
+	//splashScreen = std::unique_ptr<SplashScreen>(new SplashScreen(4.0f, imgManager->GetImage("Images/splashscreen.png"), soundBufferManager->LoadFromFile("Sound/splash_sound.wav")));
+	stateManager->PushState(new SplashScreenState(4.0f, imgManager->GetImage("Images/splashscreen.png"), soundBufferManager->LoadFromFile("Sound/splash_sound.wav")));
+	
+	evt = new sf::Event();
 	LoadImages();
 	clock = std::unique_ptr<sf::Clock>(new sf::Clock());
 	clock->restart();
@@ -42,11 +33,13 @@ void ScionEngine::Init()
 void ScionEngine::RenderFrame()
 {
 	window->clear();
-	
+	stateManager->Draw(window.get());
+	/*
 	switch(currentGameState)
 	{
+
 	case GS_SPLASH_SCREEN:
-		splashScreen->Draw(*window);
+		splashScreen->Draw(window.get());
 		break;
 	case GS_GAME:
 		//Set the View that the game will be drawn in
@@ -90,55 +83,19 @@ void ScionEngine::RenderFrame()
 		window->draw(text);
 		break;
 	}
-
+	*/
 	window->display();
 }
 
 void ScionEngine::ProcessInput()
 {
-	sf::Event evt;
-
-	while(window->pollEvent(evt))
+	//The event handler they have is bad, for simplicity only one state can handle event at a time	
+	window->pollEvent(*evt);
+	switch(evt->type)
 	{
-		switch(evt.type)
-		{
-		case sf::Event::Closed:
-			window->close();
-			break;
-		case sf::Event::MouseWheelMoved:
-			camera->Zoom((evt.mouseWheel.delta > 0)?.5f:2.0f);
-			break;
-		case sf::Event::KeyPressed:
-			switch(evt.key.code)
-			{
-			case sf::Keyboard::PageUp:
-				camera->Zoom(0.5f);
-				break;
-			case sf::Keyboard::PageDown:
-				camera->Zoom(2.0f);
-				break;
-			case sf::Keyboard::Left:
-				camera->MoveBy(-5.0f,0);
-				break;
-			case sf::Keyboard::Right:
-				camera->MoveBy(5.0f,0);
-				break;
-			case sf::Keyboard::Up:
-				camera->MoveBy(0,-5.0f);
-				break;
-			case sf::Keyboard::Down:
-				camera->MoveBy(0,5.0f);
-				break;
-			}
-			break;
-		case sf::Event::MouseButtonPressed:
-			sf::Vector2f MousePos = window->convertCoords( sf::Vector2i( evt.mouseButton.x,  evt.mouseButton.y), *camera->GetView());
-			camera->GoToCenter(MousePos.x, MousePos.y);
-			
-			
-			break;
-		
-		}
+	case sf::Event::Closed:
+            window->close();
+            break;
 	}
 } 
 
@@ -152,7 +109,8 @@ void ScionEngine::Update()
 {
 	float delta = clock->getElapsedTime().asSeconds();
 	clock->restart();
-
+	stateManager->Update(delta, *evt, window.get());
+	/*
 	switch(currentGameState)
 	{
 	case GS_SPLASH_SCREEN:
@@ -166,6 +124,7 @@ void ScionEngine::Update()
 	case GS_GAME:
 		camera->Update();
 	}
+	*/
 }
 
 void ScionEngine::GameLoop()

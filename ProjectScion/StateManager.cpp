@@ -6,7 +6,16 @@ StateManager::StateManager()
 {
 	States = new std::list<State*>();
 	statesToUpdate = new std::list<State*>();
+
 }
+
+void StateManager::LoadResourceManager(ImageManager* iM, SoundBufferManager* sBM, FontManager* fM)
+{
+	imgManager = iM;
+	soundBufferManager = sBM;
+	fontManager = fM;
+}
+
 StateManager::~StateManager()
 {
 	States->clear();
@@ -16,8 +25,10 @@ StateManager::~StateManager()
 }
 void StateManager::PushState(State* state)
 {
-	//state->stateManager = this;
+	state->stateManager = this;
+	state->LoadResourceManager(imgManager, soundBufferManager, fontManager);
 	state->Initialize();
+	
 	States->push_back(state);
 }
 
@@ -43,9 +54,9 @@ State* StateManager::PopState()
 void StateManager::PopAll()
 {
 	while (PopState() != 0);
-}
+}	
 
-void StateManager::Update(double delta, sf::Event evt)
+void StateManager::Update(double delta, sf::Event evt, sf::RenderWindow* window)
 {
 	statesToUpdate->clear();
 
@@ -63,7 +74,7 @@ void StateManager::Update(double delta, sf::Event evt)
 		currentState = statesToUpdate->back();
 
 		if (isGameActive)
-			currentState->HandleInput(evt);
+			currentState->HandleInput(&evt, window);
 
 		currentState->Update(delta, isGameActive, isCoveredByOtherState);
 
@@ -74,7 +85,7 @@ void StateManager::Update(double delta, sf::Event evt)
 	}
 }
 
-void StateManager::Draw(sf::RenderWindow& window)
+void StateManager::Draw(sf::RenderWindow* window)
 {
 	for(std::list<State*>::iterator it = States->begin(); it != States->end(); ++it)
 	{
@@ -84,16 +95,11 @@ void StateManager::Draw(sf::RenderWindow& window)
 		(*it)->Draw(window);
 	}
 }
-/*
-void DrawSolidColor(Color c, float alpha, RenderTarget2D target = null)
+
+void StateManager::DrawSolidColor(sf::Color c, float alpha, sf::RenderWindow* window)
 {
-	Viewport viewport = graphicsDevice.Viewport;
-
-	//spriteBatch.Begin();
-
-	spriteBatch.Draw(blankTexture,
-		new Rectangle(0, 0, viewport.Width, viewport.Height),
-		Color.Black * alpha);
-
-	//spriteBatch.End();
-}*/
+	rect.setFillColor(c);
+	rect.setPosition(0,0);
+	rect.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
+	window->draw(rect);
+}

@@ -1,5 +1,5 @@
 #ifndef _SOUND_BUFFER_MANAGER_H
-#define _SOUNDBUFFER_MANAGER_H
+#define _SOUND_BUFFER_MANAGER_H
  
 #include <SFML/Audio.hpp>
  
