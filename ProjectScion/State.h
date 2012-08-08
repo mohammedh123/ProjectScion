@@ -2,9 +2,7 @@
 #define _STATE_H
 
 #include "SFML\Graphics.hpp"
-#include "SoundBufferManager.h"
-#include "FontManager.h"
-#include "ImageManager.h"
+#include "Managers.h"
 
 class StateManager;
 
@@ -31,27 +29,6 @@ protected:
     double              transitionOffTime;
     float               transitionPosition;
 public:
-	/*
-    double       getTotalTime();
-    bool         getIsPopup();
-    bool         getIsExiting();
-    VisibleState getCurrentState();
-    double       getTransitionOnTime();
-    double       getTransitionOffTime();
-    float        getTransitionPosition();
-    float        getTransitionAlpha();
-
-	void		 setTotalTime(double newTotalTime);
-    void         setIsPopup(bool newIsPopUp);
-    void         setIsExiting(bool newIsExiting);
-    void		 setCurrentState(VisibleState newState);
-    void         setTransitionOnTime(double newTime);
-    void         setTransitionOffTime(double newTime);
-    void         setTransitionPosition(float newPosition);
-    void         setTransitionAlpha(float newAlpha);
-	*/
-
-
 	State::~State(){}
 	
 	StateManager* stateManager;

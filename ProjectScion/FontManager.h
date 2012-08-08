@@ -1,7 +1,7 @@
 #ifndef _FONT_MANAGER_H
 #define _FONT_MANAGER_H
  
-#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics.hpp>
  
 #include "ResourceManager.h"
  

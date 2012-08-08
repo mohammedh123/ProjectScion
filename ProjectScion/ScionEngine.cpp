@@ -17,7 +17,9 @@ void ScionEngine::Init()
 	soundBufferManager = std::unique_ptr<SoundBufferManager>(new SoundBufferManager());
 	fontManager = std::unique_ptr<FontManager>(new FontManager());
 	stateManager = std::unique_ptr<StateManager>(new StateManager());
-	stateManager->LoadResourceManager(imgManager.get(), soundBufferManager.get(), fontManager.get());
+	musicManager = std::unique_ptr<MusicManager>(new MusicManager());
+	shaderManager = std::unique_ptr<ShaderManager>(new ShaderManager());
+	stateManager->LoadResourceManager(imgManager.get(), soundBufferManager.get(), fontManager.get(), musicManager.get(), shaderManager.get());
 	
 	fonts["mainFont"] = fontManager->LoadFromFile("Fonts/arial.ttf");
 	stateManager->PushState(new GameState());

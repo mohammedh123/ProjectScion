@@ -9,11 +9,13 @@ StateManager::StateManager()
 
 }
 
-void StateManager::LoadResourceManager(ImageManager* iM, SoundBufferManager* sBM, FontManager* fM)
+void StateManager::LoadResourceManager(ImageManager* iM, SoundBufferManager* sBM, FontManager* fM, MusicManager *mM, ShaderManager* sM)
 {
 	imgManager = iM;
 	soundBufferManager = sBM;
 	fontManager = fM;
+	musicManager = mM;
+	shaderManager = sM;
 }
 
 StateManager::~StateManager()

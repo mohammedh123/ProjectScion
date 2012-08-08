@@ -7,7 +7,6 @@
 #include <vector>
 #include <SFML\Graphics.hpp>
 #include <SFML\Audio.hpp>
-#include <SFML\Audio\SoundBuffer.hpp>
 
 using namespace std;
 
@@ -15,12 +14,11 @@ template<class T>
 class ResourceManager
 {
 private:
-	
-	std::map<std::string, std::unique_ptr<T>> contentMap;
-	
 	ResourceManager(const ResourceManager&);
 	ResourceManager& operator=(const ResourceManager&);
 	
+protected:
+	std::map<std::string, std::unique_ptr<T>> contentMap;
 public:
 	ResourceManager<T>(){}
 	~ResourceManager<T>(){}

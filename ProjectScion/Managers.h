@@ -1,0 +1,5 @@
+#include "ImageManager.h"
+#include "SoundBufferManager.h"
+#include "MusicManager.h"
+#include "FontManager.h"
+#include "ShaderManager.h"

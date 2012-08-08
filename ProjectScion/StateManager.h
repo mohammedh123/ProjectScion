@@ -1,8 +1,6 @@
 #include <list>
 #include "SFML/Graphics.hpp"
-#include "SoundBufferManager.h"
-#include "FontManager.h"
-#include "ImageManager.h"
+#include "Managers.h"
 
 class State;
 
@@ -23,10 +21,13 @@ public:
 	ImageManager* imgManager; 
 	SoundBufferManager* soundBufferManager; 
 	FontManager* fontManager;
+	MusicManager* musicManager;
+	ShaderManager* shaderManager;
+
 
 	StateManager();
 	~StateManager();
-	void LoadResourceManager(ImageManager* iM, SoundBufferManager* sBM, FontManager* fM);
+	void LoadResourceManager(ImageManager* iM, SoundBufferManager* sBM, FontManager* fM, MusicManager *mM, ShaderManager* sM);
 	//State[] GetStates();
 
 	void PushState(State* state);

@@ -43,6 +43,9 @@
     <Filter Include="Source Files\States">
       <UniqueIdentifier>{36ac2b15-57dd-44e0-b310-d000f0f5ed34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shader">
+      <UniqueIdentifier>{a4a954d7-4b80-4df8-a311-e6e421e5bead}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -90,6 +93,12 @@
     <ClCompile Include="SplashScreenState.cpp">
       <Filter>Source Files\States</Filter>
     </ClCompile>
+    <ClCompile Include="MusicManager.cpp">
+      <Filter>Source Files\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>Source Files\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ScionEngine.h">
@@ -134,6 +143,15 @@
     <ClInclude Include="GameState.h">
       <Filter>Header Files\States</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>Header Files\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="MusicManager.h">
+      <Filter>Header Files\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Managers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Fonts\arial.ttf">
@@ -144,6 +162,12 @@
     </None>
     <None Include="Images\splashscreen.png">
       <Filter>Resource Files\Images</Filter>
+    </None>
+    <None Include="Shaders\colorize.frag">
+      <Filter>Resource Files\Shader</Filter>
+    </None>
+    <None Include="Shaders\colorize.vert">
+      <Filter>Resource Files\Shader</Filter>
     </None>
   </ItemGroup>
 </Project>

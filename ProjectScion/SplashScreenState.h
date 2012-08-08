@@ -13,6 +13,7 @@ private:
 	float duration;
 	float runTime;
 	sf::Sound sound;
+	sf::Shader* effect;
 public:
 	SplashScreenState(float duration, sf::Texture* image, sf::SoundBuffer* soundBuffer, bool clickToSkip = false);
 	virtual void Initialize();
