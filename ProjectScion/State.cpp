@@ -16,13 +16,6 @@ VisibleState State::getCurrentState() const
 	return currentState;
 }
 
-void State::LoadResourceManager(ImageManager* iM, SoundBufferManager* sBM, FontManager* fM)
-{
-	imgManager = iM;
-	soundBufferManager = sBM;
-	fontManager = fM;
-}
-
 void State::Initialize() 
 { 
 	transitionOnTime = 0;

@@ -26,7 +26,6 @@ StateManager::~StateManager()
 void StateManager::PushState(State* state)
 {
 	state->stateManager = this;
-	state->LoadResourceManager(imgManager, soundBufferManager, fontManager);
 	state->Initialize();
 	
 	States->push_back(state);
@@ -56,7 +55,7 @@ void StateManager::PopAll()
 	while (PopState() != 0);
 }	
 
-void StateManager::Update(double delta, sf::Event evt, sf::RenderWindow* window)
+void StateManager::Update(double delta, sf::RenderWindow* window)
 {
 	statesToUpdate->clear();
 
@@ -74,14 +73,14 @@ void StateManager::Update(double delta, sf::Event evt, sf::RenderWindow* window)
 		currentState = statesToUpdate->back();
 
 		if (isGameActive)
-			currentState->HandleInput(&evt, window);
+			currentState->HandleInput(window);
 
 		currentState->Update(delta, isGameActive, isCoveredByOtherState);
 
 
 		isCoveredByOtherState = !currentState->IsPopup();
 
-		statesToUpdate->remove(currentState);
+		statesToUpdate->pop_back();
 	}
 }
 
@@ -100,6 +99,7 @@ void StateManager::DrawSolidColor(sf::Color c, float alpha, sf::RenderWindow* wi
 {
 	rect.setFillColor(c);
 	rect.setPosition(0,0);
-	rect.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
+	auto size = window->getSize();
+	rect.setSize(sf::Vector2f(size.x, size.y));
 	window->draw(rect);
 }

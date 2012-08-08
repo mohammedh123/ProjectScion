@@ -25,7 +25,6 @@ private:
 	std::map<std::string, sf::Font*> fonts;
 	std::unique_ptr<SplashScreen> splashScreen;
 	std::unique_ptr<sf::Clock> clock;
-	sf::Event* evt;
 
 	void Init();
 	void GameLoop();

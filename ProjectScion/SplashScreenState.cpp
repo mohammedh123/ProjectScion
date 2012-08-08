@@ -30,10 +30,11 @@ void SplashScreenState::Update(double delta, bool isGameActive, bool isCoveredBy
 
 void SplashScreenState::Draw(sf::RenderWindow* window)
 {
-	rect.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
+	auto size = window->getSize();
+	rect.setSize(sf::Vector2f(size.x, size.y));
 	window->draw(rect);
 }
 
-void SplashScreenState::HandleInput(sf::Event* evt, sf::RenderWindow* window)
+void SplashScreenState::HandleInput(sf::RenderWindow* window)
 {
 }

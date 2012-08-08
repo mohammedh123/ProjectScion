@@ -12,9 +12,7 @@ private:
 	std::list<State*>* States;
 	std::list<State*>* statesToUpdate;
 
-	ImageManager* imgManager; 
-	SoundBufferManager* soundBufferManager; 
-	FontManager* fontManager;
+	
 	
 	StateManager(const StateManager&);
 	StateManager& operator=(const StateManager&);
@@ -22,6 +20,10 @@ private:
 	sf::RectangleShape rect;
 
 public:
+	ImageManager* imgManager; 
+	SoundBufferManager* soundBufferManager; 
+	FontManager* fontManager;
+
 	StateManager();
 	~StateManager();
 	void LoadResourceManager(ImageManager* iM, SoundBufferManager* sBM, FontManager* fM);
@@ -35,7 +37,7 @@ public:
 
 	void PopAll();
 
-	void Update(double delta, sf::Event evt, sf::RenderWindow* window);
+	void Update(double delta, sf::RenderWindow* window);
 
 	void Draw(sf::RenderWindow* window);
 

@@ -30,8 +30,6 @@ protected:
     double              transitionOnTime;
     double              transitionOffTime;
     float               transitionPosition;
-	sf::Keyboard		previousKeyboardState;
-	sf::Keyboard		currentKeyboardState;
 public:
 	/*
     double       getTotalTime();
@@ -57,19 +55,14 @@ public:
 	State::~State(){}
 	
 	StateManager* stateManager;
-	ImageManager* imgManager; 
-	SoundBufferManager* soundBufferManager; 
-	FontManager* fontManager;
 
 	bool IsPopup() const;
 	float GetTransitionAlpha() const;
 	VisibleState getCurrentState() const;
 
-	virtual void LoadResourceManager(ImageManager* iM, SoundBufferManager* sBM, FontManager* fM);
-
     virtual void Initialize();
 
-    virtual void HandleInput(sf::Event* evt, sf::RenderWindow* window) = 0;
+    virtual void HandleInput(sf::RenderWindow* window) = 0;
 
     virtual void Update(double delta, bool isGameActive, bool isCoveredByOtherState);
 

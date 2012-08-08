@@ -18,7 +18,7 @@ public:
 	virtual void Initialize();
 	virtual void Update(double delta, bool isGameActive, bool isCoveredByOtherState);
 	virtual void Draw(sf::RenderWindow* window);
-	virtual void HandleInput(sf::Event* evt, sf::RenderWindow* window);
+	virtual void HandleInput(sf::RenderWindow* window);
 };
 
 #endif

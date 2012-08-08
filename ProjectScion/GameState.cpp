@@ -20,51 +20,46 @@ void GameState::Initialize()
 		for(int x = 0; x < currentLevel->GetWidth(); x++)
 		{
 			if(y % 4 == 0)
-				currentLevel->AddTile(x, y, new Tile(imgManager->GetImage("tiles.png")));
+				currentLevel->AddTile(x, y, new Tile(stateManager->imgManager->GetImage("tiles.png")));
 			else
-				currentLevel->AddTile(x, y, new Tile(imgManager->GetImage("tiles2.png")));
+				currentLevel->AddTile(x, y, new Tile(stateManager->imgManager->GetImage("tiles2.png")));
 		}
 	}
 }
 
-void GameState::HandleInput(sf::Event* evt, sf::RenderWindow* window)
+void GameState::HandleInput(sf::RenderWindow* window)
 {
-	switch(evt->type)
+	//sf::Event::MouseWheelMoved:
+	//	camera->Zoom((evt->mouseWheel.delta > 0)?.5f:2.0f);
+		
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		ExitState();
+			
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::PageUp))
+		camera->Zoom(0.5f);
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::PageDown))
+		camera->Zoom(2.0f);
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		camera->MoveBy(-5.0f,0);
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		camera->MoveBy(5.0f,0);
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		camera->MoveBy(0,-5.0f);
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		camera->MoveBy(0,5.0f);
+
+	if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
-	case sf::Event::KeyPressed:
-		switch(evt->key.code)
-		{
-		case sf::Event::MouseWheelMoved:
-			camera->Zoom((evt->mouseWheel.delta > 0)?.5f:2.0f);
-			break;
-		case sf::Keyboard::Escape:
-			ExitState();
-			break;
-		case sf::Keyboard::PageUp:
-				camera->Zoom(0.5f);
-				break;
-		case sf::Keyboard::PageDown:
-			camera->Zoom(2.0f);
-			break;
-		case sf::Keyboard::Left:
-			camera->MoveBy(-5.0f,0);
-			break;
-		case sf::Keyboard::Right:
-			camera->MoveBy(5.0f,0);
-			break;
-		case sf::Keyboard::Up:
-			camera->MoveBy(0,-5.0f);
-			break;
-		case sf::Keyboard::Down:
-			camera->MoveBy(0,5.0f);
-			break;
-		}
-		break;
-		case sf::Event::MouseButtonPressed:
-			sf::Vector2f MousePos = window->convertCoords( sf::Vector2i( evt->mouseButton.x,  evt->mouseButton.y), *camera->GetView());
-			camera->GoToCenter(MousePos.x, MousePos.y);
-			break;
+		auto windowPosition = window->getPosition();
+		sf::Vector2f MousePos = window->convertCoords(  sf::Mouse::getPosition() - windowPosition, *camera->GetView());
+		camera->GoToCenter(MousePos.x, MousePos.y);
 	}
+			
 }
 
 void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherState)
@@ -96,6 +91,31 @@ void GameState::Draw(sf::RenderWindow* window)
 			currentLevel->GetTile(tileX, tileY)->Draw(x*Tile::SIZE, y*Tile::SIZE, window);
 		}
 	}
+
+	/*	
+		// Set the default view back
+		sf::View defaultView = window->getDefaultView();
+		window->setView(window->getDefaultView());
+	
+		//Draw the UI
+		//Needs to be encapsulated and thought out
+
+		sf::RectangleShape rectangle;
+		rectangle.setSize(sf::Vector2f(defaultView.getSize().x, 100));
+		rectangle.setPosition(0, defaultView.getSize().y - 100);
+		window->draw(rectangle);
+
+		sf::Text text("UI");
+		text.setFont(*fonts["mainFont"]);
+		text.setCharacterSize(30);
+		text.setStyle(sf::Text::Bold);
+		text.setColor(sf::Color::Red);
+		text.setPosition(defaultView.getSize().x/2, defaultView.getSize().y - 50);
+		//Does not have a built in alignment option =/
+		window->draw(text);
+		break;
+	
+	*/
 
 	if (currentState == TransitionOn)
 	{
