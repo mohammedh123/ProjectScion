@@ -14,6 +14,7 @@ public:
 	~Tile();
 
 	void Draw(int x, int y, sf::RenderWindow* rw);
+	void Draw(int x, int y, sf::RenderTexture* rt);
 };
 
 #endif

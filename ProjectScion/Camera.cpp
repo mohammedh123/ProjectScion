@@ -4,6 +4,8 @@
 
 Camera::Camera(int w, int h, float speed, float depth) : speed(speed), depth(depth)
 {
+	zoom = 1.0f;
+	
 	size.x = w;
 	size.y = h;
 
@@ -57,7 +59,15 @@ void Camera::GoTo(float x, float y)
 
 void Camera::Zoom(float z)
 {
-	view->zoom(z);
+	float delta = 0;
+	float upperBound = 3.0f;
+	float lowerBound = .5f;
+
+	if(zoom + z < upperBound && zoom + z > lowerBound)
+	{
+		zoom += z;
+		view->zoom(z + 1);
+	}
 }
 
 void Camera::MoveRelative(float x, float y)

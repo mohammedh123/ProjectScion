@@ -17,12 +17,12 @@ void SplashScreenState::Initialize()
 	transitionOnTime = 0.5f;
     transitionOffTime = 0.5f;
 	sound.play();
-	effect = stateManager->shaderManager->LoadFromFile("Shaders/colorize.vert", "Shaders/colorize.frag");
+	effect = stateManager->shaderManager->LoadFromFile("Shaders/bloom.frag", sf::Shader::Type::Fragment);
 }
 
 void SplashScreenState::Update(double delta, bool isGameActive, bool isCoveredByOtherState)
 {
-	effect->setParameter("color", sf::Color(std::rand() % 255, std::rand() % 255, std::rand() % 255, 170) );
+	
     State::Update(delta, isGameActive, isCoveredByOtherState);
 
     if(std::rand() % 10 == 0)
@@ -36,7 +36,8 @@ void SplashScreenState::Draw(sf::RenderWindow* window)
 {
 	auto size = window->getSize();
 	rect.setSize(sf::Vector2f(size.x, size.y));
-	window->draw(rect);
+	effect->setParameter("bgl_RenderedTexture",*rect.getTexture());
+
 	sf::RenderStates states;
 	states.shader = effect;
 	window->draw(rect, states);

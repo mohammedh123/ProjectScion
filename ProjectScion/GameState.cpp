@@ -25,6 +25,16 @@ void GameState::Initialize()
 				currentLevel->AddTile(x, y, new Tile(stateManager->imgManager->GetImage("tiles2.png")));
 		}
 	}
+	effect = stateManager->shaderManager->LoadFromFile("Shaders/bloom.frag", sf::Shader::Type::Fragment);
+	rt = std::unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
+	rt->create(800,600, true);
+	rt->setView(*camera->GetView());
+	//rt->setView(*camera->GetView());
+	states = std::unique_ptr<sf::RenderStates>(new sf::RenderStates);
+	states->shader = effect;
+	
+	WindowTexture = std::unique_ptr<sf::Texture>(new sf::Texture);
+	TextureDrawer = std::unique_ptr<sf::Sprite>(new sf::Sprite);
 }
 
 void GameState::HandleInput(sf::RenderWindow* window)
@@ -36,10 +46,10 @@ void GameState::HandleInput(sf::RenderWindow* window)
 		ExitState();
 			
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::PageUp))
-		camera->Zoom(0.5f);
+		camera->Zoom(-0.01f);
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::PageDown))
-		camera->Zoom(2.0f);
+		camera->Zoom(.01f);
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		camera->MoveBy(-5.0f,0);
@@ -74,12 +84,15 @@ void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherSta
 
 void GameState::Draw(sf::RenderWindow* window)
 {
-	window->setView(*camera->GetView());
+	//window->setView(*camera->GetView());
 
 	auto bounds = camera->GetTileBounds();
 	auto camOffsetX = camera->GetTileOffset().x;
 	auto camOffsetY = camera->GetTileOffset().y;
 
+	
+	rt->clear(sf::Color::Transparent);
+	rt->setView(*camera->GetView());
 	for(int y = 0, tileY = 0; y < bounds.height && tileY < currentLevel->GetHeight(); y++, tileY++)
 	{
 		if(tileY < 0) continue;
@@ -88,10 +101,17 @@ void GameState::Draw(sf::RenderWindow* window)
 		{
 		if(tileX < 0) continue;
 
-			currentLevel->GetTile(tileX, tileY)->Draw(x*Tile::SIZE, y*Tile::SIZE, window);
+			currentLevel->GetTile(tileX, tileY)->Draw(x*Tile::SIZE, y*Tile::SIZE, rt.get());
 		}
 	}
-
+	
+	rt->display();
+	TextureDrawer->setTexture(rt->getTexture());
+	effect->setParameter("bgl_RenderedTexture", rt->getTexture());
+	//TextureDrawer->setTexture(*WindowTexture.get());
+    window->draw(*TextureDrawer.get(), *states.get());
+	//window->draw(*TextureDrawer.get());
+	
 	/*	
 		// Set the default view back
 		sf::View defaultView = window->getDefaultView();
