@@ -105,8 +105,14 @@
     <ClCompile Include="ShaderManager.cpp">
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerSystem.cpp">
+    <ClCompile Include="TransformSystem.cpp">
       <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsSystem.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteComponent.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,13 +179,16 @@
     <ClInclude Include="TransformComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerSystem.h">
-      <Filter>Systems\Headers</Filter>
-    </ClInclude>
     <ClInclude Include="TransformSystem.h">
       <Filter>Systems\Headers</Filter>
     </ClInclude>
     <ClInclude Include="ComponentSystem.h">
+      <Filter>Systems\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsSystem.h">
       <Filter>Systems\Headers</Filter>
     </ClInclude>
   </ItemGroup>

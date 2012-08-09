@@ -67,19 +67,21 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="GraphicsSystem.cpp" />
     <ClCompile Include="ImageManager.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MusicManager.cpp" />
-    <ClCompile Include="PlayerSystem.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ScionEngine.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="SoundBufferManager.cpp" />
     <ClCompile Include="SplashScreenState.cpp" />
+    <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="TransformSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -89,18 +91,19 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GraphicsComponent.h" />
+    <ClInclude Include="GraphicsSystem.h" />
     <ClInclude Include="ImageManager.h" />
     <ClInclude Include="InputComponent.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LogicComponent.h" />
     <ClInclude Include="Managers.h" />
     <ClInclude Include="MusicManager.h" />
-    <ClInclude Include="PlayerSystem.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ScionEngine.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="SoundBufferManager.h" />
     <ClInclude Include="SplashScreenState.h" />
+    <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="Tile.h" />

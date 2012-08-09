@@ -4,14 +4,14 @@
 #include <SFML\Graphics.hpp>
 #include "Component.h"
 
-#include <list>
+#include <vector>
 
 class GameObject
 {
 public:
 	GameObject() {}
 
-	std::list<Component*> components;
+	std::vector<Component*> components;
 };
 
 #endif
