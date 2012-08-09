@@ -32,3 +32,7 @@ _ReSharper*/
 *.sdf
 *.opensdf
 *.ipch
+ProjectScion/ProjectScion.vcxproj.filters.BACKUP.2668.filters
+ProjectScion/ProjectScion.vcxproj.filters.LOCAL.2668.filters
+ProjectScion/ProjectScion.vcxproj.filters.REMOTE.2668.filters
+ProjectScion/ProjectScion.vcxproj.filters.BASE.2668.filters

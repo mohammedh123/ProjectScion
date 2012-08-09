@@ -71,6 +71,7 @@
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MusicManager.cpp" />
+    <ClCompile Include="PlayerSystem.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ScionEngine.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
@@ -83,6 +84,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentSystem.h" />
     <ClInclude Include="FontManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameState.h" />
@@ -90,8 +92,10 @@
     <ClInclude Include="ImageManager.h" />
     <ClInclude Include="InputComponent.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LogicComponent.h" />
     <ClInclude Include="Managers.h" />
     <ClInclude Include="MusicManager.h" />
+    <ClInclude Include="PlayerSystem.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ScionEngine.h" />
     <ClInclude Include="ShaderManager.h" />
@@ -100,6 +104,8 @@
     <ClInclude Include="State.h" />
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="TransformComponent.h" />
+    <ClInclude Include="TransformSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\splashscreen.png" />
