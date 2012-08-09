@@ -52,6 +52,12 @@
     <Filter Include="Source Files\Components">
       <UniqueIdentifier>{32e529ca-ae0a-4acb-97da-e5687b01a5e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Systems">
+      <UniqueIdentifier>{57e3334e-6ed2-4661-a235-212363fcc9ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems\Headers">
+      <UniqueIdentifier>{7d169390-b550-458b-b883-e1e0a4329d12}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -100,7 +106,7 @@
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
     <ClCompile Include="PlayerSystem.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -167,14 +173,14 @@
     <ClInclude Include="TransformComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="TransformSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerSystem.h">
-      <Filter>Header Files</Filter>
+      <Filter>Systems\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformSystem.h">
+      <Filter>Systems\Headers</Filter>
     </ClInclude>
     <ClInclude Include="ComponentSystem.h">
-      <Filter>Header Files</Filter>
+      <Filter>Systems\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
