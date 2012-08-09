@@ -46,6 +46,12 @@
     <Filter Include="Resource Files\Shader">
       <UniqueIdentifier>{a4a954d7-4b80-4df8-a311-e6e421e5bead}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Components">
+      <UniqueIdentifier>{f721aadc-0e79-454f-8788-1957e16aad22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components">
+      <UniqueIdentifier>{32e529ca-ae0a-4acb-97da-e5687b01a5e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -74,12 +80,6 @@
     </ClCompile>
     <ClCompile Include="FontManager.cpp">
       <Filter>Source Files\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="State.cpp">
       <Filter>Source Files\State Management</Filter>
@@ -134,9 +134,6 @@
     <ClInclude Include="GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SplashScreenState.h">
       <Filter>Header Files\States</Filter>
     </ClInclude>
@@ -151,6 +148,15 @@
     </ClInclude>
     <ClInclude Include="Managers.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="InputComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

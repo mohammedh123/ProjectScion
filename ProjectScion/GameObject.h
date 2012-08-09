@@ -2,18 +2,16 @@
 #define _GAMEOBJ_H
 
 #include <SFML\Graphics.hpp>
+#include "Component.h"
+
+#include <list>
 
 class GameObject
 {
-protected:
-	sf::Vector3f position;
-	sf::Sprite sprite;
 public:
-	GameObject(float x, float y, float z, sf::Texture& tex);
-	GameObject(float x, float y, float z, sf::Texture& tex, sf::IntRect& rect);
+	GameObject() {}
 
-	virtual void Update(float dt) = 0;
-	virtual void Draw(sf::RenderWindow* window);
+	std::list<Component*> components;
 };
 
 #endif
