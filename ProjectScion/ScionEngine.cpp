@@ -23,7 +23,7 @@ void ScionEngine::Init()
 	
 	fonts["mainFont"] = fontManager->LoadFromFile("Fonts/arial.ttf");
 	stateManager->PushState(new GameState());
-	stateManager->PushState(new SplashScreenState(4.0f, imgManager->GetImage("Images/splashscreen.png"), soundBufferManager->LoadFromFile("Sound/splash_sound.wav")));
+	//stateManager->PushState(new SplashScreenState(4.0f, imgManager->GetImage("Images/splashscreen.png"), soundBufferManager->LoadFromFile("Sound/splash_sound.wav")));
 	LoadImages();
 	clock = std::unique_ptr<sf::Clock>(new sf::Clock());
 	clock->restart();

@@ -11,6 +11,7 @@ private:
 	sf::Vector2f target;
 	sf::Vector2i size;
 	
+	float zoom;
 	float depth;
 	float speed;
 
