@@ -1,6 +1,7 @@
 #include "ScionEngine.h"
 
 #include "GraphicsSystem.h"
+#include "TransformSystem.h"
 
 ScionEngine::ScionEngine()
 {
@@ -23,8 +24,9 @@ void ScionEngine::Init()
 	shaderManager = std::unique_ptr<ShaderManager>(new ShaderManager());
 	systemManager = std::unique_ptr<SystemManager>(new SystemManager());
 	stateManager->LoadResourceManager(imgManager.get(), soundBufferManager.get(), fontManager.get(), musicManager.get(), shaderManager.get());
-
+	
 	systemManager->System<GraphicsSystem>("graphics");
+	systemManager->System<TransformSystem>("transform");
 
 	systemManager->Initialize();
 	

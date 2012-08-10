@@ -10,3 +10,7 @@ void TransformSystem::Process()
 		c->position.y += c->velocity.y;
 	});
 }
+
+void TransformSystem::Initialize()
+{
+}

@@ -10,6 +10,7 @@ class TransformSystem : public ComponentSystem
 	std::vector<TransformComponent*> components;
 public:
 	void Process();
+	void Initialize();
 };
 
 #endif
