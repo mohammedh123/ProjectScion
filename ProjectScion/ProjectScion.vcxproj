@@ -41,7 +41,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\SFML-2.0-rc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\boost_1_50_0;C:\SFML-2.0-rc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
@@ -67,8 +67,8 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="FontManager.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameState.cpp" />
-    <ClCompile Include="GraphicsSystem.cpp" />
     <ClCompile Include="ImageManager.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -78,26 +78,21 @@
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="SoundBufferManager.cpp" />
     <ClCompile Include="SplashScreenState.cpp" />
-    <ClCompile Include="SpriteComponent.cpp" />
+    <ClCompile Include="SpriteBehavior.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StateManager.cpp" />
-    <ClCompile Include="SystemManager.cpp" />
     <ClCompile Include="Tile.cpp" />
-    <ClCompile Include="TransformSystem.cpp" />
+    <ClCompile Include="TransformAttribute.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Attribute.h" />
+    <ClInclude Include="Behavior.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="ComponentSystem.h" />
     <ClInclude Include="FontManager.h" />
-    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="GameState.h" />
-    <ClInclude Include="GraphicsComponent.h" />
-    <ClInclude Include="GraphicsSystem.h" />
     <ClInclude Include="ImageManager.h" />
-    <ClInclude Include="InputComponent.h" />
     <ClInclude Include="Level.h" />
-    <ClInclude Include="LogicComponent.h" />
     <ClInclude Include="Managers.h" />
     <ClInclude Include="MusicManager.h" />
     <ClInclude Include="ResourceManager.h" />
@@ -105,13 +100,11 @@
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="SoundBufferManager.h" />
     <ClInclude Include="SplashScreenState.h" />
-    <ClInclude Include="SpriteComponent.h" />
+    <ClInclude Include="SpriteBehavior.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateManager.h" />
-    <ClInclude Include="SystemManager.h" />
     <ClInclude Include="Tile.h" />
-    <ClInclude Include="TransformComponent.h" />
-    <ClInclude Include="TransformSystem.h" />
+    <ClInclude Include="TransformAttribute.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\splashscreen.png" />

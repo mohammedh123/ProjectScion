@@ -1,7 +1,6 @@
 #include "ScionEngine.h"
 
-#include "GraphicsSystem.h"
-#include "TransformSystem.h"
+#include "SpriteBehavior.h"
 
 using namespace std;
 
@@ -24,20 +23,18 @@ void ScionEngine::Init()
 	stateManager = unique_ptr<StateManager>(new StateManager());
 	musicManager = unique_ptr<MusicManager>(new MusicManager());
 	shaderManager = unique_ptr<ShaderManager>(new ShaderManager());
-	systemManager = unique_ptr<SystemManager>(new SystemManager());
 	stateManager->LoadResourceManager(imgManager.get(), soundBufferManager.get(), fontManager.get(), musicManager.get(), shaderManager.get());
-	
-	systemManager->System<GraphicsSystem>("graphics");
-	systemManager->System<TransformSystem>("transform");
-
-	systemManager->Initialize();
-	
+		
 	fonts["mainFont"] = fontManager->LoadFromFile("Fonts/arial.ttf");
-	stateManager->PushState(new GameState());
+	stateManager->PushState(new GameState(this));
 	//stateManager->PushState(new SplashScreenState(4.0f, imgManager->GetImage("Images/splashscreen.png"), soundBufferManager->LoadFromFile("Sound/splash_sound.wav")));
 	LoadImages();
 	clock = unique_ptr<sf::Clock>(new sf::Clock());
 	clock->restart();
+
+	auto player = CreateEntity();
+	TransformAttribute* trans = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(0, 0, 0, 0)));
+	player->AddBehavior(CreateBehavior(new SpriteBehavior(*imgManager->GetImage("player.png"), 16, 16, trans, window.get())));
 }
 
 void ScionEngine::RenderFrame()
@@ -93,9 +90,22 @@ void ScionEngine::Go()
 	GameLoop();
 }
 	
-GameObject* ScionEngine::CreateGameObject()
+Entity* ScionEngine::CreateEntity()
 {
-	gameObjects.push_back(unique_ptr<GameObject>(new GameObject()));
+	entitys.push_back(unique_ptr<Entity>(new Entity()));
+	entitys.back()->game = this;
 
-	return gameObjects.back().get();
+	return entitys.back().get();
+}
+
+Behavior* ScionEngine::CreateBehavior(Behavior* b)
+{
+	behaviors.push_back(unique_ptr<Behavior>(b));
+	return b;
+}
+	
+Attribute* ScionEngine::CreateAttribute(Attribute* a)
+{
+	attributes.push_back(unique_ptr<Attribute>(a));
+	return a;
 }

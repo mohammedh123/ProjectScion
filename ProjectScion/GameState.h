@@ -1,9 +1,12 @@
+#ifndef _GAMESTATE_H
+#define _GAMESTATE_H
+
 #include "State.h"
 #include "SFML/Graphics.hpp"
 #include "Tile.h"
 #include "Camera.h"
 #include "Level.h"
-#include "GameObject.h"
+#include "Entity.h"
 
 class GameState : public State
 {
@@ -18,12 +21,16 @@ private:
 	std::unique_ptr<sf::Texture> WindowTexture;
 	std::unique_ptr<sf::Sprite> TextureDrawer;
 
-	std::unique_ptr<GameObject> player;	
+	std::unique_ptr<Entity> player;
+
+	ScionEngine* game;
 public:
-	GameState();
+	GameState(ScionEngine* game);
 
 	void Initialize();
 	void HandleInput(sf::RenderWindow* window);
 	void Update(double delta, bool isGameActive, bool isCoveredByOtherState);
 	void Draw(sf::RenderWindow * window);
 };
+
+#endif

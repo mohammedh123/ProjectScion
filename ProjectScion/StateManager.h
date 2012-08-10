@@ -1,3 +1,6 @@
+#ifndef _STATEMANAGER_H
+#define _STATEMANAGER_H
+
 #include <list>
 #include "SFML/Graphics.hpp"
 #include "Managers.h"
@@ -43,3 +46,5 @@ public:
 
 	void DrawSolidColor(sf::Color color, float alpha, sf::RenderWindow* window);
 };
+
+#endif

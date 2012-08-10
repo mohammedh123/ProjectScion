@@ -1,12 +1,12 @@
 #include "GameState.h"
 #include "StateManager.h"
 #include "ImageManager.h"
-#include "TransformComponent.h"
-#include "SpriteComponent.h"
+
+#include "ScionEngine.h"
 
 using namespace std;
 
-GameState::GameState()
+GameState::GameState(ScionEngine* game) : game(game)
 {
 }
 
@@ -32,7 +32,7 @@ void GameState::Initialize()
 	}
 	effect = stateManager->shaderManager->LoadFromFile("Shaders/bloom.frag", sf::Shader::Type::Fragment);
 
-	//player = move(unique_ptr<GameObject>(new GameObject()));
+	//player = move(unique_ptr<Entity>(new Entity()));
 
 	rt = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
 	rt->create(800,600, true);
@@ -88,6 +88,12 @@ void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherSta
 	{
 		camera->Update();
 	}
+
+	for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
+	{
+		if(!(*it)->IsRenderingBehavior())
+			(*it)->Process();
+	}
 }
 
 void GameState::Draw(sf::RenderWindow* window)
@@ -98,9 +104,10 @@ void GameState::Draw(sf::RenderWindow* window)
 	auto camOffsetX = camera->GetTileOffset().x;
 	auto camOffsetY = camera->GetTileOffset().y;
 
-	
-	rt->clear(sf::Color::Transparent);
-	rt->setView(*camera->GetView());
+
+	//rt->clear(sf::Color::Transparent);
+	//rt->setView(*camera->GetView());
+	window->setView(*camera->GetView());
 	for(int y = 0, tileY = 0; y < bounds.height && tileY < currentLevel->GetHeight(); y++, tileY++)
 	{
 		if(tileY < 0) continue;
@@ -109,15 +116,21 @@ void GameState::Draw(sf::RenderWindow* window)
 		{
 		if(tileX < 0) continue;
 
-			currentLevel->GetTile(tileX, tileY)->Draw(x*Tile::SIZE, y*Tile::SIZE, rt.get());
+			currentLevel->GetTile(tileX, tileY)->Draw(x*Tile::SIZE, y*Tile::SIZE, window);
 		}
 	}
 	
-	rt->display();
-	TextureDrawer->setTexture(rt->getTexture());
-	effect->setParameter("bgl_RenderedTexture", rt->getTexture());
-	//TextureDrawer->setTexture(*WindowTexture.get());
-    window->draw(*TextureDrawer.get(), *states.get());
+
+	//rt->display();
+	//TextureDrawer->setTexture(rt->getTexture());
+	//effect->setParameter("bgl_RenderedTexture", rt->getTexture());
+	////TextureDrawer->setTexture(*WindowTexture.get());
+ //   window->draw(*TextureDrawer.get(), *states.get());
+	for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
+	{
+		if((*it)->IsRenderingBehavior())
+			(*it)->Process();
+	}
 	//window->draw(*TextureDrawer.get());
 	
 	/*	

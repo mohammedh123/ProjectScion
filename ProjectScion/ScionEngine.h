@@ -21,8 +21,8 @@
 #include "GameState.h"
 #include "SplashScreenState.h"
 
-//Component Systems
-#include "SystemManager.h"
+#include "Behavior.h"
+#include "Attribute.h"
 
 class ScionEngine
 {
@@ -35,12 +35,14 @@ private:
 	std::unique_ptr<FontManager> fontManager;
 	std::unique_ptr<MusicManager> musicManager;
 	std::unique_ptr<ShaderManager> shaderManager;
-	std::unique_ptr<SystemManager> systemManager;
 
 	std::map<std::string, sf::Font*> fonts;
 	std::unique_ptr<sf::Clock> clock;
 
-	std::vector<std::unique_ptr<GameObject>> gameObjects;
+	std::vector<std::unique_ptr<Entity>> entitys;
+	
+	std::vector<std::unique_ptr<Behavior>> behaviors;
+	std::vector<std::unique_ptr<Attribute>> attributes;
 	
 	void Init();
 	void GameLoop();
@@ -48,14 +50,18 @@ private:
 	void ProcessInput();
 	void LoadImages();
 	void Update();
-
-	//put systems here that you will use	
 public:
 	ScionEngine();
 	~ScionEngine();
+	
+	std::vector<std::unique_ptr<Behavior>>& GetBehaviors() { return behaviors;}
 
 	void Go();
-	GameObject* CreateGameObject();
+	Entity* CreateEntity();
+	
+	Behavior* CreateBehavior(Behavior* b);
+	Attribute* CreateAttribute(Attribute* a);
+	
 };
 
 #endif

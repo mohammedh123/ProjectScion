@@ -3,13 +3,13 @@
 
 #include <vector>
 #include "Tile.h"
-#include "GameObject.h"
+#include "Entity.h"
 
 class Level
 {
 private:
 	std::vector<std::vector<Tile*>> map;
-	std::vector<GameObject*> objects;
+	std::vector<Entity*> objects;
 
 	int w;
 	int h;
