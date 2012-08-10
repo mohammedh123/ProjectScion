@@ -3,6 +3,8 @@
 #include "GraphicsSystem.h"
 #include "TransformSystem.h"
 
+using namespace std;
+
 ScionEngine::ScionEngine()
 {
 }
@@ -14,15 +16,15 @@ ScionEngine::~ScionEngine()
 
 void ScionEngine::Init()
 {
-	window = std::unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(800, 600, 32), "Project Scion"));		
+	window = unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(800, 600, 32), "Project Scion"));		
 
-	imgManager = std::unique_ptr<ImageManager>(new ImageManager());
-	soundBufferManager = std::unique_ptr<SoundBufferManager>(new SoundBufferManager());
-	fontManager = std::unique_ptr<FontManager>(new FontManager());
-	stateManager = std::unique_ptr<StateManager>(new StateManager());
-	musicManager = std::unique_ptr<MusicManager>(new MusicManager());
-	shaderManager = std::unique_ptr<ShaderManager>(new ShaderManager());
-	systemManager = std::unique_ptr<SystemManager>(new SystemManager());
+	imgManager = unique_ptr<ImageManager>(new ImageManager());
+	soundBufferManager = unique_ptr<SoundBufferManager>(new SoundBufferManager());
+	fontManager = unique_ptr<FontManager>(new FontManager());
+	stateManager = unique_ptr<StateManager>(new StateManager());
+	musicManager = unique_ptr<MusicManager>(new MusicManager());
+	shaderManager = unique_ptr<ShaderManager>(new ShaderManager());
+	systemManager = unique_ptr<SystemManager>(new SystemManager());
 	stateManager->LoadResourceManager(imgManager.get(), soundBufferManager.get(), fontManager.get(), musicManager.get(), shaderManager.get());
 	
 	systemManager->System<GraphicsSystem>("graphics");
@@ -34,7 +36,7 @@ void ScionEngine::Init()
 	stateManager->PushState(new GameState());
 	//stateManager->PushState(new SplashScreenState(4.0f, imgManager->GetImage("Images/splashscreen.png"), soundBufferManager->LoadFromFile("Sound/splash_sound.wav")));
 	LoadImages();
-	clock = std::unique_ptr<sf::Clock>(new sf::Clock());
+	clock = unique_ptr<sf::Clock>(new sf::Clock());
 	clock->restart();
 }
 
@@ -89,4 +91,11 @@ void ScionEngine::Go()
 	Init();
 
 	GameLoop();
+}
+	
+GameObject* ScionEngine::CreateGameObject()
+{
+	gameObjects.push_back(unique_ptr<GameObject>(new GameObject()));
+
+	return gameObjects.back().get();
 }

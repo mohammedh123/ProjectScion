@@ -32,7 +32,7 @@ void GameState::Initialize()
 	}
 	effect = stateManager->shaderManager->LoadFromFile("Shaders/bloom.frag", sf::Shader::Type::Fragment);
 
-	player = move(unique_ptr<GameObject>(new GameObject()));
+	//player = move(unique_ptr<GameObject>(new GameObject()));
 
 	rt = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
 	rt->create(800,600, true);

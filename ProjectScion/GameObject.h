@@ -8,10 +8,11 @@
 
 class GameObject
 {
+	friend class ScionEngine;
+
 	std::vector<Component*> components;
-public:
 	GameObject(){}
-	~GameObject(){}
+public:
 };
 
 #endif

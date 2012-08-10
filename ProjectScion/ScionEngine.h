@@ -39,6 +39,8 @@ private:
 
 	std::map<std::string, sf::Font*> fonts;
 	std::unique_ptr<sf::Clock> clock;
+
+	std::vector<std::unique_ptr<GameObject>> gameObjects;
 	
 	void Init();
 	void GameLoop();
@@ -53,6 +55,7 @@ public:
 	~ScionEngine();
 
 	void Go();
+	GameObject* CreateGameObject();
 };
 
 #endif
