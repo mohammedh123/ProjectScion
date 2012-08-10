@@ -5,6 +5,8 @@
 
 class ComponentSystem
 {
+public:
+	virtual void Initialize() = 0;
 };
 
 #endif

@@ -81,6 +81,7 @@
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StateManager.cpp" />
+    <ClCompile Include="SystemManager.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TransformSystem.cpp" />
   </ItemGroup>
@@ -107,6 +108,7 @@
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateManager.h" />
+    <ClInclude Include="SystemManager.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="TransformSystem.h" />

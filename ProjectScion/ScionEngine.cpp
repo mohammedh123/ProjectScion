@@ -1,5 +1,7 @@
 #include "ScionEngine.h"
 
+#include "GraphicsSystem.h"
+
 ScionEngine::ScionEngine()
 {
 }
@@ -19,7 +21,12 @@ void ScionEngine::Init()
 	stateManager = std::unique_ptr<StateManager>(new StateManager());
 	musicManager = std::unique_ptr<MusicManager>(new MusicManager());
 	shaderManager = std::unique_ptr<ShaderManager>(new ShaderManager());
+	systemManager = std::unique_ptr<SystemManager>(new SystemManager());
 	stateManager->LoadResourceManager(imgManager.get(), soundBufferManager.get(), fontManager.get(), musicManager.get(), shaderManager.get());
+
+	systemManager->System<GraphicsSystem>("graphics");
+
+	systemManager->Initialize();
 	
 	fonts["mainFont"] = fontManager->LoadFromFile("Fonts/arial.ttf");
 	stateManager->PushState(new GameState());
@@ -55,6 +62,7 @@ void ScionEngine::LoadImages()
 {
 	//preload images here
 	imgManager->GetImage("tiles.png");
+	imgManager->GetImage("player.png");
 }
 
 void ScionEngine::Update()

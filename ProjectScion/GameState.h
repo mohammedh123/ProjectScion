@@ -3,6 +3,7 @@
 #include "Tile.h"
 #include "Camera.h"
 #include "Level.h"
+#include "GameObject.h"
 
 class GameState : public State
 {
@@ -16,13 +17,13 @@ private:
 	std::unique_ptr<sf::RenderStates> states;
 	std::unique_ptr<sf::Texture> WindowTexture;
 	std::unique_ptr<sf::Sprite> TextureDrawer;
+
+	std::unique_ptr<GameObject> player;	
 public:
 	GameState();
+
 	void Initialize();
-
 	void HandleInput(sf::RenderWindow* window);
-
 	void Update(double delta, bool isGameActive, bool isCoveredByOtherState);
-
 	void Draw(sf::RenderWindow * window);
 };

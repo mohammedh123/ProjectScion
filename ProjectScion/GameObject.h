@@ -8,10 +8,10 @@
 
 class GameObject
 {
-public:
-	GameObject() {}
-
 	std::vector<Component*> components;
+public:
+	GameObject(){}
+	~GameObject(){}
 };
 
 #endif

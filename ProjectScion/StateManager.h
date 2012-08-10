@@ -16,15 +16,14 @@ private:
 	StateManager& operator=(const StateManager&);
 	//GameManager game = null;
 	sf::RectangleShape rect;
-
 public:
+	//move these from being public to being accessed via static GetImage, GetSound, etc
 	ImageManager* imgManager; 
 	SoundBufferManager* soundBufferManager; 
 	FontManager* fontManager;
 	MusicManager* musicManager;
 	ShaderManager* shaderManager;
-
-
+	
 	StateManager();
 	~StateManager();
 	void LoadResourceManager(ImageManager* iM, SoundBufferManager* sBM, FontManager* fM, MusicManager *mM, ShaderManager* sM);

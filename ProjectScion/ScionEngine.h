@@ -21,6 +21,9 @@
 #include "GameState.h"
 #include "SplashScreenState.h"
 
+//Component Systems
+#include "SystemManager.h"
+
 class ScionEngine
 {
 private:
@@ -32,16 +35,19 @@ private:
 	std::unique_ptr<FontManager> fontManager;
 	std::unique_ptr<MusicManager> musicManager;
 	std::unique_ptr<ShaderManager> shaderManager;
+	std::unique_ptr<SystemManager> systemManager;
 
 	std::map<std::string, sf::Font*> fonts;
 	std::unique_ptr<sf::Clock> clock;
-
+	
 	void Init();
 	void GameLoop();
 	void RenderFrame();
 	void ProcessInput();
 	void LoadImages();
 	void Update();
+
+	//put systems here that you will use	
 public:
 	ScionEngine();
 	~ScionEngine();

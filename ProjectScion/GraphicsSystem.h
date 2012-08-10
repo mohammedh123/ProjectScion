@@ -4,12 +4,14 @@
 #include "ComponentSystem.h"
 #include "GraphicsComponent.h"
 #include <vector>
+#include <memory>
 
 class GraphicsSystem : public ComponentSystem
 {	
-	std::vector<GraphicsComponent*> components;
+	std::vector<std::unique_ptr<GraphicsComponent>> components;
 public:
 	void Process(sf::RenderWindow* window);
+	void Initialize();
 };
 
 #endif

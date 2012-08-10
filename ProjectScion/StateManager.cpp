@@ -102,6 +102,6 @@ void StateManager::DrawSolidColor(sf::Color c, float alpha, sf::RenderWindow* wi
 	rect.setFillColor(c);
 	rect.setPosition(0,0);
 	auto size = window->getSize();
-	rect.setSize(sf::Vector2f(size.x, size.y));
+	rect.setSize(sf::Vector2f((float)size.x, (float)size.y));
 	window->draw(rect);
 }

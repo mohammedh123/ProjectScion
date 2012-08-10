@@ -53,10 +53,10 @@
       <UniqueIdentifier>{32e529ca-ae0a-4acb-97da-e5687b01a5e3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Systems">
-      <UniqueIdentifier>{57e3334e-6ed2-4661-a235-212363fcc9ac}</UniqueIdentifier>
+      <UniqueIdentifier>{44a0df3a-cd8a-43ad-82ba-3f566672acac}</UniqueIdentifier>
     </Filter>
     <Filter Include="Systems\Headers">
-      <UniqueIdentifier>{7d169390-b550-458b-b883-e1e0a4329d12}</UniqueIdentifier>
+      <UniqueIdentifier>{a657961c-f340-4e55-8e8c-ad5df2faabbf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -111,8 +111,11 @@
     <ClCompile Include="GraphicsSystem.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
+    <ClCompile Include="SystemManager.cpp">
+      <Filter>Source Files\Manager</Filter>
+    </ClCompile>
     <ClCompile Include="SpriteComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -179,17 +182,20 @@
     <ClInclude Include="TransformComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="SpriteComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
     <ClInclude Include="TransformSystem.h">
+      <Filter>Systems\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsSystem.h">
       <Filter>Systems\Headers</Filter>
     </ClInclude>
     <ClInclude Include="ComponentSystem.h">
       <Filter>Systems\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphicsSystem.h">
-      <Filter>Systems\Headers</Filter>
+    <ClInclude Include="SystemManager.h">
+      <Filter>Header Files\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

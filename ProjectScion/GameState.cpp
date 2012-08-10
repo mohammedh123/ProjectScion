@@ -1,6 +1,10 @@
 #include "GameState.h"
 #include "StateManager.h"
 #include "ImageManager.h"
+#include "TransformComponent.h"
+#include "SpriteComponent.h"
+
+using namespace std;
 
 GameState::GameState()
 {
@@ -9,12 +13,13 @@ GameState::GameState()
 void GameState::Initialize()
 {
 	State::Initialize();
+
 	transitionOnTime = 0.5f;
 	transitionOffTime = 0.5f;
 
-	camera = std::unique_ptr<Camera>(new Camera(800, 600, 0.2f));
+	camera = unique_ptr<Camera>(new Camera(800, 600, 0.2f));
 
-	currentLevel = std::unique_ptr<Level>(new Level(20, 10));
+	currentLevel = unique_ptr<Level>(new Level(20, 10));
 	for(int y = 0; y < currentLevel->GetHeight(); y++)
 	{
 		for(int x = 0; x < currentLevel->GetWidth(); x++)
@@ -26,15 +31,18 @@ void GameState::Initialize()
 		}
 	}
 	effect = stateManager->shaderManager->LoadFromFile("Shaders/bloom.frag", sf::Shader::Type::Fragment);
-	rt = std::unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
+
+	player = move(unique_ptr<GameObject>(new GameObject()));
+
+	rt = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
 	rt->create(800,600, true);
 	rt->setView(*camera->GetView());
 	//rt->setView(*camera->GetView());
-	states = std::unique_ptr<sf::RenderStates>(new sf::RenderStates);
+	states = unique_ptr<sf::RenderStates>(new sf::RenderStates);
 	states->shader = effect;
 	
-	WindowTexture = std::unique_ptr<sf::Texture>(new sf::Texture);
-	TextureDrawer = std::unique_ptr<sf::Sprite>(new sf::Sprite);
+	WindowTexture = unique_ptr<sf::Texture>(new sf::Texture);
+	TextureDrawer = unique_ptr<sf::Sprite>(new sf::Sprite);
 }
 
 void GameState::HandleInput(sf::RenderWindow* window)
