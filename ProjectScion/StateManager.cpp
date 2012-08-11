@@ -79,10 +79,20 @@ void StateManager::Update(double delta, sf::RenderWindow* window)
 
 		currentState->Update(delta, isGameActive, isCoveredByOtherState);
 
-
 		isCoveredByOtherState = !currentState->IsPopup();
 
 		statesToUpdate->pop_back();
+	}
+	std::list<State*>::iterator it = States->begin();
+	for( ; it != States->end(); )
+	{
+		std::list<State*>::iterator temp = (it);
+		it++;
+		if((*temp)->IsDead())
+		{
+			States->remove(*temp);
+		}
+		
 	}
 }
 

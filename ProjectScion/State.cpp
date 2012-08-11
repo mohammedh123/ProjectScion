@@ -11,6 +11,11 @@ bool State::IsPopup() const
 	return isPopup;
 }
 
+bool State::IsDead() const
+{
+	return isDead;
+}
+
 VisibleState State::getCurrentState() const
 {
 	return currentState;
@@ -24,6 +29,7 @@ void State::Initialize()
 	totalTime = 0;
 	isPopup = false;
 	isExiting = false;
+	isDead = false;
 	currentState = TransitionOn;
 }
 
@@ -37,7 +43,8 @@ void State::Update(double delta, bool isGameActive, bool isCoveredByOtherState)
 		if (!UpdateTransition(delta, transitionOffTime, 1))
 		{
 			// When the transition finishes, remove the screen.
-			stateManager->RemoveState(this);
+			//stateManager->RemoveState(this);
+			isDead = true;
 		}
 	}
 	else if (isCoveredByOtherState)
@@ -101,7 +108,8 @@ void State::ExitState()
 	if (transitionOffTime == 0)
 	{
 		// If the screen has a zero transition time, remove it immediately.
-		stateManager->RemoveState(this);
+		//stateManager->RemoveState(this);
+		isDead = true;
 	}
 	else
 	{

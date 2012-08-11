@@ -20,7 +20,7 @@ private:
     double              totalTime;
     bool                isPopup;
     bool                isExiting;
-    
+    bool				isDead;
     
 	
 protected:
@@ -33,6 +33,7 @@ public:
 	
 	StateManager* stateManager;
 
+	bool IsDead() const;
 	bool IsPopup() const;
 	float GetTransitionAlpha() const;
 	VisibleState getCurrentState() const;
