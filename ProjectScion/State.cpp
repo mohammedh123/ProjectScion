@@ -101,7 +101,7 @@ void State::ExitState()
 	if (transitionOffTime == 0)
 	{
 		// If the screen has a zero transition time, remove it immediately.
-		//stateManager.RemoveState(this);
+		stateManager->RemoveState(this);
 	}
 	else
 	{
