@@ -59,17 +59,17 @@ void GameState::HandleInput(sf::RenderWindow* window)
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::PageDown))
 		camera->Zoom(.01f);
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		camera->MoveBy(-5.0f,0);
+	//if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	//	camera->MoveBy(-5.0f,0);
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		camera->MoveBy(5.0f,0);
+	//if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	//	camera->MoveBy(5.0f,0);
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		camera->MoveBy(0,-5.0f);
+	//if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	//	camera->MoveBy(0,-5.0f);
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		camera->MoveBy(0,5.0f);
+	//if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	//	camera->MoveBy(0,5.0f);
 
 	if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{

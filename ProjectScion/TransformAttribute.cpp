@@ -9,3 +9,15 @@ TransformAttribute::TransformAttribute(float x, float y, float vx, float vy, flo
 	: _position(x, y), _velocity(vx, vy), _scale(sx, sy), _angle(angle), _spriteAngle(spriteAngle)
 {
 }
+
+void TransformAttribute::Move(float dx, float dy)
+{
+	_position.x += dx;
+	_position.y += dy;
+}
+
+void TransformAttribute::MoveTo(float x, float y)
+{
+	_position.x = x;
+	_position.y = y;
+}

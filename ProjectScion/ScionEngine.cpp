@@ -1,8 +1,11 @@
 #include "ScionEngine.h"
 
 #include "SpriteBehavior.h"
+#include "PlayerInputBehavior.h"
 
 using namespace std;
+
+std::vector<sf::Event> ScionEngine::events(8);
 
 ScionEngine::ScionEngine()
 {
@@ -32,9 +35,12 @@ void ScionEngine::Init()
 	clock = unique_ptr<sf::Clock>(new sf::Clock());
 	clock->restart();
 
+	ScionEngine::events.reserve(8);
+
 	auto player = CreateEntity();
 	TransformAttribute* trans = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(0, 0, 0, 0)));
 	player->AddBehavior(CreateBehavior(new SpriteBehavior(*imgManager->GetImage("player.png"), 16, 16, trans, window.get())));
+	player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans)));
 }
 
 void ScionEngine::RenderFrame()
@@ -46,10 +52,14 @@ void ScionEngine::RenderFrame()
 
 void ScionEngine::ProcessInput()
 {
-	//This input processor only deals with non keyboard and mouse presses	
+	//This input processor only deals with non keyboard and mouse presses
+	events.clear();
+
 	sf::Event evt;
 	while(window->pollEvent(evt))
 	{
+		events.push_back(evt);
+
 		switch(evt.type)
 		{
 		case sf::Event::Closed:

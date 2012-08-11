@@ -24,6 +24,8 @@
 #include "Behavior.h"
 #include "Attribute.h"
 
+#include <vector>
+
 class ScionEngine
 {
 private:
@@ -44,6 +46,8 @@ private:
 	std::vector<std::unique_ptr<Behavior>> behaviors;
 	std::vector<std::unique_ptr<Attribute>> attributes;
 	
+	static std::vector<sf::Event> events;
+	
 	void Init();
 	void GameLoop();
 	void RenderFrame();
@@ -56,9 +60,10 @@ public:
 	
 	std::vector<std::unique_ptr<Behavior>>& GetBehaviors() { return behaviors;}
 
+	static const std::vector<sf::Event>& GetEvents() { return ScionEngine::events;}
+
 	void Go();
-	Entity* CreateEntity();
-	
+	Entity* CreateEntity();	
 	Behavior* CreateBehavior(Behavior* b);
 	Attribute* CreateAttribute(Attribute* a);
 	
