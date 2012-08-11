@@ -84,9 +84,6 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Source Files\States</Filter>
     </ClCompile>
-    <ClCompile Include="SplashScreenState.cpp">
-      <Filter>Source Files\States</Filter>
-    </ClCompile>
     <ClCompile Include="MusicManager.cpp">
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
@@ -104,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="PlayerInputBehavior.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SplashScreenState.cpp">
+      <Filter>Source Files\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
