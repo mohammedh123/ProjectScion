@@ -29,6 +29,7 @@
 class ScionEngine
 {
 private:
+	Level currentLevel;
 	std::unique_ptr<sf::RenderWindow> window;
 
 	std::unique_ptr<StateManager> stateManager;

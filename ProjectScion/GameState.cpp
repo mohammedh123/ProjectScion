@@ -19,17 +19,6 @@ void GameState::Initialize()
 
 	camera = unique_ptr<Camera>(new Camera(800, 600, 0.2f));
 
-	currentLevel = unique_ptr<Level>(new Level(20, 10));
-	for(int y = 0; y < currentLevel->GetHeight(); y++)
-	{
-		for(int x = 0; x < currentLevel->GetWidth(); x++)
-		{
-			if(y % 4 == 0)
-				currentLevel->AddTile(x, y, new Tile(stateManager->imgManager->GetImage("tiles.png")));
-			else
-				currentLevel->AddTile(x, y, new Tile(stateManager->imgManager->GetImage("tiles2.png")));
-		}
-	}
 	effect = stateManager->shaderManager->LoadFromFile("Shaders/bloom.frag", sf::Shader::Type::Fragment);
 
 	//player = move(unique_ptr<Entity>(new Entity()));
@@ -100,25 +89,11 @@ void GameState::Draw(sf::RenderWindow* window)
 {
 	//window->setView(*camera->GetView());
 
-	auto bounds = camera->GetTileBounds();
-	auto camOffsetX = camera->GetTileOffset().x;
-	auto camOffsetY = camera->GetTileOffset().y;
 
 
 	//rt->clear(sf::Color::Transparent);
 	//rt->setView(*camera->GetView());
 	window->setView(*camera->GetView());
-	for(int y = 0, tileY = 0; y < bounds.height && tileY < currentLevel->GetHeight(); y++, tileY++)
-	{
-		if(tileY < 0) continue;
-
-		for(int x = 0, tileX = 0; x < bounds.width && tileX < currentLevel->GetWidth(); x++, tileX++)
-		{
-		if(tileX < 0) continue;
-
-			currentLevel->GetTile(tileX, tileY)->Draw(x*Tile::SIZE, y*Tile::SIZE, window);
-		}
-	}
 	
 
 	//rt->display();

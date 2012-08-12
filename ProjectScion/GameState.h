@@ -12,7 +12,6 @@ class GameState : public State
 {
 private:
 	std::unique_ptr<Camera> camera;
-	std::unique_ptr<Level> currentLevel;
 	sf::Shader* effect;
 	//Basically a render target where you render first and do some shader effects than draw it to the window
 	std::unique_ptr<sf::RenderTexture> rt;
