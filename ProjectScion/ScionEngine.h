@@ -32,12 +32,12 @@ private:
 	Level currentLevel;
 	std::unique_ptr<sf::RenderWindow> window;
 
-	std::unique_ptr<StateManager> stateManager;
-	std::unique_ptr<TextureManager> texManager;
-	std::unique_ptr<SoundBufferManager> soundBufferManager;
-	std::unique_ptr<FontManager> fontManager;
-	std::unique_ptr<MusicManager> musicManager;
-	std::unique_ptr<ShaderManager> shaderManager;
+	static std::unique_ptr<StateManager> stateManager;
+	static std::unique_ptr<TextureManager> texManager;
+	static std::unique_ptr<SoundBufferManager> soundBufferManager;
+	static std::unique_ptr<FontManager> fontManager;
+	static std::unique_ptr<MusicManager> musicManager;
+	static std::unique_ptr<ShaderManager> shaderManager;
 
 	std::map<std::string, sf::Font*> fonts;
 	std::unique_ptr<sf::Clock> clock;
@@ -59,12 +59,12 @@ public:
 	ScionEngine();
 	~ScionEngine();
 	
-	sf::Texture* GetTexture(const std::string& name) const { return texManager->GetImage(name);}
-	sf::SoundBuffer* GetSoundBuffer(const std::string& name) const { return soundBufferManager->LoadFromFile(name);}
-	sf::Font* GetFont(const std::string& name) const { return fontManager->LoadFromFile(name);}
-	sf::Music* GetMusic(const std::string& name) const { return musicManager->LoadFromFile(name);}
-	sf::Shader* GetShader(const std::string& vShaderName, const std::string& fShaderName) const { return shaderManager->LoadFromFile(vShaderName, fShaderName);}
-	sf::Shader* GetShader(const std::string& name, sf::Shader::Type type) const { return shaderManager->LoadFromFile(name, type);}
+	static sf::Texture* GetTexture(const std::string& name) { return texManager->GetImage(name);}
+	static sf::SoundBuffer* GetSoundBuffer(const std::string& name) { return soundBufferManager->LoadFromFile(name);}
+	static sf::Font* GetFont(const std::string& name) { return fontManager->LoadFromFile(name);}
+	static sf::Music* GetMusic(const std::string& name) { return musicManager->LoadFromFile(name);}
+	static sf::Shader* GetShader(const std::string& vShaderName, const std::string& fShaderName) { return shaderManager->LoadFromFile(vShaderName, fShaderName);}
+	static sf::Shader* GetShader(const std::string& name, sf::Shader::Type type) { return shaderManager->LoadFromFile(name, type);}
 
 	inline Level& GetCurrentLevel() { return currentLevel;}
 	std::vector<std::unique_ptr<Behavior>>& GetBehaviors() { return behaviors;}

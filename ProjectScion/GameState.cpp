@@ -8,6 +8,7 @@ using namespace std;
 
 void GameState::Initialize(ScionEngine* game)
 {
+	this->game = game;
 	State::Initialize();
 
 	transitionOnTime = 0.5f;
@@ -101,6 +102,8 @@ void GameState::Draw(sf::RenderWindow* window)
 	//effect->setParameter("bgl_RenderedTexture", rt->getTexture());
 	////TextureDrawer->setTexture(*WindowTexture.get());
  //   window->draw(*TextureDrawer.get(), *states.get());
+	game->GetCurrentLevel().Draw(window);
+
 	for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
 	{
 		if((*it)->IsRenderingBehavior())

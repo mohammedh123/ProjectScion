@@ -59,7 +59,7 @@ void Camera::GoTo(float x, float y)
 void Camera::Zoom(float z)
 {
 	float delta = 0;
-	float upperBound = 3.0f;
+	float upperBound = 6.0f;
 	float lowerBound = .5f;
 
 	if(zoom + z < upperBound && zoom + z > lowerBound)

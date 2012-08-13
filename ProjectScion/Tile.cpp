@@ -1,9 +1,8 @@
 #include "Tile.h"
 #include <SFML\Graphics.hpp>
 
-Tile::Tile(sf::Texture* image)
+Tile::Tile(sf::Texture* image) : baseSprite(*image)
 {
-	baseSprite.setTexture(*image, true);
 }
 
 Tile::~Tile()

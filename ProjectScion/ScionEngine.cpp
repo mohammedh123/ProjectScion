@@ -5,7 +5,13 @@
 
 using namespace std;
 
-std::vector<sf::Event> ScionEngine::events(8);
+std::vector<sf::Event>					ScionEngine::events(8);
+std::unique_ptr<StateManager>			ScionEngine::stateManager(new StateManager());
+std::unique_ptr<TextureManager>			ScionEngine::texManager(new TextureManager());
+std::unique_ptr<SoundBufferManager>		ScionEngine::soundBufferManager(new SoundBufferManager());
+std::unique_ptr<FontManager>			ScionEngine::fontManager(new FontManager());
+std::unique_ptr<MusicManager>			ScionEngine::musicManager(new MusicManager());
+std::unique_ptr<ShaderManager>			ScionEngine::shaderManager(new ShaderManager());
 
 ScionEngine::ScionEngine()
 {
@@ -43,16 +49,6 @@ void ScionEngine::Init()
 	player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans)));
 	
 	currentLevel = Level::CreateLevel(80,80);
-	for(int y = 0; y < currentLevel.GetHeight(); y++)
-	{
-		for(int x = 0; x < currentLevel.GetWidth(); x++)
-		{
-			if(y % 4 == 0)
-				currentLevel.AddTile(x, y, Tile(texManager->GetImage("tiles.png")));
-			else
-				currentLevel.AddTile(x, y, Tile(texManager->GetImage("tiles2.png")));
-		}
-	}
 
 	//only for testing out proc gen
 	currentLevel.GetCamera().Zoom(1.75f);
@@ -82,6 +78,9 @@ void ScionEngine::ProcessInput()
 				break;
 		}
 	}
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K))
+		currentLevel = Level::CreateLevel(80, 80);
 } 
 
 void ScionEngine::LoadImages()

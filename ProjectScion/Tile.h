@@ -6,8 +6,8 @@
 class Tile
 {
 private:
-	sf::Sprite baseSprite;
 public:
+	sf::Sprite baseSprite;
 	static const int SIZE = 32;
 
 	Tile(){}
