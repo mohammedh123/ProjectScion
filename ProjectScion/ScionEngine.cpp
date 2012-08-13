@@ -29,7 +29,7 @@ void ScionEngine::Init()
 	shaderManager = unique_ptr<ShaderManager>(new ShaderManager());
 	
 	fonts["mainFont"] = fontManager->LoadFromFile("Fonts/arial.ttf");
-	stateManager->PushState(new GameState(this));
+	stateManager->PushState(new GameState(), this);
 	//stateManager->PushState(new SplashScreenState(4.0f, texManager->GetImage("Images/splashscreen.png"), soundBufferManager->LoadFromFile("Sound/splash_sound.wav")));
 	LoadImages();
 	clock = unique_ptr<sf::Clock>(new sf::Clock());

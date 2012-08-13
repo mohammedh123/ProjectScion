@@ -6,6 +6,7 @@
 #include "Managers.h"
 
 class State;
+class ScionEngine;
 
 class StateManager
 {
@@ -24,7 +25,7 @@ public:
 	~StateManager();
 	//State[] GetStates();
 
-	void PushState(State* state);
+	void PushState(State* state, ScionEngine* game=0);
 
 	void RemoveState(State* state);
 

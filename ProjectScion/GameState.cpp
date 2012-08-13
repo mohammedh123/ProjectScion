@@ -6,10 +6,6 @@
 
 using namespace std;
 
-GameState::GameState(ScionEngine* game) : game(game)
-{
-}
-
 void GameState::Initialize(ScionEngine* game)
 {
 	State::Initialize();

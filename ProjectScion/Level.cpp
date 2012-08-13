@@ -77,8 +77,8 @@ Level Level::CreateLevel(int levelWidth, int levelHeight)
 		room.h = MIN_ROOM_H + rand() % (MAX_ROOM_H - MIN_ROOM_H);
 
 		//carve these rooms out into the level
-		for(int x = room.x; x <= room.x + room.w; x++)
-			for(int y = room.y; y <= room.y + room.h; y++)
+		for(int x = room.x; x < room.x + room.w; x++)
+			for(int y = room.y; y < room.y + room.h; y++)
 				level.GetTile(x, y);
 	});
 

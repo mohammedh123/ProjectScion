@@ -1,5 +1,6 @@
 #include "StateManager.h"	
 #include "State.h"
+
 #include <algorithm>
 
 StateManager::~StateManager()
@@ -9,10 +10,10 @@ StateManager::~StateManager()
 	});
 }
 
-void StateManager::PushState(State* state)
+void StateManager::PushState(State* state, ScionEngine* game)
 {
 	state->stateManager = this;
-	state->Initialize();
+	state->Initialize(game);
 	
 	States.push_back(state);
 }
