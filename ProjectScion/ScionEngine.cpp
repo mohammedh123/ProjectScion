@@ -21,17 +21,16 @@ void ScionEngine::Init()
 
 	window = unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(800, 600, 32), "Project Scion"));		
 
-	imgManager = unique_ptr<ImageManager>(new ImageManager());
+	texManager = unique_ptr<TextureManager>(new TextureManager());
 	soundBufferManager = unique_ptr<SoundBufferManager>(new SoundBufferManager());
 	fontManager = unique_ptr<FontManager>(new FontManager());
 	stateManager = unique_ptr<StateManager>(new StateManager());
 	musicManager = unique_ptr<MusicManager>(new MusicManager());
 	shaderManager = unique_ptr<ShaderManager>(new ShaderManager());
-	stateManager->LoadResourceManager(imgManager.get(), soundBufferManager.get(), fontManager.get(), musicManager.get(), shaderManager.get());
-		
+	
 	fonts["mainFont"] = fontManager->LoadFromFile("Fonts/arial.ttf");
 	stateManager->PushState(new GameState(this));
-	//stateManager->PushState(new SplashScreenState(4.0f, imgManager->GetImage("Images/splashscreen.png"), soundBufferManager->LoadFromFile("Sound/splash_sound.wav")));
+	//stateManager->PushState(new SplashScreenState(4.0f, texManager->GetImage("Images/splashscreen.png"), soundBufferManager->LoadFromFile("Sound/splash_sound.wav")));
 	LoadImages();
 	clock = unique_ptr<sf::Clock>(new sf::Clock());
 	clock->restart();
@@ -40,7 +39,7 @@ void ScionEngine::Init()
 
 	auto player = CreateEntity();
 	TransformAttribute* trans = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(0, 0, 0, 0)));
-	player->AddBehavior(CreateBehavior(new SpriteBehavior(*imgManager->GetImage("player.png"), 16, 16, trans, window.get())));
+	player->AddBehavior(CreateBehavior(new SpriteBehavior(*texManager->GetImage("player.png"), 16, 16, trans, window.get())));
 	player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans)));
 	
 	currentLevel = Level::CreateLevel(80,80);
@@ -49,9 +48,9 @@ void ScionEngine::Init()
 		for(int x = 0; x < currentLevel.GetWidth(); x++)
 		{
 			if(y % 4 == 0)
-				currentLevel.AddTile(x, y, Tile(stateManager->imgManager->GetImage("tiles.png")));
+				currentLevel.AddTile(x, y, Tile(texManager->GetImage("tiles.png")));
 			else
-				currentLevel.AddTile(x, y, Tile(stateManager->imgManager->GetImage("tiles2.png")));
+				currentLevel.AddTile(x, y, Tile(texManager->GetImage("tiles2.png")));
 		}
 	}
 
@@ -88,8 +87,8 @@ void ScionEngine::ProcessInput()
 void ScionEngine::LoadImages()
 {
 	//preload images here
-	imgManager->GetImage("tiles.png");
-	imgManager->GetImage("player.png");
+	texManager->GetImage("tiles.png");
+	texManager->GetImage("player.png");
 }
 
 void ScionEngine::Update()
@@ -115,7 +114,7 @@ void ScionEngine::Go()
 
 	GameLoop();
 }
-	
+
 Entity* ScionEngine::CreateEntity()
 {
 	entitys.push_back(unique_ptr<Entity>(new Entity()));

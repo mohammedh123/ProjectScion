@@ -6,18 +6,18 @@
 #include <string>
 #include <SFML\Graphics.hpp>
 
-class ImageManager
+class TextureManager
 {
 private:
 	std::map<std::string, std::unique_ptr<sf::Texture>> imageMap;
 	
-	ImageManager(const ImageManager&);
-	ImageManager& operator=(const ImageManager&);
+	TextureManager(const TextureManager&);
+	TextureManager& operator=(const TextureManager&);
 public:
-	ImageManager();
-	~ImageManager();
+	TextureManager();
+	~TextureManager();
 
-	sf::Texture* ImageManager::GetImage(const std::string& filename);
+	sf::Texture* TextureManager::GetImage(const std::string& filename);
 };
 
 #endif

@@ -1,6 +1,7 @@
 #include <vector>
 #include "Level.h"
 #include "Tile.h"
+#include "StateManager.h"
 #include <math.h>
 
 using namespace std;
@@ -78,7 +79,7 @@ Level Level::CreateLevel(int levelWidth, int levelHeight)
 		//carve these rooms out into the level
 		for(int x = room.x; x <= room.x + room.w; x++)
 			for(int y = room.y; y <= room.y + room.h; y++)
-				level.GetTile(x, y) = Tile(
+				level.GetTile(x, y);
 	});
 
 	return level;

@@ -1,5 +1,6 @@
 #include "SplashScreenState.h"
 #include "StateManager.h"
+#include "ScionEngine.h"
 #include "SFML/Graphics/Shader.hpp"
 
 SplashScreenState::SplashScreenState(float duration, sf::Texture* image, sf::SoundBuffer* soundBuffer, bool clickToSkip):duration(duration),State()
@@ -11,13 +12,13 @@ SplashScreenState::SplashScreenState(float duration, sf::Texture* image, sf::Sou
 	sound.setBuffer(*soundBuffer);
 }
 
-void SplashScreenState::Initialize()
+void SplashScreenState::Initialize(ScionEngine* game)
 {
 	State::Initialize();
 	transitionOnTime = 0.5f;
     transitionOffTime = 0.5f;
 	sound.play();
-	effect = stateManager->shaderManager->LoadFromFile("Shaders/bloom.frag", sf::Shader::Type::Fragment);
+	effect = game->GetShader("Shaders/bloom.frag", sf::Shader::Type::Fragment);
 }
 
 void SplashScreenState::Update(double delta, bool isGameActive, bool isCoveredByOtherState)

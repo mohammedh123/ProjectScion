@@ -25,7 +25,7 @@ private:
 public:
 	GameState(ScionEngine* game);
 
-	void Initialize();
+	void Initialize(ScionEngine* game);
 	void HandleInput(sf::RenderWindow* window);
 	void Update(double delta, bool isGameActive, bool isCoveredByOtherState);
 	void Draw(sf::RenderWindow * window);

@@ -5,6 +5,7 @@
 #include "Managers.h"
 
 class StateManager;
+class ScionEngine;
 
 enum VisibleState
 {
@@ -38,7 +39,7 @@ public:
 	float GetTransitionAlpha() const;
 	VisibleState getCurrentState() const;
 
-    virtual void Initialize();
+    virtual void Initialize(ScionEngine* game = nullptr);
 
     virtual void HandleInput(sf::RenderWindow* window) = 0;
 

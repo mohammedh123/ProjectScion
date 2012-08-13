@@ -1,18 +1,18 @@
-#include "ImageManager.h"
+#include "TextureManager.h"
 #include <vector>
 #include <SFML\Graphics.hpp>
 
-ImageManager::ImageManager()
+TextureManager::TextureManager()
 {
 
 }
 
-ImageManager::~ImageManager()
+TextureManager::~TextureManager()
 {
 
 }
 
-sf::Texture* ImageManager::GetImage(const std::string& filename)
+sf::Texture* TextureManager::GetImage(const std::string& filename)
 {
 	sf::Texture* retVal = nullptr;
 

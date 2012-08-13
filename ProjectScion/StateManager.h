@@ -10,8 +10,8 @@ class State;
 class StateManager
 {
 private:
-	std::list<State*>* States;
-	std::list<State*>* statesToUpdate;
+	std::list<State*> States;
+	std::list<State*> statesToUpdate;
 
 	
 	
@@ -19,17 +19,9 @@ private:
 	StateManager& operator=(const StateManager&);
 	//GameManager game = null;
 	sf::RectangleShape rect;
-public:
-	//move these from being public to being accessed via static GetImage, GetSound, etc
-	ImageManager* imgManager; 
-	SoundBufferManager* soundBufferManager; 
-	FontManager* fontManager;
-	MusicManager* musicManager;
-	ShaderManager* shaderManager;
-	
-	StateManager();
+public:	
+	StateManager() { }
 	~StateManager();
-	void LoadResourceManager(ImageManager* iM, SoundBufferManager* sBM, FontManager* fM, MusicManager *mM, ShaderManager* sM);
 	//State[] GetStates();
 
 	void PushState(State* state);
@@ -37,8 +29,6 @@ public:
 	void RemoveState(State* state);
 
 	State* PopState();
-
-	void PopAll();
 
 	void Update(double delta, sf::RenderWindow* window);
 

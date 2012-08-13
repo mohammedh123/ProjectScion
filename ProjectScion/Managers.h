@@ -1,4 +1,4 @@
-#include "ImageManager.h"
+#include "TextureManager.h"
 #include "SoundBufferManager.h"
 #include "MusicManager.h"
 #include "FontManager.h"

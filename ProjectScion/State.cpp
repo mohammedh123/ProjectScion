@@ -21,7 +21,7 @@ VisibleState State::getCurrentState() const
 	return currentState;
 }
 
-void State::Initialize() 
+void State::Initialize(ScionEngine* game) 
 { 
 	transitionOnTime = 0;
 	transitionOffTime = 0;

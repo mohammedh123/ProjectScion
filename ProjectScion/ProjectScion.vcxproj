@@ -69,7 +69,7 @@
     <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameState.cpp" />
-    <ClCompile Include="ImageManager.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="PlayerInputBehavior.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -92,7 +92,7 @@
     <ClInclude Include="FontManager.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameState.h" />
-    <ClInclude Include="ImageManager.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="PlayerInputBehavior.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Managers.h" />

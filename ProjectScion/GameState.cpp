@@ -1,6 +1,6 @@
 #include "GameState.h"
 #include "StateManager.h"
-#include "ImageManager.h"
+#include "TextureManager.h"
 
 #include "ScionEngine.h"
 
@@ -10,14 +10,14 @@ GameState::GameState(ScionEngine* game) : game(game)
 {
 }
 
-void GameState::Initialize()
+void GameState::Initialize(ScionEngine* game)
 {
 	State::Initialize();
 
 	transitionOnTime = 0.5f;
 	transitionOffTime = 0.5f;
 
-	effect = stateManager->shaderManager->LoadFromFile("Shaders/bloom.frag", sf::Shader::Type::Fragment);
+	effect = game->GetShader("Shaders/bloom.frag", sf::Shader::Type::Fragment);
 
 	//player = move(unique_ptr<Entity>(new Entity()));
 	
