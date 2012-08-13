@@ -2,7 +2,7 @@
 #include <math.h>
 #include "Camera.h"
 
-Camera::Camera(int w, int h, float speed, float depth) : speed(speed), depth(depth)
+Camera::Camera(int w, int h, float speed, float depth) : speed(speed), depth(depth), view(sf::Vector2f(0,0), sf::Vector2f(320, 240))
 {
 	zoom = 1.0f;
 	
@@ -16,7 +16,6 @@ Camera::Camera(int w, int h, float speed, float depth) : speed(speed), depth(dep
 
 	sf::Vector2f Center(0, 0);
     sf::Vector2f HalfSize(320, 240);
-	view = std::unique_ptr<sf::View>(new sf::View(Center, HalfSize));
 }
 
 Camera::~Camera()
@@ -66,13 +65,13 @@ void Camera::Zoom(float z)
 	if(zoom + z < upperBound && zoom + z > lowerBound)
 	{
 		zoom += z;
-		view->zoom(z + 1);
+		view.zoom(z + 1);
 	}
 }
 
 void Camera::MoveRelative(float x, float y)
 {
-	view->move(x, y);
+	view.move(x, y);
 }
 
 void Camera::GoToCenter(float x, float y)
@@ -112,7 +111,7 @@ void Camera::Update()
 		position.x += vx;
 		position.y += vy;
 	}
-	view->setCenter(position.x, position.y);
+	view.setCenter(position.x, position.y);
 }
 
 sf::IntRect Camera::GetTileBounds() const

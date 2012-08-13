@@ -17,16 +17,16 @@ void GameState::Initialize()
 	transitionOnTime = 0.5f;
 	transitionOffTime = 0.5f;
 
-	camera = unique_ptr<Camera>(new Camera(800, 600, 0.2f));
-
 	effect = stateManager->shaderManager->LoadFromFile("Shaders/bloom.frag", sf::Shader::Type::Fragment);
 
 	//player = move(unique_ptr<Entity>(new Entity()));
+	
+	auto c = game->GetCurrentLevel().GetCamera();
 
 	rt = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
 	rt->create(800,600, true);
-	rt->setView(*camera->GetView());
 	//rt->setView(*camera->GetView());
+	rt->setView(c.GetView());
 	states = unique_ptr<sf::RenderStates>(new sf::RenderStates);
 	states->shader = effect;
 	
@@ -38,15 +38,17 @@ void GameState::HandleInput(sf::RenderWindow* window)
 {
 	//sf::Event::MouseWheelMoved:
 	//	camera->Zoom((evt->mouseWheel.delta > 0)?.5f:2.0f);
-		
+
+	Camera& c = game->GetCurrentLevel().GetCamera();
+
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 		ExitState();
 			
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::PageUp))
-		camera->Zoom(-0.01f);
+		c.Zoom(-0.01f);
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::PageDown))
-		camera->Zoom(.01f);
+		c.Zoom(.01f);
 
 	//if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	//	camera->MoveBy(-5.0f,0);
@@ -63,19 +65,20 @@ void GameState::HandleInput(sf::RenderWindow* window)
 	if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		auto windowPosition = window->getPosition();
-		sf::Vector2f MousePos = window->convertCoords(  sf::Mouse::getPosition() - windowPosition, *camera->GetView());
-		camera->GoToCenter(MousePos.x, MousePos.y);
+		sf::Vector2f MousePos = window->convertCoords(  sf::Mouse::getPosition() - windowPosition, c.GetView());
+		c.GoToCenter(MousePos.x, MousePos.y);
 	}
 			
 }
 
 void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherState)
 {
+	Camera& c = game->GetCurrentLevel().GetCamera();
 	State::Update(delta, isGameActive, isCoveredByOtherState);
 
 	if (!isCoveredByOtherState && isGameActive)
 	{
-		camera->Update();
+		c.Update();
 	}
 
 	for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
@@ -89,11 +92,12 @@ void GameState::Draw(sf::RenderWindow* window)
 {
 	//window->setView(*camera->GetView());
 
-
+	
+	Camera& c = game->GetCurrentLevel().GetCamera();
 
 	//rt->clear(sf::Color::Transparent);
 	//rt->setView(*camera->GetView());
-	window->setView(*camera->GetView());
+	window->setView(c.GetView());
 	
 
 	//rt->display();

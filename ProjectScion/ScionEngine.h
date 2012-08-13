@@ -59,6 +59,7 @@ public:
 	ScionEngine();
 	~ScionEngine();
 	
+	inline Level& GetCurrentLevel() { return currentLevel;}
 	std::vector<std::unique_ptr<Behavior>>& GetBehaviors() { return behaviors;}
 
 	static const std::vector<sf::Event>& GetEvents() { return ScionEngine::events;}

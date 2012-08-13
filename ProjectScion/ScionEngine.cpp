@@ -18,17 +18,6 @@ ScionEngine::~ScionEngine()
 
 void ScionEngine::Init()
 {
-	currentLevel = Level::CreateLevel(80,80);
-	for(int y = 0; y < currentLevel.GetHeight(); y++)
-	{
-		for(int x = 0; x < currentLevel.GetWidth(); x++)
-		{
-			if(y % 4 == 0)
-				currentLevel.AddTile(x, y, Tile(stateManager->imgManager->GetImage("tiles.png")));
-			else
-				currentLevel.AddTile(x, y, Tile(stateManager->imgManager->GetImage("tiles2.png")));
-		}
-	}
 
 	window = unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(800, 600, 32), "Project Scion"));		
 
@@ -53,6 +42,21 @@ void ScionEngine::Init()
 	TransformAttribute* trans = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(0, 0, 0, 0)));
 	player->AddBehavior(CreateBehavior(new SpriteBehavior(*imgManager->GetImage("player.png"), 16, 16, trans, window.get())));
 	player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans)));
+	
+	currentLevel = Level::CreateLevel(80,80);
+	for(int y = 0; y < currentLevel.GetHeight(); y++)
+	{
+		for(int x = 0; x < currentLevel.GetWidth(); x++)
+		{
+			if(y % 4 == 0)
+				currentLevel.AddTile(x, y, Tile(stateManager->imgManager->GetImage("tiles.png")));
+			else
+				currentLevel.AddTile(x, y, Tile(stateManager->imgManager->GetImage("tiles2.png")));
+		}
+	}
+
+	//only for testing out proc gen
+	currentLevel.GetCamera().Zoom(1.75f);
 }
 
 void ScionEngine::RenderFrame()
