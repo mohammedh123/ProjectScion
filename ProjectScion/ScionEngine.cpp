@@ -80,7 +80,13 @@ void ScionEngine::ProcessInput()
 	}
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K))
+	{
+		auto oldCamera = currentLevel.GetCamera();
+
 		currentLevel = Level::CreateLevel(80, 80);
+
+		currentLevel.GetCamera() = oldCamera;
+	}
 } 
 
 void ScionEngine::LoadImages()

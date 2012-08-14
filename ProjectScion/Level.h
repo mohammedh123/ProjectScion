@@ -26,7 +26,7 @@ public:
 	Level(int widthInTiles, int heightInTiles);
 	~Level();
 
-	void AddTile(int x, int y, Tile&& tile);
+	void SetTile(int x, int y, Tile&& tile);
 	Tile& GetTile(int x, int y);
 
 	void LoadLevel();

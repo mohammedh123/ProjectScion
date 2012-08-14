@@ -27,7 +27,7 @@ void Level::SetDimensions(int w, int h)
 		map.at(i).resize(h);
 }
 
-void Level::AddTile(int x, int y, Tile&& tile)
+void Level::SetTile(int x, int y, Tile&& tile)
 {
 	map[x][y] = tile;
 }
@@ -75,6 +75,7 @@ Level Level::CreateLevel(int levelWidth, int levelHeight)
 	{
 		room->x = MIN_ROOM_X + rand() % (MAX_ROOM_X - MIN_ROOM_X);
 		room->y = MIN_ROOM_Y + rand() % (MAX_ROOM_Y - MIN_ROOM_Y);
+		
 		auto tempW = MIN_ROOM_W + rand() % (MAX_ROOM_W - MIN_ROOM_W);
 		//77 + 23 => 100 >= 80
 		//100 - 81 = 19; 100 - 80 + 1 = 81
@@ -84,7 +85,7 @@ Level Level::CreateLevel(int levelWidth, int levelHeight)
 			room->w = tempW;
 
 		auto tempH = MIN_ROOM_H + rand() % (MAX_ROOM_H - MIN_ROOM_H);
-		if(room->y + tempW >= levelWidth)
+		if(room->y + tempH >= levelWidth)
 			room->h = tempH - (room->y + tempH - levelHeight) - 1;
 		else
 			room->h = tempH;
@@ -92,7 +93,7 @@ Level Level::CreateLevel(int levelWidth, int levelHeight)
 		//carve these rooms out into the level
 		for(int x = room->x; x < room->x + room->w; x++)
 			for(int y = room->y; y < room->y + room->h; y++)
-				level.GetTile(x, y) = Tile(ScionEngine::GetTexture("tiles.png"));
+				level.SetTile(x, y, Tile(ScionEngine::GetTexture("tiles.png")));
 	}
 
 	return level;
