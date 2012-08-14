@@ -47,17 +47,17 @@ void GameState::HandleInput(sf::RenderWindow* window)
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::PageDown))
 		c.Zoom(.01f);
 
-	//if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-	//	camera->MoveBy(-5.0f,0);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		c.MoveBy(-1.0f,0);
 
-	//if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-	//	camera->MoveBy(5.0f,0);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		c.MoveBy(1.0f,0);
 
-	//if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-	//	camera->MoveBy(0,-5.0f);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		c.MoveBy(0,-1.0f);
 
-	//if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-	//	camera->MoveBy(0,5.0f);
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		c.MoveBy(0,1.0f);
 
 	if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{

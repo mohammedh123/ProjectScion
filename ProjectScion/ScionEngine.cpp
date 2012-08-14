@@ -3,6 +3,9 @@
 #include "SpriteBehavior.h"
 #include "PlayerInputBehavior.h"
 
+#include <string>
+#include <sstream>
+
 using namespace std;
 
 std::vector<sf::Event>					ScionEngine::events(8);
@@ -51,13 +54,20 @@ void ScionEngine::Init()
 	currentLevel = Level::CreateLevel(80,80);
 
 	//only for testing out proc gen
-	currentLevel.GetCamera().Zoom(1.75f);
+	//currentLevel.GetCamera().Zoom(1.00f);
 }
 
 void ScionEngine::RenderFrame()
 {
+	std::stringstream ss;
+	
+	ss << currentLevel.GetCamera().GetPosition().x << ", " << currentLevel.GetCamera().GetPosition().y << endl;
+	ss << currentLevel.GetCamera().GetTileBounds().left << ", " << currentLevel.GetCamera().GetTileBounds().top << " : " << currentLevel.GetCamera().GetTileBounds().width << ", " << currentLevel.GetCamera().GetTileBounds().height;
+
+	sf::Text text(sf::String(ss.str()), *fontManager->LoadFromFile("Fonts/arial.ttf"));
 	window->clear();
 	stateManager->Draw(window.get());
+	window->draw(text);
 	window->display();
 }
 

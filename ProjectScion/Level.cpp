@@ -4,6 +4,7 @@
 #include "StateManager.h"
 #include "ScionEngine.h"
 
+#include <iostream>
 #include <math.h>
 
 using namespace std;
@@ -21,20 +22,20 @@ Level::~Level()
 
 void Level::SetDimensions(int w, int h)
 {
-	map.resize(w);
+	map.resize(h);
 
 	for(int i = 0; i < w; i++)
-		map.at(i).resize(h);
+		map.at(i).resize(w);
 }
 
 void Level::SetTile(int x, int y, Tile&& tile)
 {
-	map[x][y] = tile;
+	map[y][x] = tile;
 }
 
 Tile& Level::GetTile(int x, int y)
 {
-	return map[x][y];
+	return map[y][x];
 }
 
 void Level::LoadLevel()
@@ -44,57 +45,61 @@ void Level::LoadLevel()
 
 Level Level::CreateLevel(int levelWidth, int levelHeight)
 {
-	auto level = Level(levelWidth, levelHeight);
+	Level& level = Level(levelWidth, levelHeight);
 
 	//the number of rooms is proportional to the height and width
 	//rough estimate is, for a 100x100 level, there should be [5,10] rooms
 	
 	int q1 = int(sqrt(static_cast<float>((levelWidth/10) * (levelHeight/10))));
 	//ex. q1 = 10, q1/2 = 5, rand()%q1/2 = 0-4
-	auto numRooms =  (int)(q1 - rand()%int(q1/2 +1));
+	auto numRooms =  q1;//(int)(q1 - rand()%int(q1/2 +1));
 
 	//fun time - create numRooms amount of 'rooms'
-	typedef struct
-	{
-		int x, y, w, h;
-	} Room;
 
 	vector<Room> rooms(numRooms);
 	
-	const int MIN_ROOM_W = 1;
-	const int MAX_ROOM_W = levelWidth/2;
-	const int MIN_ROOM_H = 1;
-	const int MAX_ROOM_H = levelHeight/2;
+	const int MIN_ROOM_W = 3;
+	const int MAX_ROOM_W = (int)(sqrt((double)levelWidth));
+	const int MIN_ROOM_H = 3;
+	const int MAX_ROOM_H = (int)(sqrt((double)levelHeight));
 
 	const int MIN_ROOM_X = 0;
 	const int MAX_ROOM_X = levelWidth - 1 - MIN_ROOM_W*2;
 	const int MIN_ROOM_Y = 0;
 	const int MAX_ROOM_Y = levelHeight - 1 - MIN_ROOM_H*2;
 
-	for(auto room = rooms.begin(); room != rooms.end(); room++)
+	for(auto tRoom = rooms.begin(); tRoom != rooms.end(); tRoom++)
 	{
-		room->x = MIN_ROOM_X + rand() % (MAX_ROOM_X - MIN_ROOM_X);
-		room->y = MIN_ROOM_Y + rand() % (MAX_ROOM_Y - MIN_ROOM_Y);
+		tRoom->x = MIN_ROOM_X + rand() % (MAX_ROOM_X - MIN_ROOM_X);
+		tRoom->y = MIN_ROOM_Y + rand() % (MAX_ROOM_Y - MIN_ROOM_Y);
 		
 		auto tempW = MIN_ROOM_W + rand() % (MAX_ROOM_W - MIN_ROOM_W);
 		//77 + 23 => 100 >= 80
 		//100 - 81 = 19; 100 - 80 + 1 = 81
-		if(room->x + tempW >= levelWidth)
-			room->w = tempW - (room->x + tempW - levelWidth) - 1;
+		if(tRoom->x + tempW >= levelWidth)
+			tRoom->w = tempW - (tRoom->x + tempW - levelWidth) - 1;
 		else
-			room->w = tempW;
+			tRoom->w = tempW;
 
 		auto tempH = MIN_ROOM_H + rand() % (MAX_ROOM_H - MIN_ROOM_H);
-		if(room->y + tempH >= levelWidth)
-			room->h = tempH - (room->y + tempH - levelHeight) - 1;
+		if(tRoom->y + tempH >= levelWidth)
+			tRoom->h = tempH - (tRoom->y + tempH - levelHeight) - 1;
 		else
-			room->h = tempH;
+			tRoom->h = tempH;
+		
+		auto room = *tRoom;
 
-		//carve these rooms out into the level
-		for(int x = room->x; x < room->x + room->w; x++)
-			for(int y = room->y; y < room->y + room->h; y++)
-				level.SetTile(x, y, Tile(ScionEngine::GetTexture("tiles.png")));
+		//carve these tRooms out into the level
+		//for(int x = tRoom->x; x < tRoom->x + tRoom->w; x++)
+		//	for(int y = tRoom->y; y < tRoom->y + tRoom->h; y++)
+		//		level.SetTile(x, y, Tile(ScionEngine::GetTexture("tiles.png")));
 	}
+	for(int x = 0; x < levelWidth; x++)
+		for(int y = 0; y < levelHeight; y++)
+			if(x % 5 == 0 || y % 5 == 0)
+				level.SetTile(x, y, Tile(ScionEngine::GetTexture("tiles2.png")));
+			else
+				level.SetTile(x, y, Tile(ScionEngine::GetTexture("tiles.png")));
 
 	return level;
 }

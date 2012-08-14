@@ -2,9 +2,10 @@
 #include <math.h>
 #include "Camera.h"
 
-Camera::Camera(int w, int h, float speed, float depth) : speed(speed), depth(depth), view(sf::Vector2f(0,0), sf::Vector2f(320, 240))
+Camera::Camera(int w, int h, float speed, float depth) : speed(speed), depth(depth), view(sf::Vector2f(0,0), sf::Vector2f(w, h))
 {
 	zoom = 1.0f;
+	inverseZoom = 1.0f / zoom;
 	
 	size.x = w;
 	size.y = h;
@@ -13,9 +14,6 @@ Camera::Camera(int w, int h, float speed, float depth) : speed(speed), depth(dep
 		speed = 0.0;
 	if(speed > 1.0)
 		speed = 1.0;
-
-	sf::Vector2f Center(0, 0);
-    sf::Vector2f HalfSize(320, 240);
 }
 
 Camera::~Camera()
@@ -67,6 +65,8 @@ void Camera::Zoom(float z)
 		zoom += z;
 		view.zoom(z + 1);
 	}
+
+	inverseZoom = 1.0f / zoom;
 }
 
 void Camera::MoveRelative(float x, float y)
@@ -116,11 +116,12 @@ void Camera::Update()
 
 sf::IntRect Camera::GetTileBounds() const
 {
-	int x = (int)(position.x / Tile::SIZE);
-	int y = (int)(position.y / Tile::SIZE);
+	//0,0 is center
+	int x = (int)((position.x - size.x*0.5) / int(Tile::SIZE));
+	int y = (int)((position.y - size.y*0.5) / int(Tile::SIZE));
 
-	int w = (int)(size.x / Tile::SIZE + 2);
-	int h = (int)(size.y / Tile::SIZE + 2);
+	int w = (int)(size.x / int(Tile::SIZE * inverseZoom));
+	int h = (int)(size.y / int(Tile::SIZE * inverseZoom));
 
 	if(x % Tile::SIZE != 0)
 		w++;

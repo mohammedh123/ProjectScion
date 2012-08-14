@@ -12,6 +12,11 @@
 class Level
 {
 private:
+	struct Room
+	{
+		int x, y, w, h;
+	};
+
 	Camera camera;
 
 	std::vector<std::vector<Tile>> map;

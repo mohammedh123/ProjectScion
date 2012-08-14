@@ -11,7 +11,7 @@ private:
 	sf::Vector2f target;
 	sf::Vector2i size;
 	
-	float zoom;
+	float zoom, inverseZoom;
 	float depth;
 	float speed;
 
@@ -28,7 +28,7 @@ public:
 	//'walks' to position
 	void GoTo(float x, float y);
 	void GoToCenter(float x, float y);
-
+	
 	void Zoom(float z);
 	void MoveRelative(float x, float y);
 
