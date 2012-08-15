@@ -120,14 +120,14 @@ sf::IntRect Camera::GetTileBounds() const
 	int x = (int)((position.x - size.x*0.5) / int(Tile::SIZE));
 	int y = (int)((position.y - size.y*0.5) / int(Tile::SIZE));
 
-	int w = (int)(size.x / int(Tile::SIZE * inverseZoom));
-	int h = (int)(size.y / int(Tile::SIZE * inverseZoom));
+	int w = (int)(size.x / int(Tile::SIZE) + 2);
+	int h = (int)(size.y / int(Tile::SIZE) + 2);
 
 	if(x % Tile::SIZE != 0)
 		w++;
 	if(y % Tile::SIZE != 0)
 		h++;
 
-	return sf::IntRect(x, y, w, h);
+	return sf::IntRect(std::max(x, 0), std::max(y, 0), w, h);
 }
 

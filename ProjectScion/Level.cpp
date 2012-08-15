@@ -110,15 +110,15 @@ void Level::Draw(sf::RenderWindow* window)
 	auto camOffsetX = camera.GetTileOffset().x;
 	auto camOffsetY = camera.GetTileOffset().y;
 
-	for(int y = 0, tileY = 0; y < bounds.height && tileY < h; y++, tileY++)
+	for(int y = 0, tileY = bounds.top; y < bounds.height && tileY < h; y++, tileY++)
 	{
 		if(tileY < 0) continue;
 
-		for(int x = 0, tileX = 0; x < bounds.width && tileX < w; x++, tileX++)
+		for(int x = 0, tileX = bounds.left; x < bounds.width && tileX < w; x++, tileX++)
 		{
 		if(tileX < 0) continue;
 
-			GetTile(tileX, tileY).Draw(x*Tile::SIZE, y*Tile::SIZE, window);
+			GetTile(tileX, tileY).Draw(tileX*Tile::SIZE, tileY*Tile::SIZE, window);
 		}
 	}
 }

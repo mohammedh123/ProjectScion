@@ -28,7 +28,8 @@ ScionEngine::~ScionEngine()
 void ScionEngine::Init()
 {
 
-	window = unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(800, 600, 32), "Project Scion"));		
+	window = unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(800, 600, 32), "Project Scion"));
+	window->setFramerateLimit(60);
 
 	texManager = unique_ptr<TextureManager>(new TextureManager());
 	soundBufferManager = unique_ptr<SoundBufferManager>(new SoundBufferManager());
@@ -67,6 +68,7 @@ void ScionEngine::RenderFrame()
 	sf::Text text(sf::String(ss.str()), *fontManager->LoadFromFile("Fonts/arial.ttf"));
 	window->clear();
 	stateManager->Draw(window.get());
+	window->setView(window->getDefaultView());
 	window->draw(text);
 	window->display();
 }
