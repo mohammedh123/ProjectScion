@@ -117,17 +117,26 @@ void Camera::Update()
 sf::IntRect Camera::GetTileBounds() const
 {
 	//0,0 is center
-	int x = (int)((position.x - size.x*0.5) / int(Tile::SIZE));
-	int y = (int)((position.y - size.y*0.5) / int(Tile::SIZE));
+	auto viewSize = view.getSize();
+	int offsetX = position.x - viewSize.x*0.5;
+	int offsetY = position.y - viewSize.y*0.5;
 
-	int w = (int)(size.x / int(Tile::SIZE) + 2);
-	int h = (int)(size.y / int(Tile::SIZE) + 2);
+	int x = (int)(offsetX / int(Tile::SIZE));
+	int y = (int)(offsetY / int(Tile::SIZE));
+
+	int w = (int)(viewSize.x / int(Tile::SIZE) + 2);
+	int h = (int)(viewSize.y / int(Tile::SIZE) + 2);
 
 	if(x % Tile::SIZE != 0)
 		w++;
 	if(y % Tile::SIZE != 0)
 		h++;
 
+	if(x < 0)
+		w += x;
+	if(y < 0)
+		h += y;
+	
 	return sf::IntRect(std::max(x, 0), std::max(y, 0), w, h);
 }
 

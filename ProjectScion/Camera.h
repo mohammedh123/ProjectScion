@@ -35,8 +35,9 @@ public:
 	void Update();
 
 	inline const sf::View& GetView() const { return view;}
-
+	
 	inline sf::Vector2i GetPosition() const { return sf::Vector2i((int)position.x, (int)position.y); }
+	inline float GetZoom() const { return zoom; }
 	inline sf::Vector2i GetTileOffset() const { return sf::Vector2i((int)(position.x) % Tile::SIZE, (int)(position.y) % Tile::SIZE); }
 	sf::IntRect GetTileBounds() const;
 };

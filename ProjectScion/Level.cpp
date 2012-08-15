@@ -116,7 +116,7 @@ void Level::Draw(sf::RenderWindow* window)
 
 		for(int x = 0, tileX = bounds.left; x < bounds.width && tileX < w; x++, tileX++)
 		{
-		if(tileX < 0) continue;
+			if(tileX < 0) continue;
 
 			GetTile(tileX, tileY).Draw(tileX*Tile::SIZE, tileY*Tile::SIZE, window);
 		}
