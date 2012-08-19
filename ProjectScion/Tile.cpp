@@ -1,7 +1,29 @@
 #include "Tile.h"
 #include <SFML\Graphics.hpp>
+#include "ScionEngine.h"
 
-Tile::Tile(sf::Texture* image) : baseSprite(*image)
+using namespace std;
+
+const map<TILE_TYPE,Tile>& Tile::DefaultTiles()
+{
+	static map<TILE_TYPE, Tile> m;
+
+	if(m.empty())
+	{
+		m[UNUSED] = Tile();
+		m[BLANK] = Tile(BLANK, false);
+		m[GROUND] = Tile(ScionEngine::GetTexture("tiles.png"), sf::IntRect(0, 0, 32, 32), GROUND, false);
+		m[WALL] = Tile(ScionEngine::GetTexture("tiles.png"), sf::IntRect(32, 0, 32, 32), WALL);
+	}
+
+	return m;
+}
+
+Tile::Tile(TILE_TYPE type, bool solid, const sf::Color& color) : type(type), solid(solid), color(color)
+{
+}
+
+Tile::Tile(sf::Texture* image, sf::IntRect rect, TILE_TYPE type, bool solid, const sf::Color& color) : baseSprite(*image, rect), type(type), solid(solid), color(color)
 {
 }
 
@@ -19,6 +41,7 @@ void Tile::Draw(int x, int y, sf::RenderTexture* rt)
 
 void Tile::Draw(int x, int y, sf::RenderWindow* rw)
 {
+	baseSprite.setColor(color);
 	baseSprite.setPosition((float)x, (float)y);
 	rw->draw(baseSprite);
 }

@@ -5,6 +5,7 @@
 
 #include <string>
 #include <sstream>
+#include <windows.h>
 
 using namespace std;
 
@@ -15,9 +16,11 @@ std::unique_ptr<SoundBufferManager>		ScionEngine::soundBufferManager(new SoundBu
 std::unique_ptr<FontManager>			ScionEngine::fontManager(new FontManager());
 std::unique_ptr<MusicManager>			ScionEngine::musicManager(new MusicManager());
 std::unique_ptr<ShaderManager>			ScionEngine::shaderManager(new ShaderManager());
+std::mt19937							ScionEngine::randEngine(GetTickCount());
 
 ScionEngine::ScionEngine()
 {
+	isActive = true;
 }
 
 ScionEngine::~ScionEngine()
@@ -27,7 +30,6 @@ ScionEngine::~ScionEngine()
 
 void ScionEngine::Init()
 {
-
 	window = unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(800, 600, 32), "Project Scion"));
 	window->setFramerateLimit(60);
 
@@ -52,10 +54,11 @@ void ScionEngine::Init()
 	player->AddBehavior(CreateBehavior(new SpriteBehavior(*texManager->GetImage("player.png"), 16, 16, trans, window.get())));
 	player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans)));
 	
-	currentLevel = Level::CreateLevel(80,80);
+	currentLevel = Level::CreateLevelWithRooms(80,80);
 
 	//only for testing out proc gen
-	//currentLevel.GetCamera().Zoom(1.00f);
+	currentLevel.GetCamera().Zoom(5.00f);
+	currentLevel.GetCamera().MoveCenter(1500, 1500);
 }
 
 void ScionEngine::RenderFrame()
@@ -89,16 +92,25 @@ void ScionEngine::ProcessInput()
 		case sf::Event::Closed:
 				window->close();
 				break;
+		case sf::Event::GainedFocus:
+				isActive = true;
+				break;
+		case sf::Event::LostFocus:
+				isActive = false;
+				break;
 		}
 	}
 
+	if(isActive)
+	{
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K))
 	{
 		auto oldCamera = currentLevel.GetCamera();
 
-		currentLevel = Level::CreateLevel(80, 80);
+		currentLevel = Level::CreateLevelWithRooms(80, 80);
 
 		currentLevel.GetCamera() = oldCamera;
+	}
 	}
 } 
 
@@ -121,8 +133,12 @@ void ScionEngine::GameLoop()
 	while(window->isOpen())
 	{
 		ProcessInput();
-		Update();
-		RenderFrame();
+
+		if(isActive)
+		{
+			Update();
+			RenderFrame();
+		}
 	}
 }
 

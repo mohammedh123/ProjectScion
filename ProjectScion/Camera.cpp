@@ -2,6 +2,8 @@
 #include <math.h>
 #include "Camera.h"
 
+using namespace std;
+
 Camera::Camera(int w, int h, float speed, float depth) : speed(speed), depth(depth), view(sf::Vector2f(0,0), sf::Vector2f(w, h))
 {
 	zoom = 1.0f;
@@ -60,7 +62,7 @@ void Camera::Zoom(float z)
 	float upperBound = 6.0f;
 	float lowerBound = .5f;
 
-	if(zoom + z < upperBound && zoom + z > lowerBound)
+	if(zoom + z <= upperBound && zoom + z >= lowerBound)
 	{
 		zoom += z;
 		view.zoom(z + 1);

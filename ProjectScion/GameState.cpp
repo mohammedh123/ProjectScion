@@ -3,6 +3,8 @@
 #include "TextureManager.h"
 
 #include "ScionEngine.h"
+#include <noise/noise.h>
+#include "noiseutils.h"
 
 using namespace std;
 

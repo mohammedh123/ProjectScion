@@ -25,6 +25,7 @@
 #include "Attribute.h"
 
 #include <vector>
+#include <random>
 
 class ScionEngine
 {
@@ -38,6 +39,7 @@ private:
 	static std::unique_ptr<FontManager> fontManager;
 	static std::unique_ptr<MusicManager> musicManager;
 	static std::unique_ptr<ShaderManager> shaderManager;
+	static std::mt19937 randEngine;
 
 	std::map<std::string, sf::Font*> fonts;
 	std::unique_ptr<sf::Clock> clock;
@@ -48,13 +50,14 @@ private:
 	std::vector<std::unique_ptr<Attribute>> attributes;
 	
 	static std::vector<sf::Event> events;
+	bool isActive;
 	
 	void Init();
 	void GameLoop();
 	void RenderFrame();
 	void ProcessInput();
 	void LoadImages();
-	void Update();
+	void Update();  
 public:
 	ScionEngine();
 	~ScionEngine();
@@ -69,6 +72,8 @@ public:
 	inline Level& GetCurrentLevel() { return currentLevel;}
 	std::vector<std::unique_ptr<Behavior>>& GetBehaviors() { return behaviors;}
 	static const std::vector<sf::Event>& GetEvents() { return ScionEngine::events;}
+	static const int GetRandomNumber(int lowerBound=1, int upperBound=100) { return std::uniform_int_distribution<int>(lowerBound, upperBound)(randEngine);}
+	inline const bool IsActive() const { return isActive;}
 
 	void Go();
 	Entity* CreateEntity();	
