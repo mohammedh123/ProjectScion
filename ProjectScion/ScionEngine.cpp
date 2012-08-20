@@ -60,7 +60,7 @@ void ScionEngine::Init()
 	currentLevel = Level::CreateLevelWithRooms(Level::LEVEL_SIZE::FINE, Level::Room::ROOM_SIZE::SMALL);
 
 	//only for testing out proc gen
-	auto z = 2*max(float(currentLevel.GetWidth()*Tile::SIZE)/windowWidth, float(currentLevel.GetHeight()*Tile::SIZE)/windowHeight);
+	auto z = 0.5f*max(float(currentLevel.GetWidth()*Tile::SIZE)/windowWidth, float(currentLevel.GetHeight()*Tile::SIZE)/windowHeight);
 	currentLevel.GetCamera().Zoom(z);
 	currentLevel.GetCamera().MoveCenter(currentLevel.GetWidth()*Tile::SIZE/2, currentLevel.GetHeight()*Tile::SIZE/2);
 }
