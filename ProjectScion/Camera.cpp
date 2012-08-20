@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Camera::Camera(int w, int h, float speed, float depth) : speed(speed), depth(depth), view(sf::Vector2f(0,0), sf::Vector2f(w, h))
+Camera::Camera(int w, int h, float speed, float depth) : speed(speed), depth(depth), view(sf::FloatRect(0,0,w, h))
 {
 	zoom = 1.0f;
 	inverseZoom = 1.0f / zoom;
