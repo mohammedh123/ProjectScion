@@ -30,7 +30,10 @@ ScionEngine::~ScionEngine()
 
 void ScionEngine::Init()
 {
-	window = unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(800, 600, 32), "Project Scion"));
+	const auto windowWidth = 800;
+	const auto windowHeight = 600;
+
+	window = unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(windowWidth, windowHeight, 32), "Project Scion"));
 	window->setFramerateLimit(60);
 
 	texManager = unique_ptr<TextureManager>(new TextureManager());
@@ -57,8 +60,9 @@ void ScionEngine::Init()
 	currentLevel = Level::CreateLevelWithRooms(Level::LEVEL_SIZE::FINE, Level::Room::ROOM_SIZE::SMALL);
 
 	//only for testing out proc gen
-	currentLevel.GetCamera().Zoom(5.00f);
-	currentLevel.GetCamera().MoveCenter(currentLevel.GetWidth()*Tile::SIZE, currentLevel.GetHeight()*Tile::SIZE);
+	auto z = 2*max(float(currentLevel.GetWidth()*Tile::SIZE)/windowWidth, float(currentLevel.GetHeight()*Tile::SIZE)/windowHeight);
+	currentLevel.GetCamera().Zoom(z);
+	currentLevel.GetCamera().MoveCenter(currentLevel.GetWidth()*Tile::SIZE/2, currentLevel.GetHeight()*Tile::SIZE/2);
 }
 
 void ScionEngine::RenderFrame()
