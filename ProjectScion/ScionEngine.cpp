@@ -61,8 +61,9 @@ void ScionEngine::Init()
 
 	//only for testing out proc gen
 	auto z = 0.5f*max(float(currentLevel.GetWidth()*Tile::SIZE)/windowWidth, float(currentLevel.GetHeight()*Tile::SIZE)/windowHeight);
-	currentLevel.GetCamera().Zoom(z);
-	currentLevel.GetCamera().MoveCenter(currentLevel.GetWidth()*Tile::SIZE/2, currentLevel.GetHeight()*Tile::SIZE/2);
+	//currentLevel.GetCamera().Zoom(z);
+	currentLevel.GetCamera().MoveCenter(0, 0);
+	//currentLevel.GetCamera().MoveCenter(currentLevel.GetWidth()*Tile::SIZE/2, currentLevel.GetHeight()*Tile::SIZE/2);
 }
 
 void ScionEngine::RenderFrame()
