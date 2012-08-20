@@ -15,9 +15,13 @@
 using namespace std;
 using namespace noise;
 
-Level::Level(int w, int h) : w(w), h(h), camera(800, 600, 0.2f)
+Level::Level(int w, int h) : w(w), h(h), camera(800, 600, 1.0f)
 {
 	SetDimensions(w, h);
+
+	for(int i = 0; i < w; i++)
+		for(int j = 0; j < h; j++)
+			SetTile(i, j, Tile::DefaultTiles().at(TILE_TYPE::BLANK));
 
 
 	//camera = unique_ptr<Camera>(new Camera(800, 600, 0.2f));
@@ -60,15 +64,10 @@ Level::Room Level::CreateRoom(vector<Room>& rooms, Room::ROOM_TYPE type, Room::R
 {
 	Room room;
 	
-	const int MIN_ROOM_W = floor(size/2.0f);
+	const int MIN_ROOM_W = 3;
 	const int MAX_ROOM_W = size;
-	const int MIN_ROOM_H = floor(size/2.0f);
+	const int MIN_ROOM_H = 3;
 	const int MAX_ROOM_H = size;
-
-	const int MIN_ROOM_X = 1;
-	const int MAX_ROOM_X = levelWidth - 2 - MIN_ROOM_W;
-	const int MIN_ROOM_Y = 1;
-	const int MAX_ROOM_Y = levelHeight - 2 - MIN_ROOM_H;
 
 	room.type = type;
 	
@@ -76,33 +75,54 @@ Level::Room Level::CreateRoom(vector<Room>& rooms, Room::ROOM_TYPE type, Room::R
 	{
 	case Room::ROOM_TYPE::RECTANGULAR:
 		{
-			room.x = ScionEngine::GetRandomNumber(MIN_ROOM_X, MAX_ROOM_X);
-			room.y = ScionEngine::GetRandomNumber(MIN_ROOM_Y, MAX_ROOM_Y);
+			int numAttemptsToCreateRoom = 0;
+			bool anyCollisions = false;
 
-			auto tempW = ScionEngine::GetRandomNumber(MIN_ROOM_W, MAX_ROOM_W);
-
-			if(room.x + tempW >= levelWidth)
-				room.w = tempW - (room.x + tempW - levelWidth) - 1;
-			else
-				room.w = tempW;
-
-			auto tempH = ScionEngine::GetRandomNumber(MIN_ROOM_H, MAX_ROOM_H);
-			if(room.y + tempH >= levelWidth)
-				room.h = tempH - (room.y + tempH - levelHeight) - 1;
-			else
-				room.h = tempH;
-
-			auto anotherRoomChance = ScionEngine::GetRandomNumber(1, 10);
-
-			if(anotherRoomChance <= 1)
+			do
 			{
-				auto centerX = int(room.x + room.w * 0.5);
-				auto centerY = int(room.y + room.h * 0.5);
+				room.x = room.y = room.w = room.h = 0;
 
-				Room room2 = CreateRoom(rooms, Room::ROOM_TYPE::RECTANGULAR, size, levelWidth, levelHeight);
-				room2.x = centerX - room2.w;
-				room2.y = centerY - room2.h;
+				anyCollisions = false;
+				while(room.w % 2 == 0)
+					room.w = ScionEngine::GetRandomNumber(MIN_ROOM_W, MAX_ROOM_W);
+
+				while(room.h % 2 == 0)
+					room.h = ScionEngine::GetRandomNumber(MIN_ROOM_H, MAX_ROOM_H);
+
+				while(room.x % 2 == 0 || room.x + room.w >= levelWidth)
+					room.x = ScionEngine::GetRandomNumber(1, levelWidth-1);
+			
+				while(room.y % 2 == 0 || room.y + room.h >= levelHeight)
+					room.y = ScionEngine::GetRandomNumber(1, levelHeight-1);
+
+				for_each(begin(rooms), end(rooms), [&](Room& room2)
+				{
+					if(room2.CollidesWith(room))
+						anyCollisions = true;
+				});
+
+				numAttemptsToCreateRoom++;
 			}
+			while(anyCollisions && numAttemptsToCreateRoom < 16);
+
+			//if(numAttemptsToCreateRoom >= 10)
+			//{
+			//	room.x = room.y = room.w = room.h = 0;
+
+			//	return room;
+			//}
+
+			//auto anotherRoomChance = ScionEngine::GetRandomNumber(1, 10);
+
+			//if(anotherRoomChance <= 1)
+			//{
+			//	auto centerX = int(room.x + room.w * 0.5);
+			//	auto centerY = int(room.y + room.h * 0.5);
+
+			//	Room room2 = CreateRoom(rooms, Room::ROOM_TYPE::RECTANGULAR, size, levelWidth, levelHeight);
+			//	room2.x = centerX - room2.w;
+			//	room2.y = centerY - room2.h;
+			//}
 
 			break;
 		}
@@ -119,16 +139,11 @@ Level::Room Level::CreateRoom(vector<Room>& rooms, Room::ROOM_TYPE type, Room::R
 	return room;
 }
 
-Level Level::CreateLevelWithRooms(int levelWidth, int levelHeight)
+Level Level::CreateLevelWithRooms(LEVEL_SIZE levelSize, Room::ROOM_SIZE maxRoomSize)
 {
-	Level& level = Level(levelWidth, levelHeight);
+	Level& level = Level(levelSize, levelSize);
 
-	//the number of rooms is proportional to the height and width
-	//rough estimate is, for a 100x100 level, there should be [5,10] rooms
-
-	int q1 = int(sqrt(static_cast<float>((levelWidth/3 * levelHeight/3))));
-	//ex. q1 = 10, q1/2 = 5, rand()%q1/2 = 0-4
-	auto numRooms =  q1;//(int)(q1 - rand()%int(q1/2 +1));
+	auto numRooms =  (levelSize*levelSize)/(maxRoomSize*maxRoomSize);
 
 	//fun time - create numRooms amount of 'rooms'
 
@@ -137,57 +152,61 @@ Level Level::CreateLevelWithRooms(int levelWidth, int levelHeight)
 
 	for(int i = 0; i < numRooms; i++)
 	{
-		Room::ROOM_SIZE size;
+		int randNum = ScionEngine::GetRandomNumber(1, 10);		
 
-		int randNum = ScionEngine::GetRandomNumber(1, 10);
+		Room& createdRoom = CreateRoom(rooms, Room::ROOM_TYPE::RECTANGULAR, maxRoomSize, levelSize, levelSize);
 
-		if(randNum <= 2) // 20% chance of small	
-			size = Room::ROOM_SIZE::SMALL;
-		else if(randNum <= 9) // 70% chance of medium
-			size = Room::ROOM_SIZE::NORMAL;
-		else if(randNum <= 10) // 10% chance of large
-			size = Room::ROOM_SIZE::LARGE;		
+		sf::Color c(ScionEngine::GetRandomNumber(0, 255), ScionEngine::GetRandomNumber(0, 255), ScionEngine::GetRandomNumber(0, 255), 80);
 
-		CreateRoom(rooms, Room::ROOM_TYPE::RECTANGULAR, size, levelWidth, levelHeight);
-	}
-	
-	for(auto tRoom = rooms.begin(); tRoom != rooms.end(); tRoom++)
-	{
-		//carve these tRooms out into the level
-		for(int x = tRoom->x; x < tRoom->x + tRoom->w; x++)
-			for(int y = tRoom->y; y < tRoom->y + tRoom->h; y++)
-				level.SetTile(x, y, Tile::DefaultTiles().at(GROUND));
-	}
-
-	for(int x =0; x < levelWidth; x++)
-		for(int y = 0; y < levelHeight; y++)
-		{
-			Tile& t = level.GetTile(x, y);
-			
-			auto n = 1;
-			int numSolid = 0;
-
-			if(t.type == GROUND)
+		for(int x = createdRoom.x; x < createdRoom.x + createdRoom.w; x++)
+			for(int y = createdRoom.y; y < createdRoom.y + createdRoom.h; y++)
 			{
-				for(int xx = x - n; xx <= x + n; xx++)
-				{
-					for(int yy = y - n; yy <= y + n; yy++)
-					{
-						if(xx == x && yy == y)
-							continue;
-
-						try
-						{
-							if(level.GetTile(xx, yy).type == UNUSED)
-								level.SetTile(xx, yy, Tile::DefaultTiles().at(WALL));
-						}
-						catch(out_of_range e)
-						{
-						}
-					}
-				}
+				level.SetTile(x, y, Tile::DefaultTiles().at(GROUND));
+				level.GetTile(x, y).color *= c;
 			}
-		}
+	}
+
+	for(int x =0; x < levelSize; x++)
+	{
+		level.SetTile(x, 0, Tile::DefaultTiles().at(WALL));
+		level.SetTile(x, levelSize-1, Tile::DefaultTiles().at(WALL));
+	}
+
+	for(int y = 0; y < levelSize; y++)
+	{
+		level.SetTile(0, y, Tile::DefaultTiles().at(WALL));
+		level.SetTile(levelSize-1, y, Tile::DefaultTiles().at(WALL));
+	}
+
+	//for(int x =0; x < levelSize; x++)
+	//	for(int y = 0; y < levelSize; y++)
+	//	{
+	//		Tile& t = level.GetTile(x, y);
+	//		
+	//		auto n = 1;
+	//		int numSolid = 0;
+
+	//		if(t.type == GROUND)
+	//		{
+	//			for(int xx = x - n; xx <= x + n; xx++)
+	//			{
+	//				for(int yy = y - n; yy <= y + n; yy++)
+	//				{
+	//					if(xx == x && yy == y)
+	//						continue;
+
+	//					try
+	//					{
+	//						if(level.GetTile(xx, yy).type == UNUSED)
+	//							level.SetTile(xx, yy, Tile::DefaultTiles().at(WALL));
+	//					}
+	//					catch(out_of_range e)
+	//					{
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
 
 	return level;
 }
@@ -222,7 +241,7 @@ Level Level::CreateLevelWithPerlinNoise(int levelWidth, int levelHeight)
 	//renderer.AddGradientPoint ( 1.0000, utils::Color (255, 255, 255, 255)); // snow
 	//renderer.Render();
 
-	auto randomZ = std::rand();
+	auto randomZ = rand();
 	for(int x = 0; x < levelWidth; x++)
 		for(int y = 0; y < levelHeight; y++)
 		{
@@ -265,7 +284,7 @@ Level Level::CreateLevelWithVoronoiNoise(int levelWidth, int levelHeight)
 	renderer.AddGradientPoint ( 1.0000, utils::Color (255, 255, 255, 255)); // snow
 	renderer.Render();
 
-	auto randomZ = std::rand();
+	auto randomZ = rand();
 	for(int x = 0; x < levelWidth; x++)
 		for(int y = 0; y < levelHeight; y++)
 		{

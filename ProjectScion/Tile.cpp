@@ -10,8 +10,9 @@ const map<TILE_TYPE,Tile>& Tile::DefaultTiles()
 
 	if(m.empty())
 	{
-		m[UNUSED] = Tile();
-		m[BLANK] = Tile(BLANK, false);
+		//m[UNUSED] = Tile();
+		//m[BLANK] = Tile(BLANK, false);
+		m[BLANK] = Tile(ScionEngine::GetTexture("tiles.png"), sf::IntRect(0, 32, 32, 32), BLANK, false);
 		m[GROUND] = Tile(ScionEngine::GetTexture("tiles.png"), sf::IntRect(0, 0, 32, 32), GROUND, false);
 		m[WALL] = Tile(ScionEngine::GetTexture("tiles.png"), sf::IntRect(32, 0, 32, 32), WALL);
 	}
@@ -25,6 +26,7 @@ Tile::Tile(TILE_TYPE type, bool solid, const sf::Color& color) : type(type), sol
 
 Tile::Tile(sf::Texture* image, sf::IntRect rect, TILE_TYPE type, bool solid, const sf::Color& color) : baseSprite(*image, rect), type(type), solid(solid), color(color)
 {
+	//baseSprite.setOrigin(Tile::SIZE/2, Tile::SIZE/2);
 }
 
 Tile::~Tile()
