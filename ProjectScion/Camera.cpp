@@ -41,9 +41,6 @@ void Camera::MoveBy(float x, float y)
 
 void Camera::MoveCenter(float x, float y)
 {
-	x = x - (size.x / 2);
-	y = y - (size.y / 2);
-
 	position.x = (float)x;
 	position.y = (float)y;
 	target.x = (float)x;
