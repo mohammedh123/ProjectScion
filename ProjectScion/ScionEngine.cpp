@@ -10,12 +10,12 @@
 using namespace std;
 
 std::vector<sf::Event>					ScionEngine::events(8);
-std::unique_ptr<StateManager>			ScionEngine::stateManager(new StateManager());
-std::unique_ptr<TextureManager>			ScionEngine::texManager(new TextureManager());
-std::unique_ptr<SoundBufferManager>		ScionEngine::soundBufferManager(new SoundBufferManager());
-std::unique_ptr<FontManager>			ScionEngine::fontManager(new FontManager());
-std::unique_ptr<MusicManager>			ScionEngine::musicManager(new MusicManager());
-std::unique_ptr<ShaderManager>			ScionEngine::shaderManager(new ShaderManager());
+StateManager*							ScionEngine::stateManager(new StateManager());
+TextureManager*						ScionEngine::texManager(new TextureManager());
+SoundBufferManager*					ScionEngine::soundBufferManager(new SoundBufferManager());
+FontManager*			ScionEngine::fontManager(new FontManager());
+MusicManager*			ScionEngine::musicManager(new MusicManager());
+ShaderManager*			ScionEngine::shaderManager(new ShaderManager());
 std::mt19937							ScionEngine::randEngine(GetTickCount());
 
 ScionEngine::ScionEngine()
@@ -25,7 +25,12 @@ ScionEngine::ScionEngine()
 
 ScionEngine::~ScionEngine()
 {
-	
+	delete texManager;
+	delete soundBufferManager;
+	delete fontManager;
+	delete musicManager;
+	delete shaderManager;
+	delete stateManager;
 }
 
 void ScionEngine::Init()
@@ -33,13 +38,14 @@ void ScionEngine::Init()
 	window = unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(800, 600, 32), "Project Scion"));
 	window->setFramerateLimit(60);
 
-	texManager = unique_ptr<TextureManager>(new TextureManager());
-	soundBufferManager = unique_ptr<SoundBufferManager>(new SoundBufferManager());
-	fontManager = unique_ptr<FontManager>(new FontManager());
-	stateManager = unique_ptr<StateManager>(new StateManager());
-	musicManager = unique_ptr<MusicManager>(new MusicManager());
-	shaderManager = unique_ptr<ShaderManager>(new ShaderManager());
+	texManager = new TextureManager();
+	soundBufferManager = new SoundBufferManager();
+	fontManager = new FontManager();
 	
+	musicManager = new MusicManager();
+	shaderManager = new ShaderManager();
+	stateManager = new StateManager();
+
 	fonts["mainFont"] = fontManager->LoadFromFile("Fonts/arial.ttf");
 	stateManager->PushState(new GameState(), this);
 	//stateManager->PushState(new SplashScreenState(4.0f, texManager->GetImage("Images/splashscreen.png"), soundBufferManager->LoadFromFile("Sound/splash_sound.wav")));
@@ -60,7 +66,6 @@ void ScionEngine::Init()
 	//currentLevel.GetCamera().Zoom(5.00f);
 	currentLevel.GetCamera().MoveCenter(0,0);
 }
-
 void ScionEngine::RenderFrame()
 {
 	std::stringstream ss;

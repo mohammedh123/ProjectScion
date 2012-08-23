@@ -15,14 +15,14 @@ ShaderManager::~ShaderManager()
 sf::Shader* ShaderManager::LoadFromFile(const std::string & filename, sf::Shader::Type type)
 {
 	sf::Shader* retVal = nullptr;
-	std::pair<std::string, std::string> key;
+	std::string key;
 	if(type == sf::Shader::Type::Vertex)
 	{
-		key = std::pair<std::string, std::string>(filename, "");
+		key = filename + "+";
 	}
 	else//Fragment
 	{
-		key = std::pair<std::string, std::string>("", filename);
+		key = "+" + filename;
 	}
 	
 	for(auto it = begin(shaderMap); it != end(shaderMap); it++)
@@ -47,7 +47,7 @@ sf::Shader* ShaderManager::LoadFromFile(const std::string& vertexShaderFilename,
 {
 	sf::Shader* retVal = nullptr;
 
-	std::pair<std::string, std::string> key(vertexShaderFilename, fragmentShaderFilename);
+	std::string key = vertexShaderFilename + "+" + fragmentShaderFilename;
 	
 	for(auto it = begin(shaderMap); it != end(shaderMap); it++)
 	{	

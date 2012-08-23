@@ -5,6 +5,7 @@
 #include "ScionEngine.h"
 #include <noise/noise.h>
 #include "noiseutils.h"
+#include "SFML/OpenGL.hpp"
 
 using namespace std;
 
@@ -31,6 +32,26 @@ void GameState::Initialize(ScionEngine* game)
 	
 	WindowTexture = unique_ptr<sf::Texture>(new sf::Texture);
 	TextureDrawer = unique_ptr<sf::Sprite>(new sf::Sprite);
+	
+	glClearDepth(1);
+
+	glEnable(GL_DEPTH_TEST);
+	glShadeModel (GL_SMOOTH);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    
+    GLfloat light_ambient[] = { 0.0, 0.0, 0.0, 1.0 };
+    GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat mat_shininess[] = { 100.0 };
+    GLfloat light_position[] = { 0, 0, 0, 0.0 };
+
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	
 }
 
 void GameState::HandleInput(sf::RenderWindow* window)
@@ -89,9 +110,15 @@ void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherSta
 
 void GameState::Draw(sf::RenderWindow* window)
 {
+	window->setActive(true);
 	//window->setView(*camera->GetView());
-
-	
+	/*
+	glBegin(GL_TRIANGLES);
+	glVertex3f( 0.0f, 300, 0.0f);		// Top
+	glVertex3f(100.0f,100.0f, 0.0f);		// Bottom Left
+	glVertex3f( 250.0f,50.0f, 0.0f);
+	glEnd();
+	*/
 	Camera& c = game->GetCurrentLevel().GetCamera();
 
 	//rt->clear(sf::Color::Transparent);
@@ -137,7 +164,9 @@ void GameState::Draw(sf::RenderWindow* window)
 		break;
 	
 	*/
-
+	
+	
+	window->setActive(false);
 	if (currentState == TransitionOn)
 	{
 		stateManager->DrawSolidColor(sf::Color::Black, 1.0f - GetTransitionAlpha(), window);
