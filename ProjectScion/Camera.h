@@ -15,7 +15,8 @@ private:
 	float depth;
 	float speed;
 
-	sf::View view;	
+	sf::View view;
+	sf::Vector2i originalDimensions;
 public:
 	Camera(int w, int h, float speed, float depth = 1.0f);
 	~Camera();
@@ -30,6 +31,7 @@ public:
 	void GoToCenter(float x, float y);
 	
 	void Zoom(float z);
+	void DirectZoomOfOriginal(float z);
 	void MoveRelative(float x, float y);
 
 	void Update();

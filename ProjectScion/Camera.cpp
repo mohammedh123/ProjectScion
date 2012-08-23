@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Camera::Camera(int w, int h, float speed, float depth) : speed(speed), depth(depth), view(sf::FloatRect(0,0,w,h))
+Camera::Camera(int w, int h, float speed, float depth) : originalDimensions(w, h), speed(speed), depth(depth), view(sf::FloatRect(0,0,w,h))
 {
 	zoom = 1.0f;
 	inverseZoom = 1.0f / zoom;
@@ -66,6 +66,14 @@ void Camera::Zoom(float z)
 	}
 
 	inverseZoom = 1.0f / zoom;
+}
+
+void Camera::DirectZoomOfOriginal(float z)
+{
+	view.setSize(originalDimensions.x * z, originalDimensions.y * z);
+	
+	zoom = z;
+	inverseZoom = 1.0f/zoom;
 }
 
 void Camera::MoveRelative(float x, float y)

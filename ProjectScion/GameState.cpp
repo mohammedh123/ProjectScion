@@ -1,7 +1,7 @@
 #include "GameState.h"
 #include "StateManager.h"
 #include "TextureManager.h"
-
+#include <sstream>
 #include "ScionEngine.h"
 #include <noise/noise.h>
 #include "noiseutils.h"
@@ -10,6 +10,10 @@ using namespace std;
 
 void GameState::Initialize(ScionEngine* game)
 {
+	hoveredTile = nullptr;
+	hoveredPosX = -1;
+	hoveredPosY = -1;
+
 	this->game = game;
 	State::Initialize();
 
@@ -63,11 +67,23 @@ void GameState::HandleInput(sf::RenderWindow* window)
 
 	if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
-		auto windowPosition = window->getPosition();
-		sf::Vector2f MousePos = window->convertCoords(  sf::Mouse::getPosition() - windowPosition, c.GetView());
+		sf::Vector2f MousePos = window->convertCoords(  sf::Mouse::getPosition(*window), c.GetView());
 		c.GoToCenter(MousePos.x, MousePos.y);
 	}
-			
+
+	sf::Vector2f MousePos = window->convertCoords(  sf::Mouse::getPosition(*window), c.GetView());
+	
+	sf::IntRect gameRect(0, 0, game->GetCurrentLevel().GetWidth()*Tile::SIZE, game->GetCurrentLevel().GetHeight()*Tile::SIZE);
+	if(gameRect.contains(MousePos.x, MousePos.y))
+	{
+		hoveredTile = &game->GetCurrentLevel().GetTile(MousePos.x / Tile::SIZE, MousePos.y / Tile::SIZE);
+		hoveredPosX = MousePos.x;
+		hoveredPosY = MousePos.y;
+	}
+	else
+	{
+		hoveredTile = nullptr;
+	}
 }
 
 void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherState)
@@ -110,6 +126,24 @@ void GameState::Draw(sf::RenderWindow* window)
 	{
 		if((*it)->IsRenderingBehavior())
 			(*it)->Process();
+	}
+
+	if(hoveredTile)
+	{
+		sf::RectangleShape rect;
+		rect.setSize(sf::Vector2f(100, 100));
+		rect.setFillColor(sf::Color(255,255,255,60));
+		rect.setOutlineThickness(2.0f);
+		rect.setOutlineColor(sf::Color::White);
+		rect.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE), Tile::SIZE*int(hoveredPosY / Tile::SIZE));
+
+		window->draw(rect);
+
+		stringstream ss;
+		ss << int(hoveredPosX / Tile::SIZE) << ", " << int(hoveredPosY / Tile::SIZE) << endl << hoveredTile->type;
+		sf::Text t(ss.str(), *game->GetFont("Fonts/arial.ttf"), 24);
+		t.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE), Tile::SIZE*int(hoveredPosY / Tile::SIZE));
+		window->draw(t);
 	}
 	//window->draw(*TextureDrawer.get());
 	

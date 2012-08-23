@@ -3,6 +3,9 @@
 
 #include <vector>
 #include <memory>
+#include <unordered_set>
+#include <unordered_map>
+#include <queue>
 
 #include "Tile.h"
 #include "Entity.h"
@@ -59,7 +62,7 @@ public:
 		int x, y, w, h;
 		ROOM_TYPE type;
 
-		inline bool CollidesWith(Room& r) const
+		inline bool CollidesWith(Room& r, int border = 0) const
 		{
 			// -    0    1    2    3
 			// 0	.    .    .    .
@@ -81,10 +84,10 @@ public:
 			// true
 
 
-			return !(r.x > x + w ||
-				r.x + r.w < x ||
-				r.y > y + h ||
-				r.y + r.h < y);
+			return !(r.x - border >= x + w + border ||
+				r.x + r.w + border <= x  - border ||
+				r.y - border >= y + h + border ||
+				r.y + r.h + border <= y - border);
 		}
 	};
 
@@ -92,9 +95,24 @@ public:
 	Level(int widthInTiles, int heightInTiles);
 	~Level();
 	
-	inline void SetTile(int x, int y, Tile&& tile);
-	inline void SetTile(int x, int y, const Tile& tile);
-	inline Tile& GetTile(int x, int y);
+	inline void SetTile(int x, int y, Tile& tile)
+	{
+		map[y][x] = tile;
+	}
+
+	inline void SetTile(int x, int y, TILE_TYPE type)
+	{
+		auto& tile = Tile::DefaultTiles().at(type);
+		map[y][x].baseSprite = tile.baseSprite;
+		map[y][x].solid = tile.solid;
+		map[y][x].type = type;
+		map[y][x].color = sf::Color::White;
+	}
+
+	inline Tile& GetTile(int x, int y)
+	{
+		return map.at(y).at(x);
+	}
 
 	void LoadLevel();
 
@@ -102,14 +120,26 @@ public:
 	inline int GetWidth() const {return w;}
 	inline int GetHeight() const {return h;}
 	
-	static Level CreateLevelWithRooms(LEVEL_SIZE levelSize, Room::ROOM_SIZE maxRoomSize);
+	static Level CreateLevelWithRooms1(LEVEL_SIZE levelSize, Room::ROOM_SIZE maxRoomSize);
+	static Level CreateLevelWithRooms2(LEVEL_SIZE levelSize, Room::ROOM_SIZE maxRoomSize);
 	static Level CreateLevelWithPerlinNoise(int levelWidth, int levelHeight);
 	static Level CreateLevelWithVoronoiNoise(int levelWidth, int levelHeight);
 	static Level CreateLevelWithCA(int levelWidth, int levelHeight);
 
 	void Draw(sf::RenderWindow* window);
+	void OpenCorridor(int x, int y, sf::Vector2i direction = sf::Vector2i());
 private:	
+	bool OpenTunnel(int x, int y, sf::Vector2i direction = sf::Vector2i());
+	bool IsTunnelValid(int midX, int midY, int nextX, int nextY);
+	bool CreateTunnel(int thisX, int thisY, int nextX, int nextY);
+
 	static Level::Room CreateRoom(std::vector<Room>& rooms, Room::ROOM_TYPE type, Room::ROOM_SIZE size, int levelWidth, int levelHeight);
+	
+	static float HeuristicForNode(const Tile& start, const Tile& end);
+	float GetDistance(const Tile& s, const Tile& e);
+	std::queue<Tile> GetNeighbors(const Tile& n);
+	static std::queue<Tile>& Level::ConstructPath(std::unordered_map<Tile, Tile>& q, std::queue<Tile>& path, const Tile& t);
+	std::queue<Tile> Level::FindPath(const Tile& start, const Tile& end);
 };
 
 #endif

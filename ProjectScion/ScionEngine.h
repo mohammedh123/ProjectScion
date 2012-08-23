@@ -54,9 +54,9 @@ private:
 	
 	void Init();
 	void GameLoop();
-	void RenderFrame();
 	void ProcessInput();
 	void LoadImages();
+	void RenderFrame();
 	void Update();  
 public:
 	ScionEngine();

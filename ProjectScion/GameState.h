@@ -22,6 +22,9 @@ private:
 	std::unique_ptr<Entity> player;
 
 	ScionEngine* game;
+
+	Tile* hoveredTile;
+	int hoveredPosX, hoveredPosY;
 public:
 	void Initialize(ScionEngine* game);
 	void HandleInput(sf::RenderWindow* window);

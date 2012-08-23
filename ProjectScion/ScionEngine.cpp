@@ -57,13 +57,14 @@ void ScionEngine::Init()
 	player->AddBehavior(CreateBehavior(new SpriteBehavior(*texManager->GetImage("player.png"), 16, 16, trans, window.get())));
 	player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans)));
 	
-	currentLevel = Level::CreateLevelWithRooms(Level::LEVEL_SIZE::FINE, Level::Room::ROOM_SIZE::SMALL);
+	currentLevel = Level::CreateLevelWithRooms2(Level::LEVEL_SIZE::FINE, Level::Room::ROOM_SIZE::SMALL);
 
 	//only for testing out proc gen
-	auto z = 0.5f*max(float(currentLevel.GetWidth()*Tile::SIZE)/windowWidth, float(currentLevel.GetHeight()*Tile::SIZE)/windowHeight);
-	//currentLevel.GetCamera().Zoom(z);
-	currentLevel.GetCamera().MoveCenter(0, 0);
-	//currentLevel.GetCamera().MoveCenter(currentLevel.GetWidth()*Tile::SIZE/2, currentLevel.GetHeight()*Tile::SIZE/2);
+	auto fstZ = float(currentLevel.GetWidth()*Tile::SIZE)/windowWidth;
+	auto sndZ = float(currentLevel.GetHeight()*Tile::SIZE)/windowHeight;
+	currentLevel.GetCamera().DirectZoomOfOriginal(max(fstZ, sndZ)+0.1f);
+	//currentLevel.GetCamera().MoveCenter(0, 0);
+	currentLevel.GetCamera().MoveCenter(currentLevel.GetWidth()*Tile::SIZE/2, currentLevel.GetHeight()*Tile::SIZE/2);
 }
 
 void ScionEngine::RenderFrame()
@@ -108,14 +109,14 @@ void ScionEngine::ProcessInput()
 
 	if(isActive)
 	{
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K))
-	{
-		auto oldCamera = currentLevel.GetCamera();
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K))
+		{
+			auto oldCamera = currentLevel.GetCamera();
+		
+			currentLevel = Level::CreateLevelWithRooms2(Level::LEVEL_SIZE::FINE, Level::Room::ROOM_SIZE::SMALL);
 
-		currentLevel = Level::CreateLevelWithRooms(Level::LEVEL_SIZE::FINE, Level::Room::ROOM_SIZE::SMALL);
-
-		currentLevel.GetCamera() = oldCamera;
-	}
+			currentLevel.GetCamera() = oldCamera;
+		}
 	}
 } 
 
