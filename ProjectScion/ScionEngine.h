@@ -33,12 +33,12 @@ private:
 	Level currentLevel;
 	std::unique_ptr<sf::RenderWindow> window;
 
-	static std::unique_ptr<StateManager> stateManager;
-	static std::unique_ptr<TextureManager> texManager;
-	static std::unique_ptr<SoundBufferManager> soundBufferManager;
-	static std::unique_ptr<FontManager> fontManager;
-	static std::unique_ptr<MusicManager> musicManager;
-	static std::unique_ptr<ShaderManager> shaderManager;
+	static StateManager* stateManager;
+	static TextureManager* texManager;
+	static SoundBufferManager* soundBufferManager;
+	static FontManager* fontManager;
+	static MusicManager* musicManager;
+	static ShaderManager* shaderManager;
 	static std::mt19937 randEngine;
 
 	std::map<std::string, sf::Font*> fonts;
