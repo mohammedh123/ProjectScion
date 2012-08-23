@@ -7,6 +7,8 @@
 #include <sstream>
 #include <windows.h>
 
+
+
 using namespace std;
 
 std::vector<sf::Event>					ScionEngine::events(8);
