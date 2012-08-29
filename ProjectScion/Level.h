@@ -5,7 +5,7 @@
 #include <memory>
 #include <unordered_set>
 #include <unordered_map>
-#include <queue>
+#include <list>
 
 #include "Tile.h"
 #include "Entity.h"
@@ -103,10 +103,10 @@ public:
 	inline void SetTile(int x, int y, TILE_TYPE type)
 	{
 		auto& tile = Tile::DefaultTiles().at(type);
-		map[y][x].baseSprite = tile.baseSprite;
-		map[y][x].solid = tile.solid;
-		map[y][x].type = type;
-		map[y][x].color = sf::Color::White;
+		map.at(y).at(x).baseSprite = tile.baseSprite;
+		map.at(y).at(x).solid = tile.solid;
+		map.at(y).at(x).type = type;
+		map.at(y).at(x).color = sf::Color::White;
 	}
 
 	inline Tile& GetTile(int x, int y)
@@ -122,6 +122,8 @@ public:
 	
 	static Level CreateLevelWithRooms1(LEVEL_SIZE levelSize, Room::ROOM_SIZE maxRoomSize);
 	static Level CreateLevelWithRooms2(LEVEL_SIZE levelSize, Room::ROOM_SIZE maxRoomSize);
+	static Level CreateLevelWithDLA(LEVEL_SIZE levelSize);
+	static Level CreateLevelWithBSP(LEVEL_SIZE levelSize, Room::ROOM_SIZE maxRoomSize);
 	static Level CreateLevelWithPerlinNoise(int levelWidth, int levelHeight);
 	static Level CreateLevelWithVoronoiNoise(int levelWidth, int levelHeight);
 	static Level CreateLevelWithCA(int levelWidth, int levelHeight);
@@ -134,12 +136,13 @@ private:
 	bool CreateTunnel(int thisX, int thisY, int nextX, int nextY);
 
 	static Level::Room CreateRoom(std::vector<Room>& rooms, Room::ROOM_TYPE type, Room::ROOM_SIZE size, int levelWidth, int levelHeight);
+	static Level::Room CreateRoom(std::vector<Room>& rooms, Room::ROOM_TYPE type, sf::IntRect bounds);
 	
 	static float HeuristicForNode(const Tile& start, const Tile& end);
 	float GetDistance(const Tile& s, const Tile& e);
-	std::queue<Tile> GetNeighbors(const Tile& n);
-	static std::queue<Tile>& Level::ConstructPath(std::unordered_map<Tile, Tile>& q, std::queue<Tile>& path, const Tile& t);
-	std::queue<Tile> Level::FindPath(const Tile& start, const Tile& end);
+	std::list<Tile> GetNeighbors(const Tile& n);
+	static std::list<Tile>& Level::ConstructPath(std::unordered_map<Tile, Tile>& q, std::list<Tile>& path, const Tile& t);
+	std::list<Tile> Level::FindPath(const Tile& start, const Tile& end);
 };
 
 #endif

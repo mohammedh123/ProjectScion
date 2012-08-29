@@ -65,7 +65,7 @@ void ScionEngine::Init()
 	player->AddBehavior(CreateBehavior(new SpriteBehavior(*texManager->GetImage("player.png"), 16, 16, trans, window.get())));
 	player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans)));
 	
-	currentLevel = Level::CreateLevelWithRooms2(Level::LEVEL_SIZE::FINE, Level::Room::ROOM_SIZE::SMALL);
+	currentLevel = Level::CreateLevelWithBSP(Level::LEVEL_SIZE::FINE, Level::Room::ROOM_SIZE::COLOSSAL);
 
 	//only for testing out proc gen
 	auto fstZ = float(currentLevel.GetWidth()*Tile::SIZE)/windowWidth;
@@ -120,7 +120,7 @@ void ScionEngine::ProcessInput()
 		{
 			auto oldCamera = currentLevel.GetCamera();
 		
-			currentLevel = Level::CreateLevelWithRooms2(Level::LEVEL_SIZE::FINE, Level::Room::ROOM_SIZE::SMALL);
+			currentLevel = Level::CreateLevelWithBSP(Level::LEVEL_SIZE::FINE, Level::Room::ROOM_SIZE::SMALL);
 
 			currentLevel.GetCamera() = oldCamera;
 		}

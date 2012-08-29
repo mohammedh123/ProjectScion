@@ -15,7 +15,7 @@ const map<TILE_TYPE,Tile>& Tile::DefaultTiles()
 		m[BLANK] = Tile(0, 0, ScionEngine::GetTexture("tiles.png"), sf::IntRect(0, 32, 32, 32), BLANK, false);
 		m[GROUND] = Tile(0, 0, ScionEngine::GetTexture("tiles.png"), sf::IntRect(0, 0, 32, 32), GROUND, false);
 		m[WALL] = Tile(0, 0, ScionEngine::GetTexture("tiles.png"), sf::IntRect(32, 0, 32, 32), WALL);
-		m[CORRIDOR] = Tile(0, 0, ScionEngine::GetTexture("tiles.png"), sf::IntRect(0, 32, 32, 32), CORRIDOR);
+		m[CORRIDOR] = Tile(0, 0, ScionEngine::GetTexture("tiles.png"), sf::IntRect(0, 32, 32, 32), CORRIDOR, false);
 	}
 
 	return m;

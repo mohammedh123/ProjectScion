@@ -59,11 +59,11 @@ void Camera::Zoom(float z)
 	float upperBound = 6.0f;
 	float lowerBound = .5f;
 
-	if(zoom + z <= upperBound && zoom + z >= lowerBound)
-	{
+	//if(zoom + z <= upperBound && zoom + z >= lowerBound)
+	//{
 		zoom += z;
 		view.zoom(z + 1);
-	}
+	//}
 
 	inverseZoom = 1.0f / zoom;
 }

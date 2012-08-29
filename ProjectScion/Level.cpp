@@ -35,6 +35,77 @@ namespace std
 	};
 }
 
+struct SUB_LEVEL
+{
+	SUB_LEVEL* left, *right, *parent;
+
+	int x,y,w,h;
+
+	SUB_LEVEL(int x, int y, int w, int h) : x(x), y(y), w(w), h(h){}
+
+	bool isValid(int minRoomSize) const
+	{ return w >= minRoomSize && h >= minRoomSize;	}
+
+	SUB_LEVEL split(bool hSplit, int splitPos)
+	{
+		if(hSplit)
+		{
+			int oldH = h;
+			h = splitPos - y;
+
+			return SUB_LEVEL(x, splitPos, w, oldH-h);
+		}
+		else
+		{
+			int oldW = w;
+			w = splitPos - x;
+
+			return SUB_LEVEL(splitPos, y, oldW-w, h);
+		}
+	}
+
+	bool testSplit(bool hSplit, int splitPos, int minRoomSize)
+	{
+		SUB_LEVEL copyOfThis(*this);
+
+		if(!hSplit &&
+			(copyOfThis.x + copyOfThis.w <= splitPos ||
+			splitPos <= copyOfThis.x ||
+			splitPos - x < minRoomSize
+			))
+			return false;
+		if(hSplit &&
+			(copyOfThis.y + copyOfThis.h <= splitPos ||
+			splitPos <= copyOfThis.y ||
+			splitPos - y < minRoomSize))
+			return false;
+
+		auto temp = copyOfThis.split(hSplit, splitPos);
+
+		return temp.isValid(minRoomSize) && copyOfThis.area() >= minRoomSize*minRoomSize && temp.area() >= minRoomSize*minRoomSize;
+	}
+
+	bool testSplitAll(bool hSplit, int minRoomSize)
+	{
+		if(!hSplit)
+		{
+			for(int i = x + 1; i < x + w - 1; i++)
+				if(testSplit(hSplit, i, minRoomSize))
+					return true;
+		}
+		else
+		{
+			for(int i = y + 1; i < y + h - 1; i++)
+				if(testSplit(hSplit, i, minRoomSize))
+					return true;
+		}
+
+		return false;
+	}
+
+	inline int area() const { return h*w;}
+};
+
 Level::Level(int w, int h) : w(w), h(h), camera(800, 600, 1.0f)
 {
 	SetDimensions(w, h);
@@ -101,7 +172,7 @@ Level::Room Level::CreateRoom(vector<Room>& rooms, Room::ROOM_TYPE type, Room::R
 
 				for_each(begin(rooms), end(rooms), [&](Room& room2)
 				{
-					if(room2.CollidesWith(room, 0))
+					if(room2.CollidesWith(room, 1))
 						anyCollisions = true;
 				});
 
@@ -143,6 +214,51 @@ Level::Room Level::CreateRoom(vector<Room>& rooms, Room::ROOM_TYPE type, Room::R
 	return room;
 }
 
+Level::Room Level::CreateRoom(std::vector<Room>& rooms, Room::ROOM_TYPE type, sf::IntRect bounds)
+{
+	Room room;
+
+	const int MIN_ROOM_W = 3;
+	const int MAX_ROOM_W = bounds.width;
+	const int MIN_ROOM_H = 3;
+	const int MAX_ROOM_H = bounds.height;
+
+	room.type = type;
+
+	switch(type)
+	{
+	case Room::ROOM_TYPE::RECTANGULAR:
+		{
+			int numAttemptsToCreateRoom = 0;
+
+			room.x = room.y = room.w = room.h = 0;
+
+			room.w = ScionEngine::GetRandomNumber(MIN_ROOM_W, MAX_ROOM_W);
+			room.h = ScionEngine::GetRandomNumber(MIN_ROOM_H, MAX_ROOM_H);			
+			room.x = ScionEngine::GetRandomNumber(bounds.left, bounds.left + bounds.width - room.w );
+			room.y = ScionEngine::GetRandomNumber(bounds.top, bounds.top + bounds.height - room.h);
+
+			while(room.x + room.w > bounds.left + bounds.width)//bounds.left+1 is interesting vvvv
+				room.x = ScionEngine::GetRandomNumber(bounds.left, bounds.left + bounds.width - room.w);
+
+			while(room.y + room.h > bounds.top + bounds.height)//bounds.top+1 is interestingvvvv
+				room.y = ScionEngine::GetRandomNumber(bounds.top, bounds.top + bounds.height - room.h);
+
+			break;
+		}
+	case Room::ROOM_TYPE::STARBURST:
+		break;
+	case Room::ROOM_TYPE::ROTATED:
+		break;
+	case Room::ROOM_TYPE::CIRCULAR:
+		break;
+	}
+
+	rooms.push_back(room);
+
+	return room;
+}
+
 Level Level::CreateLevelWithRooms2(LEVEL_SIZE levelSize, Room::ROOM_SIZE maxRoomSize)
 {
 	Level& level = Level(levelSize, levelSize);
@@ -154,18 +270,69 @@ Level Level::CreateLevelWithRooms2(LEVEL_SIZE levelSize, Room::ROOM_SIZE maxRoom
 	vector<Room> rooms;
 	rooms.reserve(numRooms);
 
-	for(int i = 0; i < 0; i++)
+	for(int i = 0; i < numRooms; i++)
 	{
 		int randNum = ScionEngine::GetRandomNumber(1, 10);		
 
 		Room& createdRoom = CreateRoom(rooms, Room::ROOM_TYPE::RECTANGULAR, maxRoomSize, levelSize, levelSize);
 
 		for(int x = createdRoom.x; x < createdRoom.x + createdRoom.w; x++)
+		{
 			for(int y = createdRoom.y; y < createdRoom.y + createdRoom.h; y++)
+			{
 				level.SetTile(x, y, GROUND);
-	}
+			}
+		}
 
-	level.FindPath(level.GetTile(5, 5), level.GetTile(6,5));
+		if(createdRoom.w != 0)
+		{
+
+			for(int x = createdRoom.x - 1; x <= createdRoom.x + createdRoom.w; x++)
+			{
+				//attempt to place a tile above and below
+				try{level.SetTile(x, createdRoom.y - 1, WALL);}
+				catch(out_of_range ex){}
+
+				try{level.SetTile(x, createdRoom.y + createdRoom.h, WALL);}
+				catch(out_of_range ex){}
+			}
+
+			for(int y = createdRoom.y - 1; y <= createdRoom.y + createdRoom.h; y++)
+			{
+				//attempt to place a tile above and below
+				try{level.SetTile(createdRoom.x - 1, y, WALL);}
+				catch(out_of_range ex){}
+
+				try{level.SetTile(createdRoom.x + createdRoom.w, y, WALL);}
+				catch(out_of_range ex){}
+			}
+
+			auto randWallX = ScionEngine::GetRandomNumber(0, createdRoom.w-1);
+			auto randWallY = ScionEngine::GetRandomNumber(0, createdRoom.h-1);
+			auto rando = ScionEngine::GetRandomNumber(0,1);
+
+			try{level.SetTile(createdRoom.x + randWallX, createdRoom.y-1 + rando*(createdRoom.h+1), UNUSED);}
+			catch(out_of_range ex){}
+		}
+	}	
+
+
+	for(int i = 0; i < rooms.size()-1; i++)
+	{
+		for(int j = i+1; j < rooms.size(); j++)
+		{
+			if(i == j)
+				continue;
+			auto&& path = level.FindPath(level.GetTile(rooms[i].x + rooms[i].w/2, rooms[i].y + rooms[i].h/2), 
+				level.GetTile(rooms[j].x + rooms[j].w/2, rooms[j].y + rooms[j].h/2));
+
+			for(auto itr = begin(path); itr != end(path); itr++)
+			{
+				level.SetTile(itr->x, itr->y, TILE_TYPE::CORRIDOR);
+				//level.GetTile(itr->x, itr->y).color = sf::Color::Blue;
+			}
+		}
+	}
 
 	return level;
 }
@@ -185,11 +352,28 @@ Level Level::CreateLevelWithRooms1(LEVEL_SIZE levelSize, Room::ROOM_SIZE maxRoom
 	{
 		int randNum = ScionEngine::GetRandomNumber(1, 10);		
 
-		Room& createdRoom = CreateRoom(rooms, Room::ROOM_TYPE::RECTANGULAR, maxRoomSize, levelSize, levelSize);
+		Room&& createdRoom = CreateRoom(rooms, Room::ROOM_TYPE::RECTANGULAR, maxRoomSize, levelSize, levelSize);
 
 		for(int x = createdRoom.x; x < createdRoom.x + createdRoom.w; x++)
 			for(int y = createdRoom.y; y < createdRoom.y + createdRoom.h; y++)
 				level.SetTile(x, y, GROUND);
+
+		for(int x =createdRoom.x-1; x <= createdRoom.x + createdRoom.w; x++)
+		{
+			try{level.SetTile(x, createdRoom.y-1, WALL);}
+			catch(out_of_range ex){}
+
+			try{level.SetTile(x, createdRoom.y+createdRoom.h, WALL);}
+			catch(out_of_range ex){}
+		}
+
+		for(int y =createdRoom.y-1; y <= createdRoom.y + createdRoom.h; y++)
+		{
+			try{level.SetTile(createdRoom.x-1, y, WALL);}
+			catch(out_of_range ex){}
+			try{level.SetTile(createdRoom.x+createdRoom.w, y, WALL);}
+			catch(out_of_range ex){}
+		}
 	}
 
 	for(int x =0; x < levelSize; x++)
@@ -204,50 +388,304 @@ Level Level::CreateLevelWithRooms1(LEVEL_SIZE levelSize, Room::ROOM_SIZE maxRoom
 		level.SetTile(levelSize-1, y, WALL);
 	}
 
-	//for(int x =0; x < levelSize; x++)
-	//	for(int y = 0; y < levelSize; y++)
-	//	{
-	//		Tile& t = level.GetTile(x, y);
-	//		
-	//		auto n = 1;
-	//		int numSolid = 0;
+	//open up doors
 
-	//		if(t.type == GROUND)
-	//		{
-	//			for(int xx = x - n; xx <= x + n; xx++)
-	//			{
-	//				for(int yy = y - n; yy <= y + n; yy++)
-	//				{
-	//					if(xx == x && yy == y)
-	//						continue;
+	for(int i = 0; i < rooms.size(); i++)
+	{
+		Room& room = rooms[i];
 
-	//					try
-	//					{
-	//						if(level.GetTile(xx, yy).type == UNUSED)
-	//							level.SetTile(xx, yy, WALL);
-	//					}
-	//					catch(out_of_range e)
-	//					{
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
+		bool usingX = ScionEngine::GetRandomNumber(0,1);
+		bool side1 = ScionEngine::GetRandomNumber(0,1);
+		int xVal = ScionEngine::GetRandomNumber(room.x, room.x + room.w - 1);
+		int yVal = ScionEngine::GetRandomNumber(room.y, room.y + room.h - 1);
+
+		while(true)
+		{
+			if(usingX)
+			{
+				//pick random place on the top or bottom (not corner) as a door
+				//make sure its not blocked by a wall first
+				if(side1) //top
+				{	//check additional north tile for 'room to move'
+					try{
+						if(level.GetTile(xVal, room.y-2).type == UNUSED)
+							level.SetTile(xVal, room.y-1, UNUSED);
+						break;
+					}
+					catch(out_of_range ex)
+					{	side1 = false; }
+				}
+
+				if(!side1) //bottom
+				{
+					try{
+						if(level.GetTile(xVal, room.y+room.h+1).type == UNUSED)
+							level.SetTile(xVal, room.y+room.h, UNUSED);
+						break;
+					}
+					catch(out_of_range ex)
+					{	usingX = !(side1 = true);}
+				}
+			}
+
+			if(!usingX)
+			{
+				if(side1) //left			
+				{
+					try{
+						if(level.GetTile(room.x-2, yVal).type == UNUSED)
+							level.SetTile(room.x-1, yVal, UNUSED);
+						break;
+					}
+					catch(out_of_range ex)
+					{	side1 = false;			}
+				}
+
+				if(!side1) //right
+				{
+					try{
+						if(level.GetTile(room.x+room.w+1, yVal).type == UNUSED)
+							level.SetTile(room.x+room.w, yVal, UNUSED);
+						break;
+					}
+					catch(out_of_range ex)
+					{	usingX = (side1 = true); }
+				}
+			}
+		}
+	}
 
 
 	//generate corridors
-	for(int x = 1; x < level.GetWidth(); x+=2)
-		for(int y = 1; y < level.GetWidth(); y+=2)
+	//for(int x = 1; x < level.GetWidth(); x+=2)
+	//	for(int y = 1; y < level.GetWidth(); y+=2)
+	//	{
+	//		const auto& t = level.GetTile(x, y);
+
+	//		if(t.type != BLANK && t.type != UNUSED)
+	//			continue;
+
+	//		level.OpenCorridor(x, y);
+	//	}
+
+	return level;
+}
+
+Level Level::CreateLevelWithDLA(LEVEL_SIZE levelSize)
+{
+	Level& level = Level(levelSize, levelSize);
+
+	for(int i = 0; i < levelSize; i++)
+		for(int j = 0; j < levelSize; j++)
+			level.SetTile(i, j, WALL);
+
+	int scaledSize = levelSize/10 + 1;
+	int numSeed = ScionEngine::GetRandomNumber(20*scaledSize, 40*scaledSize);
+
+	for(int s = 0; s < numSeed; s++)
+	{
+		int randX = levelSize/2 + ScionEngine::GetRandomNumber(-scaledSize, scaledSize);
+		int randY = levelSize/2 + ScionEngine::GetRandomNumber(-scaledSize, scaledSize);
+
+		int numTries = 0;
+
+		while(level.GetTile(randX, randY).type == GROUND)
 		{
-			const auto& t = level.GetTile(x, y);
+			numTries++;
 
-			if(t != Tile::DefaultTiles().at(BLANK) && t != Tile::DefaultTiles().at(UNUSED))
-				continue;
+			randX = levelSize/2 + ScionEngine::GetRandomNumber(-scaledSize, scaledSize);
+			randY = levelSize/2 + ScionEngine::GetRandomNumber(-scaledSize, scaledSize);
 
-			level.OpenCorridor(x, y);
+			if(numTries >= 10)
+				break;
 		}
 
-		return level;
+		level.SetTile(randX, randY, GROUND);
+	}
+
+	static sf::Vector2i directionsCanGo[] = 
+	{
+		sf::Vector2i(-1, 0),
+		sf::Vector2i(0, 1),
+		sf::Vector2i(1, 0),
+		sf::Vector2i(0, -1)
+	};
+
+	int numWalkers = 10*levelSize;
+	while(numWalkers > 0)
+	{
+		sf::Vector2i walker(ScionEngine::GetRandomNumber(1, levelSize-2), ScionEngine::GetRandomNumber(1, levelSize-2));
+		sf::Vector2i oldDir;
+
+		int numDirsTried = 0;
+		while(level.GetTile(walker.x, walker.y).type != GROUND)
+		{
+			sf::Vector2i randDirection = directionsCanGo[ScionEngine::GetRandomNumber(0, 3)];
+
+			while(oldDir == randDirection)
+			{
+				numDirsTried++;
+				randDirection = directionsCanGo[ScionEngine::GetRandomNumber(0, 3)];
+			}
+
+			if(numDirsTried >= 3)
+				break;
+
+			try{
+				if(level.GetTile(walker.x + randDirection.x, walker.y + randDirection.y).type == GROUND)
+				{				
+					level.SetTile(walker.x, walker.y, GROUND);
+					break;
+				}
+				else
+					walker += randDirection;
+			}
+			catch(out_of_range ex)
+			{}
+		}
+
+		numWalkers--;
+	}
+
+	return level;
+}
+
+Level Level::CreateLevelWithBSP(LEVEL_SIZE levelSize, Room::ROOM_SIZE maxRoomSize)
+{
+	Level& level = Level(levelSize, levelSize);
+	int numRooms =  ((levelSize)*(levelSize))/(maxRoomSize*maxRoomSize);
+	vector<Room> rooms;
+	const int maxBSPSize = 3;
+
+	vector<SUB_LEVEL> subdungeons;
+	SUB_LEVEL* root;
+	SUB_LEVEL dungeon(0, 0, levelSize, levelSize);
+
+	auto avgSizeOfDungeonParts = [](vector<SUB_LEVEL>& parts) -> int
+	{
+		int sum = 0;
+
+		for(int i = 0; i < parts.size(); i++)
+			sum += parts[i].area();
+
+		sum /= parts.size();
+
+		return sum;
+	};
+
+	auto getRandomSplitNumber = [](double sL, double sH, bool hSplit, SUB_LEVEL& sdung) -> int
+	{
+		return ScionEngine::GetRandomNumber(
+				(!hSplit*(sdung.x + sdung.w*sL)) + (hSplit*(sdung.y + sdung.h*sL)),
+				(!hSplit*(sdung.x + sdung.w*sH)) + (hSplit*(sdung.y + sdung.h*sH)));
+	};
+
+	int smallestPartArea = dungeon.area();
+	subdungeons.push_back(dungeon);
+
+	bool splitting = true;
+	while(avgSizeOfDungeonParts(subdungeons) > maxRoomSize*maxRoomSize && splitting && subdungeons.size() <= numRooms)
+	{
+		int oldSize = subdungeons.size();
+		int numDone = 0;
+
+		for(int i = 0; i < oldSize; i++)
+		{
+			auto& sd = subdungeons[i];
+
+			bool hSplit = static_cast<bool>(ScionEngine::GetRandomNumber(0,1));
+			double splitLow = 0.0;
+			double splitHigh = 1.0;
+
+			int splitPos = getRandomSplitNumber(splitLow, splitHigh, hSplit, sd);
+
+			//make sure the split wont make the resulting dungeon too small
+			if(sd.testSplit(hSplit, splitPos, maxBSPSize))
+			{
+				subdungeons.push_back(sd.split(hSplit, splitPos));
+			}
+			else
+			{
+				bool tsahs = sd.testSplitAll(hSplit, maxBSPSize);
+				bool tsanhs = sd.testSplitAll(!hSplit, maxBSPSize);
+
+				if(!tsahs && !tsanhs)
+				{
+					//youre done with this one
+					numDone++;
+					continue;
+				}
+				else
+				{
+					if(tsahs)
+					{
+					}
+					else if(tsanhs)
+					{
+tsanhs:
+						hSplit = !hSplit;
+					}
+
+					//try a different splitPos
+					set<int> triedSplitPos;
+					triedSplitPos.insert(splitPos);
+
+					splitPos = getRandomSplitNumber(splitLow, splitHigh, hSplit, sd);
+
+					while(!sd.testSplit(hSplit, splitPos, maxBSPSize))
+					{
+						splitPos = getRandomSplitNumber(splitLow, splitHigh, hSplit, sd);
+
+						int limits = !hSplit*(sd.w*(splitHigh - splitLow)) + 
+							hSplit*(sd.h*(splitHigh - splitLow));
+
+						while(triedSplitPos.find(splitPos) != triedSplitPos.end() && triedSplitPos.size() <= limits) 
+						{						
+							splitPos = getRandomSplitNumber(splitLow, splitHigh, hSplit, sd);
+						}
+
+						if(triedSplitPos.size() >= limits)
+						{
+							goto tsanhs;
+						}
+
+						triedSplitPos.insert(splitPos);
+					}
+
+					subdungeons.push_back(sd.split(hSplit, splitPos));
+				}
+			}
+		}
+
+		splitting = (numDone != oldSize);
+	}
+
+
+	for(int i = 0; i < subdungeons.size(); i++)
+	{
+		auto& d = subdungeons[i];
+
+		//create room contained in this subdungeon
+		auto& createdRoom = CreateRoom(rooms, Room::ROOM_TYPE::RECTANGULAR, sf::IntRect(d.x, d.y, d.w, d.h));
+		
+
+		sf::Color c(ScionEngine::GetRandomNumber(0, 255), ScionEngine::GetRandomNumber(0, 255), ScionEngine::GetRandomNumber(0, 255));
+
+		//for(int x = d.x; x < d.x + d.w; x++)
+		//	for(int y = d.y; y < d.y + d.h; y++)
+		//	{
+		//		level.SetTile(x, y, WALL);
+		//		level.GetTile(x, y).color = c;
+		//	}
+
+		for(int x = createdRoom.x; x < createdRoom.x + createdRoom.w; x++)
+			for(int y = createdRoom.y; y < createdRoom.y + createdRoom.h; y++)
+			{
+				level.SetTile(x, y, GROUND);
+				//level.GetTile(x, y).color = sf::Color::White;
+			}
+	}
+	return level;
 }
 
 void Level::OpenCorridor(int x, int y, sf::Vector2i direction)
@@ -536,64 +974,65 @@ float Level::GetDistance(const Tile& s, const Tile& e)
 		return 1.0f;
 	else if (xD == yD) //1,1
 	{
-		if (!GetTile(s.x + (e.x - s.x), s.y).solid && !GetTile(s.x, s.y + (e.y - s.y)).solid)
-			return 0.9f;
-		else
-			return 140.0f;
+		return 9999.0f;
+		//if (!GetTile(s.x + (e.x - s.x), s.y).solid && !GetTile(s.x, s.y + (e.y - s.y)).solid)
+		//	return 0.9f;
+		//else
+		//	return 140.0f;
 	}
 	else
 		return 0;
 }
 
-queue<Tile> Level::GetNeighbors(const Tile& n)
+list<Tile> Level::GetNeighbors(const Tile& n)
 {
 	//returns the neighbors of a node
 
-	queue<Tile> neighbors;
+	list<Tile> neighbors;
 
 	if (n.x > 0)
 	{
-		neighbors.push(GetTile(n.x - 1, n.y));
+		neighbors.push_back(GetTile(n.x - 1, n.y));
 
 		if (n.y > 0)
-			neighbors.push(GetTile(n.x - 1, n.y - 1));
+			neighbors.push_back(GetTile(n.x - 1, n.y - 1));
 		if (n.y < h - 1)
-			neighbors.push(GetTile(n.x - 1, n.y + 1));
+			neighbors.push_back(GetTile(n.x - 1, n.y + 1));
 	}
 
 	if (n.y > 0)
-		neighbors.push(GetTile(n.x, n.y - 1));
+		neighbors.push_back(GetTile(n.x, n.y - 1));
 
 	if (n.x < w - 1)
 	{
-		neighbors.push(GetTile(n.x + 1, n.y));
+		neighbors.push_back(GetTile(n.x + 1, n.y));
 
 		if (n.y > 0)
-			neighbors.push(GetTile(n.x + 1, n.y - 1));
+			neighbors.push_back(GetTile(n.x + 1, n.y - 1));
 		if (n.y < h - 1)
-			neighbors.push(GetTile(n.x + 1, n.y + 1));
+			neighbors.push_back(GetTile(n.x + 1, n.y + 1));
 	}
 
 	if (n.y < h - 1)
-		neighbors.push(GetTile(n.x, n.y + 1));
+		neighbors.push_back(GetTile(n.x, n.y + 1));
 
 	return neighbors;
 }
 
-queue<Tile>& Level::ConstructPath(std::unordered_map<Tile, Tile>& q, queue<Tile>& path, const Tile& t)
+list<Tile>& Level::ConstructPath(std::unordered_map<Tile, Tile>& q, list<Tile>& path, const Tile& t)
 {
 	//traverses the map and constructs a path given a node
 	if (q.find(t) != q.end())
 	{
 		path = ConstructPath(q, path, q[t]);
-		path.push(t);
+		path.push_back(t);
 		return path;
 	}
 	else
 		return path;
 }
 
-queue<Tile> Level::FindPath(const Tile& start, const Tile& end)
+list<Tile> Level::FindPath(const Tile& start, const Tile& end)
 {
 	bool newGScoreBetter = false;
 	unordered_set<Tile> closedSet;
@@ -603,26 +1042,26 @@ queue<Tile> Level::FindPath(const Tile& start, const Tile& end)
 	std::unordered_map<Tile, Tile> navigated;
 	std::unordered_map<Tile, float> gScore;
 	std::unordered_map<Tile, float> hScore;
-	std::map<float, queue<Tile>> fScore; //easy way to use a structure to auto-sort for you
+	std::map<float, list<Tile>> fScore; //easy way to use a structure to auto-sort for you
 
 	gScore[start] = 0;
 	hScore[start] = HeuristicForNode(start, end);
-	fScore[gScore[start] + hScore[start]].push(start);
+	fScore[gScore[start] + hScore[start]].push_back(start);
 
 	while (openSet.size() > 0)
 	{
 		//take the lowest f-score node and dequeue it
 		auto& lowestScore = fScore.begin()->second;
 		Tile current = lowestScore.front();
-		lowestScore.pop();
+		lowestScore.pop_front();
 
 		if (lowestScore.size() == 0)
 			fScore.erase(fScore.begin()); //just some maintenance to make sure you keep the lowest fscore with .First()
 
 		if (current == end) //reached the end
 		{
-			queue<Tile> path;
-			path.push(start);
+			list<Tile> path;
+			path.push_back(start);
 			return ConstructPath(navigated, path, current);
 		}
 
@@ -630,7 +1069,7 @@ queue<Tile> Level::FindPath(const Tile& start, const Tile& end)
 		closedSet.insert(current); //put into closed
 
 		auto neighbors = GetNeighbors(current);
-		for(auto neighbor1 = std::begin(neighbors._Get_container()); neighbor1 != std::end(neighbors._Get_container()); neighbor1++)
+		for(auto neighbor1 = std::begin(neighbors); neighbor1 != std::end(neighbors); neighbor1++)
 		{
 			auto& neighbor = *neighbor1;
 			if (closedSet.find(neighbor) != closedSet.end() || neighbor.solid)
@@ -658,11 +1097,11 @@ queue<Tile> Level::FindPath(const Tile& start, const Tile& end)
 				if (fScore.find(gScore[neighbor] + hScore[neighbor]) == fScore.end())
 					fScore[gScore[neighbor] + hScore[neighbor]];
 
-				fScore[gScore[neighbor] + hScore[neighbor]].push(neighbor);
+				fScore[gScore[neighbor] + hScore[neighbor]].push_back(neighbor);
 			}
 		}
 	}
 
 	//failed
-	return queue<Tile>();
+	return list<Tile>();
 }
