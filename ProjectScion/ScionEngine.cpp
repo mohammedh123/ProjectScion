@@ -1,7 +1,7 @@
 #include "ScionEngine.h"
-
 #include "SpriteBehavior.h"
 #include "PlayerInputBehavior.h"
+#include "LevelGenerator.h"
 
 #include <string>
 #include <sstream>
@@ -65,7 +65,7 @@ void ScionEngine::Init()
 	player->AddBehavior(CreateBehavior(new SpriteBehavior(*texManager->GetImage("player.png"), 16, 16, trans, window.get())));
 	player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans)));
 	
-	currentLevel = Level::CreateLevelWithBSP(Level::LEVEL_SIZE::FINE, Level::Room::ROOM_SIZE::COLOSSAL);
+	currentLevel = LevelGenerator::CreateLevelWithRooms1(Level::SIZE::FINE, ROOM::SIZE::SMALL);
 
 	//only for testing out proc gen
 	auto fstZ = float(currentLevel.GetWidth()*Tile::SIZE)/windowWidth;
@@ -120,7 +120,7 @@ void ScionEngine::ProcessInput()
 		{
 			auto oldCamera = currentLevel.GetCamera();
 		
-			currentLevel = Level::CreateLevelWithBSP(Level::LEVEL_SIZE::FINE, Level::Room::ROOM_SIZE::SMALL);
+			currentLevel = LevelGenerator::CreateLevelWithRooms1(Level::SIZE::FINE, ROOM::SIZE::SMALL);
 
 			currentLevel.GetCamera() = oldCamera;
 		}

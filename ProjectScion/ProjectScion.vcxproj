@@ -49,6 +49,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\libnoise\bin;C:\SFML-2.0-rc\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libnoise.lib;sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-audio-s-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>false</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -67,10 +68,14 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Direction.cpp" />
     <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="LevelGenerator.cpp" />
+    <ClCompile Include="LevelPartition.cpp" />
     <ClCompile Include="noiseutils.cpp" />
+    <ClCompile Include="Room.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="PlayerInputBehavior.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -90,12 +95,19 @@
   <ItemGroup>
     <ClInclude Include="Attribute.h" />
     <ClInclude Include="Behavior.h" />
+    <ClInclude Include="Branch.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="CorridorBranch.h" />
+    <ClInclude Include="Direction.h" />
     <ClInclude Include="FontManager.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="LevelGenerator.h" />
+    <ClInclude Include="LevelPartition.h" />
     <ClInclude Include="noiseutils.h" />
+    <ClInclude Include="Room.h" />
+    <ClInclude Include="RoomBranch.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="PlayerInputBehavior.h" />
     <ClInclude Include="Level.h" />

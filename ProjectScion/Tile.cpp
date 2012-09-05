@@ -4,9 +4,9 @@
 
 using namespace std;
 
-const map<TILE_TYPE,Tile>& Tile::DefaultTiles()
+const map<Tile::TYPE,Tile>& Tile::DefaultTiles()
 {
-	static map<TILE_TYPE, Tile> m;
+	static map<Tile::TYPE, Tile> m;
 
 	if(m.empty())
 	{
@@ -21,11 +21,11 @@ const map<TILE_TYPE,Tile>& Tile::DefaultTiles()
 	return m;
 }
 
-Tile::Tile(int x, int y, TILE_TYPE type, bool solid, const sf::Color& color) : x(x), y(y), type(type), solid(solid), color(color)
+Tile::Tile(int x, int y, Tile::TYPE type, bool solid, const sf::Color& color) : x(x), y(y), type(type), solid(solid), color(color)
 {
 }
 
-Tile::Tile(int x, int y, sf::Texture* image, sf::IntRect rect, TILE_TYPE type, bool solid, const sf::Color& color) : x(x), y(y), baseSprite(*image, rect), type(type), solid(solid), color(color)
+Tile::Tile(int x, int y, sf::Texture* image, sf::IntRect rect, Tile::TYPE type, bool solid, const sf::Color& color) : x(x), y(y), baseSprite(*image, rect), type(type), solid(solid), color(color)
 {
 	//baseSprite.setOrigin(Tile::SIZE/2, Tile::SIZE/2);
 }
@@ -61,5 +61,5 @@ bool operator!=(const Tile& lhs, const Tile& rhs)
 
 bool operator<(const Tile& lhs, const Tile& rhs)
 {
-	return lhs.x < rhs.x && lhs.y < rhs.y;
+	return lhs.GetF() < rhs.GetF();
 }

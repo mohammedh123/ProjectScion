@@ -4,34 +4,48 @@
 #include <SFML\Graphics.hpp>
 #include <map>
 #include <string>
+#include <math.h>
 
-enum TILE_TYPE
-{
-	UNUSED,
-	BLANK,
-	GROUND,
-	WALL,
-	CORRIDOR
-};
 
 class Tile
 {
 	friend bool operator==(const Tile& lhs, const Tile& rhs);
 public:
-	TILE_TYPE type;
+	enum TYPE
+	{
+		UNUSED,
+		BLANK,
+		GROUND,
+		WALL,
+		CORRIDOR
+	};
+
+	Tile::TYPE type;
+	bool entrance;
+
 	sf::Color color;
 	int x, y;
 
-    static const std::map<TILE_TYPE,Tile>& DefaultTiles();
+	//pathfinding
+	float G, H;
+	inline float GetF() const { return G + H; }
+	inline float ManhattanDistance(Tile* tile) const
+	{
+		return std::abs(tile->x - x) + std::abs(tile->y - y);		
+	}
+	Tile* parent;
+	//end pathfinding
+
+    static const std::map<Tile::TYPE,Tile>& DefaultTiles();
 
 	sf::Sprite baseSprite;
 	bool solid;
 	static const int SIZE = 32;
 	
-	Tile() : x(0), y(0), solid(false), type(UNUSED) {}
-	Tile(int x, int y) : x(x), y(y), solid(false), type(UNUSED) {}
-	explicit Tile(int x, int y, TILE_TYPE type, bool solid = true, const sf::Color& color = sf::Color::White);
-	explicit Tile(int x, int y, sf::Texture* image, sf::IntRect rect, TILE_TYPE type, bool solid = true, const sf::Color& color = sf::Color::White);
+	Tile() : x(0), y(0), solid(false), type(UNUSED), entrance(false) {}
+	Tile(int x, int y) : x(x), y(y), solid(false), type(UNUSED), entrance(false) {}
+	explicit Tile(int x, int y, Tile::TYPE type, bool solid = true, const sf::Color& color = sf::Color::White);
+	explicit Tile(int x, int y, sf::Texture* image, sf::IntRect rect, Tile::TYPE type, bool solid = true, const sf::Color& color = sf::Color::White);
 
 	~Tile();
 

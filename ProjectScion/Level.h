@@ -2,10 +2,8 @@
 #define _LEVEL_H
 
 #include <vector>
-#include <memory>
-#include <unordered_set>
 #include <unordered_map>
-#include <list>
+#include <deque>
 
 #include "Tile.h"
 #include "Entity.h"
@@ -25,7 +23,7 @@ private:
 
 	void SetDimensions(int w, int h);
 public:
-	enum LEVEL_SIZE
+	enum SIZE
 	{
 		FINE = 23,
 		DIMINUTIVE = 29,
@@ -38,59 +36,6 @@ public:
 		COLOSSAL = 161
 	};
 
-	struct Room
-	{
-		enum ROOM_SIZE
-		{
-			//value is max-size
-			SMALL = 5,
-			MEDIUM = 11,
-			LARGE = 11,
-			HUGE = 17,
-			GARGANTUAN = 23,
-			COLOSSAL = 29
-		};
-
-		enum ROOM_TYPE
-		{
-			RECTANGULAR,
-			STARBURST,
-			CIRCULAR,
-			ROTATED
-		};
-
-		int x, y, w, h;
-		ROOM_TYPE type;
-
-		inline bool CollidesWith(Room& r, int border = 0) const
-		{
-			// -    0    1    2    3
-			// 0	.    .    .    .
-			// 1	.    b(a) a    .
-			// 2	.    a    a    .
-			// 3	.    .    .    .
-			// x = 1
-			// y = 1
-			// w = 1
-			// h = 1
-			// r.x = 1
-			// r.y = 1
-			// r.w = 2
-			// r.h = 2
-			// (1 > 2) = false
-			// (3 < 1) = false
-			// (1 > 2) = false
-			// (3 < 1) = false
-			// true
-
-
-			return !(r.x - border >= x + w + border ||
-				r.x + r.w + border <= x  - border ||
-				r.y - border >= y + h + border ||
-				r.y + r.h + border <= y - border);
-		}
-	};
-
 	Level() : camera(800, 600, 0.2f) {}
 	Level(int widthInTiles, int heightInTiles);
 	~Level();
@@ -100,13 +45,14 @@ public:
 		map[y][x] = tile;
 	}
 
-	inline void SetTile(int x, int y, TILE_TYPE type)
+	inline void SetTile(int x, int y, Tile::TYPE type, int entrance = -1)
 	{
 		auto& tile = Tile::DefaultTiles().at(type);
 		map.at(y).at(x).baseSprite = tile.baseSprite;
 		map.at(y).at(x).solid = tile.solid;
 		map.at(y).at(x).type = type;
 		map.at(y).at(x).color = sf::Color::White;
+		map.at(y).at(x).entrance = (entrance != -1 ? (bool)entrance : map.at(y).at(x).entrance);
 	}
 
 	inline Tile& GetTile(int x, int y)
@@ -119,30 +65,17 @@ public:
 	inline Camera& GetCamera() {return camera;}
 	inline int GetWidth() const {return w;}
 	inline int GetHeight() const {return h;}
-	
-	static Level CreateLevelWithRooms1(LEVEL_SIZE levelSize, Room::ROOM_SIZE maxRoomSize);
-	static Level CreateLevelWithRooms2(LEVEL_SIZE levelSize, Room::ROOM_SIZE maxRoomSize);
-	static Level CreateLevelWithDLA(LEVEL_SIZE levelSize);
-	static Level CreateLevelWithBSP(LEVEL_SIZE levelSize, Room::ROOM_SIZE maxRoomSize);
-	static Level CreateLevelWithPerlinNoise(int levelWidth, int levelHeight);
-	static Level CreateLevelWithVoronoiNoise(int levelWidth, int levelHeight);
-	static Level CreateLevelWithCA(int levelWidth, int levelHeight);
 
 	void Draw(sf::RenderWindow* window);
-	void OpenCorridor(int x, int y, sf::Vector2i direction = sf::Vector2i());
 private:	
-	bool OpenTunnel(int x, int y, sf::Vector2i direction = sf::Vector2i());
-	bool IsTunnelValid(int midX, int midY, int nextX, int nextY);
-	bool CreateTunnel(int thisX, int thisY, int nextX, int nextY);
-
-	static Level::Room CreateRoom(std::vector<Room>& rooms, Room::ROOM_TYPE type, Room::ROOM_SIZE size, int levelWidth, int levelHeight);
-	static Level::Room CreateRoom(std::vector<Room>& rooms, Room::ROOM_TYPE type, sf::IntRect bounds);
-	
 	static float HeuristicForNode(const Tile& start, const Tile& end);
-	float GetDistance(const Tile& s, const Tile& e);
-	std::list<Tile> GetNeighbors(const Tile& n);
-	static std::list<Tile>& Level::ConstructPath(std::unordered_map<Tile, Tile>& q, std::list<Tile>& path, const Tile& t);
-	std::list<Tile> Level::FindPath(const Tile& start, const Tile& end);
+	float GetDistance(const Tile& s, const Tile& e) const;
+	void GetNeighbors(const Tile& n, std::deque<Tile>& neighbors);
+	void GetNeighbors(const Tile* n, std::deque<Tile*>& neighbors);
+	static std::deque<Tile>& Level::ConstructPath(std::unordered_map<Tile, Tile>& q, std::deque<Tile>& path, const Tile& t);
+	std::deque<Tile> Level::FindPath(const Tile& start, const Tile& end);
+	std::deque<Tile*> ConstructPath(Tile* end);
+	std::deque<Tile*> FindPath(Tile* start, Tile* end);
 };
 
 #endif
