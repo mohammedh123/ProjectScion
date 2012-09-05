@@ -160,12 +160,29 @@ void LevelGenerator::GenerateRooms(Level& level, vector<ROOM>& rooms, int numRoo
 			//place doors
 			while(numDoors < maxDoors)
 			{
-				int randX = ScionEngine::GetRandomNumber(
-				if(x % 2 != 0 || y % 2 != 0)
-				{
-					if(ScionEngine::GetRandomNumber(1, 100) <= door_chance*100)
-						level.SetTile(x, y, Tile::BLANK, true);
+				bool whichSide = ScionEngine::GetRandomNumber(0, 1); //false = top/left, true = bot/right
+				bool topOrLeft = ScionEngine::GetRandomNumber(0, 1); //false = horizontal, true = vertical
+				int randX = ( topOrLeft*whichSide*(createdRoom.w+1)) + (!topOrLeft)*ScionEngine::GetRandomNumber(0, createdRoom.w+1);
+				int randY = (!topOrLeft*whichSide*(createdRoom.h+1)) + ( topOrLeft)*ScionEngine::GetRandomNumber(0, createdRoom.h+1);
+				
+				int wallX = createdRoom.x-1+randX;
+				int wallY = createdRoom.y-1+randY;
+
+				while((wallX % 2 == 0 && wallY % 2 == 0) ||
+					(wallX == 0 || wallX == level.GetWidth()-1 ||
+					wallY == 0 || wallY == level.GetHeight()-1))
+				{			
+					whichSide = ScionEngine::GetRandomNumber(0, 1); //false = top/left, true = bot/right
+					topOrLeft = ScionEngine::GetRandomNumber(0, 1); //false = horizontal, true = vertical
+					randX = ( topOrLeft*whichSide*(createdRoom.w+1)) + (!topOrLeft)*ScionEngine::GetRandomNumber(0, createdRoom.w+1);
+					randY = (!topOrLeft*whichSide*(createdRoom.h+1)) + ( topOrLeft)*ScionEngine::GetRandomNumber(0, createdRoom.h+1);
+
+					wallX = createdRoom.x-1+randX;
+					wallY = createdRoom.y-1+randY;
 				}
+
+				level.SetTile(wallX, wallY, Tile::BLANK, true);
+				numDoors++;
 			}
 			//for(int x =createdRoom.x-1; x <= createdRoom.x + createdRoom.w; x++)
 			//{
@@ -353,7 +370,7 @@ void LevelGenerator::OpenCorridor(Level& level, int x, int y, CorridorBranch* pa
 
 			for(int b = 0; b < tiles.size(); b++)
 			{
-				level.SetTile(tiles[b]->x, tiles[b]->y, Tile::CORRIDOR);
+				level.SetTile(tiles[b]->x, tiles[b]->y, Tile::GROUND);
 				corridorMap[tiles[b]] = corridorObj;
 			}
 
@@ -369,12 +386,12 @@ void LevelGenerator::OpenCorridor(Level& level, int x, int y, CorridorBranch* pa
 
 			for(int b = 0; b < tiles.size(); b++)
 			{
-				level.SetTile(tiles[b]->x, tiles[b]->y, Tile::CORRIDOR);
+				level.SetTile(tiles[b]->x, tiles[b]->y, Tile::GROUND);
 				corridorMap[tiles[b]] = corridorObj;
 			}
 
 			if(parent != nullptr)
-				parent->children.push_back(reinterpret_cast<Branch*>(roomMap[tiles[tiles.size()-1]].get()));
+				parent->children.push_back(roomMap[tiles[tiles.size()-1]].get());
 		}
 	}
 }
@@ -382,7 +399,7 @@ void LevelGenerator::OpenCorridor(Level& level, int x, int y, CorridorBranch* pa
 void LevelGenerator::TrimTree(Level& level)
 {
 	for(int i = 0; i < corridorSeeds.size(); i++)
-		CheckBranch(level, reinterpret_cast<Branch*>(corridorMap[corridorSeeds[i]].get()));
+		CheckBranch(level, corridorMap[corridorSeeds[i]].get());
 }
 
 //if branch does not have room, remove reference
@@ -402,8 +419,9 @@ bool LevelGenerator::CheckBranch(Level& level, Branch* branch)
 
 		if(!tRoom || branch->children.size() > level.GetWidth()/2)
 		{
-			for(int j = 0; j < c->tiles.size(); j++)
-				level.SetTile(c->tiles[j]->x, c->tiles[j]->y, Tile::UNUSED);
+			if(c)
+				for(int j = 0; j < c->tiles.size(); j++)
+					level.SetTile(c->tiles[j]->x, c->tiles[j]->y, Tile::UNUSED);
 		}
 		else
 			if(!room) room = true;
@@ -412,7 +430,7 @@ bool LevelGenerator::CheckBranch(Level& level, Branch* branch)
 	if(room)
 	{
 		auto lastTile = branch->tiles[branch->tiles.size()-1];
-		level.SetTile(lastTile->x, lastTile->y, Tile::CORRIDOR);
+		level.SetTile(lastTile->x, lastTile->y, Tile::GROUND);
 	}
 	else
 	{
