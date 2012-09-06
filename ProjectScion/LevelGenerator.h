@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <map>
+#include <string>
 
 //https://sourceforge.net/p/dungeongen/
 
@@ -24,7 +25,7 @@ class LevelGenerator
 	static void WallUpRooms(Level& level, std::vector<ROOM>& rooms);
 	static void OpenDoorsOnRooms(Level& level, std::vector<ROOM>& rooms);
 	static void GenerateCorridors(Level& level);
-	static void OpenCorridor(Level& level, int x, int y, CorridorBranch* parent);
+	static void OpenCorridor(Level& level, int x, int y, CorridorBranch* parent, std::string lastDir="");
 
 	static ROOM CreateRoom(std::vector<ROOM>& rooms, ROOM::TYPE type, ROOM::SIZE size, int levelWidth, int levelHeight);
 	static ROOM CreateRoom(std::vector<ROOM>& rooms, ROOM::TYPE type, sf::IntRect bounds);

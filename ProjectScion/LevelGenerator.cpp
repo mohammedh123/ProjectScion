@@ -144,16 +144,19 @@ void LevelGenerator::GenerateRooms(Level& level, vector<ROOM>& rooms, int numRoo
 			for(int x = createdRoom.x-1; x <= createdRoom.x + createdRoom.w; x++)
 				for(int y = createdRoom.y-1; y <= createdRoom.y + createdRoom.h; y++)
 				{
-					level.SetTile(x, y, Tile::GROUND);
-
-					if(x == createdRoom.x - 1 ||
-						x == createdRoom.x + createdRoom.w ||
-						y == createdRoom.y - 1 ||
-						y == createdRoom.y + createdRoom.h)
+					if(x != 0 && y != 0 && x != level.GetWidth()-1 && y != level.GetHeight()-1)
 					{
-						level.SetTile(x, y, Tile::WALL);
+						if(x == createdRoom.x - 1 ||
+							x == createdRoom.x + createdRoom.w ||
+							y == createdRoom.y - 1 ||
+							y == createdRoom.y + createdRoom.h)
+						{
+							level.SetTile(x, y, Tile::WALL);
 						
-						roomTiles.push_back(&level.GetTile(x, y));
+							roomTiles.push_back(&level.GetTile(x, y));
+						}
+						else
+							level.SetTile(x, y, Tile::GROUND);
 					}
 				}				
 
@@ -326,11 +329,11 @@ void LevelGenerator::GenerateCorridors(Level& level)
 	}
 }
 
-void LevelGenerator::OpenCorridor(Level& level, int x, int y, CorridorBranch* parent)
+void LevelGenerator::OpenCorridor(Level& level, int x, int y, CorridorBranch* parent, string lastDir)
 {
-	vector<string> dirs;
-
-	dirs = move(Direction::GetKeys());
+	deque<string> dirs = move(Direction::GetKeys());
+	if(lastDir != "")
+		dirs.push_front(lastDir);
 
 	for(int d = 0; d < dirs.size(); d++)
 	{
@@ -361,7 +364,9 @@ void LevelGenerator::OpenCorridor(Level& level, int x, int y, CorridorBranch* pa
 				}
 			}
 			else
+			{
 				failed = true;
+			}
 		}
 
 		if(!failed)
@@ -377,7 +382,7 @@ void LevelGenerator::OpenCorridor(Level& level, int x, int y, CorridorBranch* pa
 			if(parent != nullptr)
 				parent->children.push_back(corridorObj.get());
 
-			OpenCorridor(level, tiles[tiles.size()-1]->x, tiles[tiles.size()-1]->y, corridorObj.get());
+			OpenCorridor(level, tiles[tiles.size()-1]->x, tiles[tiles.size()-1]->y, corridorObj.get(), dKey);
 		}
 
 		if(corientrance)
@@ -419,7 +424,7 @@ bool LevelGenerator::CheckBranch(Level& level, Branch* branch)
 
 		if(!tRoom || branch->children.size() > level.GetWidth()/2)
 		{
-			if(c)
+			//if(c)
 				for(int j = 0; j < c->tiles.size(); j++)
 					level.SetTile(c->tiles[j]->x, c->tiles[j]->y, Tile::UNUSED);
 		}
@@ -521,6 +526,14 @@ Level LevelGenerator::CreateLevelWithRooms2(Level::SIZE levelSize, ROOM::SIZE ma
 Level LevelGenerator::CreateLevelWithRooms1(Level::SIZE levelSize, ROOM::SIZE maxRoomSize)
 {
 	Level& level = Level(levelSize, levelSize);
+	
+	for(int i = 0; i < levelSize; i++)
+	{
+		level.SetTile(i, 0, Tile::WALL);
+		level.SetTile(0, i, Tile::WALL);
+		level.SetTile(i, levelSize-1, Tile::WALL);
+		level.SetTile(levelSize-1, i, Tile::WALL);
+	}
 
 	int numRooms =  ((levelSize)*(levelSize))/(maxRoomSize*maxRoomSize);
 
@@ -530,6 +543,8 @@ Level LevelGenerator::CreateLevelWithRooms1(Level::SIZE levelSize, ROOM::SIZE ma
 	rooms.reserve(numRooms);
 
 	GenerateRooms(level, rooms, numRooms, maxRoomSize, levelSize);
+
+
 	//WallUpRooms(level, rooms);
 
 	//open up doors

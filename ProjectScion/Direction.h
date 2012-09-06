@@ -2,7 +2,7 @@
 #define _DIRECTION_H
 
 #include <unordered_map>
-#include <vector>
+#include <deque>
 #include <string>
 #include <algorithm>
 
@@ -31,10 +31,9 @@ public:
 		OPPOSITE["west"]	= "east";
 	}
 
-	static std::vector<std::string> GetKeys()
+	static std::deque<std::string> GetKeys()
 	{
-		std::vector<std::string> dirKeys;
-		dirKeys.reserve(4);
+		std::deque<std::string> dirKeys;
 
 		std::for_each(begin(DIRECTIONS), end(DIRECTIONS), [&](std::pair<std::string, sf::Vector2i> val)
 		{
@@ -44,7 +43,7 @@ public:
 		return dirKeys;
 	}
 
-	static std::vector<std::string> ShuffleKeys()
+	static std::deque<std::string> ShuffleKeys()
 	{
 		auto&& dirKeys = GetKeys();
 
