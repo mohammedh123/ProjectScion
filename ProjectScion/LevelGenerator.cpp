@@ -823,7 +823,7 @@ Level LevelGenerator::CreateLevelWithRooms1(Level::SIZE levelSize, ROOM::SIZE ma
 
 	Cleanup();
 
-	level.PrintToImage("final.png");
+	//level.PrintToImage("final.png");
 
 	array<array<Tile*, 3>, 3> neighbors;
 	neighbors[0] = array<Tile*, 3>();
