@@ -9,7 +9,7 @@
 class CorridorBranch : public Branch
 {
 public:
-	CorridorBranch(std::vector<Tile*>& tiles) : Branch(tiles)
+	CorridorBranch(std::vector<Tile*>& tiles, Branch* parent = nullptr) : Branch(tiles, parent)
 	{}
 
 	TYPE Type() { return Branch::CORRIDOR; }

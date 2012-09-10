@@ -16,8 +16,9 @@ public:
 
 	std::vector<Tile*> tiles;
 	std::vector<Branch*> children;
+	Branch* parent;
 
-	Branch(std::vector<Tile*>& tiles) : tiles(tiles)
+	Branch(std::vector<Tile*>& tiles, Branch* parent=nullptr) : tiles(tiles), parent(parent)
 	{}
 
 	virtual TYPE Type() = 0;

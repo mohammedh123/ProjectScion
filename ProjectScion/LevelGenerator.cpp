@@ -7,6 +7,11 @@
 #include "noiseutils.h"
 
 #include <Windows.h>
+#include <map>
+#include <vector>
+#include <unordered_set>
+
+#define SCREENSHOTTING 0
 
 using namespace noise;
 using namespace std;
@@ -45,22 +50,22 @@ ROOM LevelGenerator::CreateRoom(vector<ROOM>& rooms, ROOM::TYPE type, ROOM::SIZE
 					room.h = ScionEngine::GetRandomNumber(MIN_ROOM_H, MAX_ROOM_H);
 
 				while(room.x % 2 == 0 || room.x + room.w >= levelWidth)
-					room.x = ScionEngine::GetRandomNumber(1, levelWidth-1);
+					room.x = ScionEngine::GetRandomNumber(0, levelWidth/2)*2+1;
 
 				while(room.y % 2 == 0 || room.y + room.h >= levelHeight)
-					room.y = ScionEngine::GetRandomNumber(1, levelHeight-1);
+					room.y = ScionEngine::GetRandomNumber(0, levelHeight/2)*2+1;
 
 				for_each(begin(rooms), end(rooms), [&](ROOM& room2)
 				{
-					if(room2.CollidesWith(room, 1))
+					if(room2.CollidesWith(room, 1, 0))
 						anyCollisions = true;
 				});
 
 				numAttemptsToCreateRoom++;
 			}
-			while(anyCollisions && numAttemptsToCreateRoom < 16);
+			while(anyCollisions && numAttemptsToCreateRoom < 2);
 
-			if(numAttemptsToCreateRoom >= 16)
+			if(numAttemptsToCreateRoom >= 2)
 			{
 				room.x = room.y = room.w = room.h = 0;
 
@@ -139,7 +144,7 @@ void LevelGenerator::GenerateRooms(Level& level, vector<ROOM>& rooms, int numRoo
 		{
 			//success
 			vector<Tile*> roomTiles;
-			int numDoors = 0, maxDoors = 1 + createdRoom.w*createdRoom.h/35;
+			int numDoors = 0, maxDoors = 1 + createdRoom.w*createdRoom.h/25;
 			
 			for(int x = createdRoom.x-1; x <= createdRoom.x + createdRoom.w; x++)
 				for(int y = createdRoom.y-1; y <= createdRoom.y + createdRoom.h; y++)
@@ -151,7 +156,7 @@ void LevelGenerator::GenerateRooms(Level& level, vector<ROOM>& rooms, int numRoo
 							y == createdRoom.y - 1 ||
 							y == createdRoom.y + createdRoom.h)
 						{
-							level.SetTile(x, y, Tile::WALL);
+							//level.SetTile(x, y, Tile::WALL);
 						
 							roomTiles.push_back(&level.GetTile(x, y));
 						}
@@ -159,6 +164,36 @@ void LevelGenerator::GenerateRooms(Level& level, vector<ROOM>& rooms, int numRoo
 							level.SetTile(x, y, Tile::GROUND);
 					}
 				}				
+
+			for(auto room = begin(rooms), roomEnd = end(rooms); room != roomEnd; room++)
+			{
+				if(*room == createdRoom)
+					continue;
+
+				ROOM colR;
+				if(createdRoom.CollidesWith(*room, 1, 1, &colR))
+				{
+					//pick a random spot along the collision [ should be a single line of collision ]
+					//turn it into a door
+					
+					int randX = ScionEngine::GetRandomNumber(colR.x, colR.x + colR.w-1);
+					int randY = ScionEngine::GetRandomNumber(colR.y, colR.y + colR.h-1);
+					int numTries = 0;
+
+					while(numTries < 16 && randX % 2 == 0 && randY % 2 == 0)
+					{
+						randX = ScionEngine::GetRandomNumber(colR.x, colR.x + colR.w-1);
+						randY = ScionEngine::GetRandomNumber(colR.y, colR.y + colR.h-1);
+						numTries++;
+					}
+
+					if(numTries < 16)
+					{
+						level.SetTile(randX, randY, Tile::GROUND, true);
+						numDoors++;
+					}
+				}
+			}
 
 			//place doors
 			while(numDoors < maxDoors)
@@ -184,7 +219,22 @@ void LevelGenerator::GenerateRooms(Level& level, vector<ROOM>& rooms, int numRoo
 					wallY = createdRoom.y-1+randY;
 				}
 
-				level.SetTile(wallX, wallY, Tile::BLANK, true);
+				sf::Vector2i outwards;
+				if(!topOrLeft)
+				{
+					outwards.x = 0;
+					outwards.y = whichSide ? 1 : -1;
+				}
+				else
+				{
+					outwards.x = whichSide ? 1 : -1;
+					outwards.y = 0;
+				}
+
+				outwards.x =  topOrLeft*(-1+whichSide*2);
+				outwards.y = !topOrLeft*(-1+whichSide*2);
+
+				level.SetTile(wallX, wallY, Tile::UNUSED, true, outwards);
 				numDoors++;
 			}
 			//for(int x =createdRoom.x-1; x <= createdRoom.x + createdRoom.w; x++)
@@ -252,27 +302,29 @@ void LevelGenerator::OpenDoorsOnRooms(Level& level, vector<ROOM>& rooms)
 				//make sure its not blocked by a wall first
 				if(side1) //top
 				{	//check additional north tile for 'room to move'
-					try{
+					if(level.IsWithinBounds(xVal, room.y-2))
+					{
 						if(level.GetTile(xVal, room.y-2).type == Tile::UNUSED)
 							level.SetTile(xVal, room.y-1, Tile::BLANK, true);
 						room.doorX = xVal;
 						room.doorY = room.y - 1;
 						break;
 					}
-					catch(out_of_range ex)
+					else
 					{	side1 = false; }
 				}
 
 				if(!side1) //bottom
 				{
-					try{
+					if(level.IsWithinBounds(xVal, room.y+room.h+1))
+					{
 						if(level.GetTile(xVal, room.y+room.h+1).type == Tile::UNUSED)
 							level.SetTile(xVal, room.y+room.h, Tile::BLANK, true);
 						room.doorX = xVal;
 						room.doorY = room.y+room.h;
 						break;
 					}
-					catch(out_of_range ex)
+					else
 					{	usingX = !(side1 = true);}
 				}
 			}
@@ -281,27 +333,29 @@ void LevelGenerator::OpenDoorsOnRooms(Level& level, vector<ROOM>& rooms)
 			{
 				if(side1) //left			
 				{
-					try{
+					if(level.IsWithinBounds(room.x-2, yVal))
+					{
 						if(level.GetTile(room.x-2, yVal).type == Tile::UNUSED)
 							level.SetTile(room.x-1, yVal, Tile::BLANK, true);
 						room.doorX = room.x-1;
 						room.doorY = yVal;
 						break;
 					}
-					catch(out_of_range ex)
+					else
 					{	side1 = false;			}
 				}
 
 				if(!side1) //right
 				{
-					try{
+					if(level.IsWithinBounds(room.x+room.w+1, yVal))
+					{
 						if(level.GetTile(room.x+room.w+1, yVal).type == Tile::UNUSED)
 							level.SetTile(room.x+room.w, yVal, Tile::BLANK, true);
 						room.doorX = room.x+room.w;
 						room.doorY = yVal;
 						break;
 					}
-					catch(out_of_range ex)
+					else
 					{	usingX = (side1 = true); }
 				}
 			}
@@ -311,33 +365,84 @@ void LevelGenerator::OpenDoorsOnRooms(Level& level, vector<ROOM>& rooms)
 
 void LevelGenerator::GenerateCorridors(Level& level)
 {
+#if SCREENSHOTTING
+	sf::RenderTexture tex;
+	tex.create(800, 600);
+	auto fstZ = float(level.GetWidth()*Tile::SIZE)/800;
+	auto sndZ = float(level.GetHeight()*Tile::SIZE)/600;
+	level.GetCamera().DirectZoomOfOriginal(max(fstZ, sndZ)+0.1f);
+	//level.GetCamera().MoveCenter(0, 0);
+	level.GetCamera().MoveCenter(level.GetWidth()*Tile::SIZE/2, level.GetHeight()*Tile::SIZE/2);
+	tex.setView(level.GetCamera().GetView());
+	level.Draw(&tex);
+	tex.display();
+	tex.getTexture().copyToImage().saveToFile("output.png");
+#endif
+
 	Direction::InitializeDirections();
 
-	for(int i = 1; i < level.GetWidth(); i++)
+	//for(int i = ScionEngine::GetRandomNumber(1, level.GetWidth()); i < level.GetWidth(); i = ScionEngine::GetRandomNumber(1, level.GetWidth()))
+	for(int i = 1; i < level.GetWidth()-1; i++)
 	{
-		for(int j = 0; j < level.GetHeight(); j++)
+		//for(int j = ScionEngine::GetRandomNumber(1, level.GetHeight()); j < level.GetHeight(); j = ScionEngine::GetRandomNumber(1, level.GetHeight()))
+		for(int j = 1; j < level.GetHeight()-1; j++)
+	//for(auto itr = begin(roomMap), itrEnd = end(roomMap); itr != itrEnd; itr++)
 		{
-			if(i%2 != 0 && j%2 != 0)
-			{
-				if(level.GetTile(i, j).type == Tile::UNUSED)
-				{
-					OpenCorridor(level, i, j, nullptr);
-					corridorSeeds.push_back(&level.GetTile(i, j));
+		//auto room = itr->second.get();
+
+		//for(int t = 0; t < room->tiles.size(); t++)
+		//{
+			//if(room->tiles[t]->entrance)
+			//{
+				//int i = room->tiles[t]->x+room->tiles[t]->outwards.x;
+				//int j = room->tiles[t]->y+room->tiles[t]->outwards.y;
+
+				if(i%2 != 0 && j%2 != 0)
+				{				
+					if(level.GetTile(i, j).type == Tile::UNUSED)
+					{
+						OpenCorridor(level, i, j, nullptr);
+						corridorSeeds.push_back(&level.GetTile(i, j));
+					}
 				}
-			}
+			//}
 		}
 	}
+	
+#if SCREENSHOTTING
+	sf::RenderTexture tex2;
+	tex2.create(800, 600);
+	tex2.setView(level.GetCamera().GetView());
+	level.Draw(&tex2);
+	tex2.display();
+	tex2.getTexture().copyToImage().saveToFile("output-corr.png");
+#endif
 }
 
 void LevelGenerator::OpenCorridor(Level& level, int x, int y, CorridorBranch* parent, string lastDir)
 {
+	//if(level.IsWithinBounds(x, y))
+	//{
+	//	if(level.GetTile(x, y).type != Tile::UNUSED && level.GetTile(x, y).type != Tile::GROUND)
+	//		return;
+	//}
+	//else
+	//	return;
+
 	deque<string> dirs = move(Direction::GetKeys());
 	if(lastDir != "")
+	{
+		auto it = find(begin(dirs), end(dirs), lastDir);
+		if(it != end(dirs))
+			dirs.erase(it);
+			
 		dirs.push_front(lastDir);
+	}
 
 	for(int d = 0; d < dirs.size(); d++)
 	{
 		string dKey = dirs[d];
+		sf::Vector2i jump = Direction::DIRECTIONS[dKey];
 
 		vector<Tile*> tiles;
 		tiles.push_back(&level.GetTile(x, y));
@@ -346,15 +451,14 @@ void LevelGenerator::OpenCorridor(Level& level, int x, int y, CorridorBranch* pa
 
 		for(int step = 1; step <= 2; step++)
 		{
-			sf::Vector2i jump = Direction::DIRECTIONS[dKey];
-
 			if(tiles[step-1] != nullptr && !failed)
 			{
-				try{tiles.push_back(&level.GetTile(tiles[step-1]->x + jump.x, tiles[step-1]->y + jump.y));}
-				catch(out_of_range ex)
-				{ tiles.push_back(nullptr);}
+				if(level.IsWithinBounds(tiles[step-1]->x + jump.x, tiles[step-1]->y + jump.y))
+					tiles.push_back(&level.GetTile(tiles[step-1]->x + jump.x, tiles[step-1]->y + jump.y));
+				else
+					tiles.push_back(nullptr);
 
-				if(tiles[step] == nullptr || tiles[step]->type != Tile::UNUSED)
+				if(tiles[step] == nullptr || (tiles[step]->type != Tile::UNUSED))// && tiles[step]->type != Tile::GROUND))
 					failed = true;
 
 				if(tiles[step] != nullptr && tiles[step]->entrance)
@@ -371,7 +475,7 @@ void LevelGenerator::OpenCorridor(Level& level, int x, int y, CorridorBranch* pa
 
 		if(!failed)
 		{
-			auto corridorObj = make_shared<CorridorBranch>(tiles);
+			auto corridorObj = make_shared<CorridorBranch>(tiles, parent);
 
 			for(int b = 0; b < tiles.size(); b++)
 			{
@@ -387,7 +491,7 @@ void LevelGenerator::OpenCorridor(Level& level, int x, int y, CorridorBranch* pa
 
 		if(corientrance)
 		{
-			auto corridorObj = make_shared<CorridorBranch>(tiles);
+			auto corridorObj = make_shared<CorridorBranch>(tiles, parent);
 
 			for(int b = 0; b < tiles.size(); b++)
 			{
@@ -404,22 +508,71 @@ void LevelGenerator::OpenCorridor(Level& level, int x, int y, CorridorBranch* pa
 void LevelGenerator::TrimTree(Level& level)
 {
 	for(int i = 0; i < corridorSeeds.size(); i++)
-		CheckBranch(level, corridorMap[corridorSeeds[i]].get());
+		CheckBranchDown(level, corridorMap[corridorSeeds[i]].get());
+	//level.PrintToImage("level-trimmed.png");
+	
+	for(int i = 1; i < level.GetWidth()-1; i++)
+		for(int j = 1; j < level.GetHeight()-1; j++)
+			FindDeadEnd(level, i, j);
+
+	//level.PrintToImage("level-culled.png");
+}
+
+void LevelGenerator::FindDeadEnd(Level& level, int x, int y)
+{
+	deque<Tile*> neighbors;
+
+	if(level.GetTile(x, y).type == Tile::GROUND)
+	{
+		level.GetNeighbors(&level.GetTile(x, y), neighbors);
+
+		int numGround = 0;
+
+		for(int i = 0; i < neighbors.size(); i++)
+			if(neighbors[i]->type == Tile::GROUND)
+				numGround++;
+
+		if(numGround <= 1)
+		{
+			level.SetTile(x, y, Tile::UNUSED);
+
+			for(int i = 0; i < neighbors.size(); i++)
+				if(neighbors[i]->type == Tile::GROUND)
+					FindDeadEnd(level, neighbors[i]->x, neighbors[i]->y);
+		}
+	}		
 }
 
 //if branch does not have room, remove reference
-bool LevelGenerator::CheckBranch(Level& level, Branch* branch)
+bool LevelGenerator::CheckBranchDown(Level& level, Branch* branch)
 {
 	if(branch == nullptr)
 		return false;
-
+	
 	bool room = false;
+	//if(branch->children.size() == 1 && branch->parent == nullptr) //delete this branch
+	//{
+	//	auto c = branch->children[0];
+	//	
+	//	for(int j = 0; j < branch->tiles.size(); j++)
+	//		level.SetTile(branch->tiles[j]->x, branch->tiles[j]->y, Tile::UNUSED);
+
+	//	c->parent = nullptr;
+	//	CheckBranchDown(level, c);
+	//	
+
+	//	for(auto itr = begin(corridorMap), itrEnd = end(corridorMap); itr != itrEnd; itr++)
+	//		if(itr->second.get() == branch)
+	//			itr = corridorMap.erase(itr);
+
+	//	return false;
+	//}
 
 	for(int i = 0; i < branch->children.size(); i++)
 	{
 		auto c = branch->children[i];
 
-		bool tRoom = CheckBranch(level, c);
+		bool tRoom = CheckBranchDown(level, c);
 		//if no room, remove corr
 
 		if(!tRoom || branch->children.size() > level.GetWidth()/2)
@@ -443,6 +596,54 @@ bool LevelGenerator::CheckBranch(Level& level, Branch* branch)
 	}
 
 	return room;
+}
+
+void LevelGenerator::FloodFillTile(Level& level, Tile* tile, Tile::TYPE targetType, set<Tile*>& floods)
+{
+	for(int i = 0; i < level.GetWidth(); i++)
+		for(int j = 0; j < level.GetHeight(); j++)
+			level.GetTile(i, j).touched = false;
+
+	floods.clear();
+
+	set<Tile*> q;
+	if(tile->type != targetType)
+		return;
+
+	q.insert(tile);
+	Tile* n =  nullptr, *w,*e,*s, *nextW, *nextE, *tile2;
+
+	while(q.size() > 0)
+	{
+		n = *q.begin();
+		q.erase(q.begin());
+
+		if(n->type == targetType)
+		{
+			w = e = n;
+			
+			while(level.IsWithinBounds(w->x-1, w->y) && (nextW = &level.GetTile(w->x - 1, w->y))->type == targetType)
+				w = nextW;
+			while(level.IsWithinBounds(e->x+1, e->y) && (nextE = &level.GetTile(e->x + 1, e->y))->type == targetType)
+				e = nextE;
+
+			for(int x = w->x; x <= e->x; x++)
+			{
+				tile2 = &level.GetTile(x, n->y);
+
+				if(!tile2->touched)
+				{
+					floods.insert(tile2);
+					tile2->touched = true;
+				}
+
+				if(level.IsWithinBounds(x, n->y - 1) && !level.GetTile(x, n->y-1).touched && level.GetTile(x, n->y - 1).type == targetType)
+					q.insert(&level.GetTile(x, n->y - 1));
+				if(level.IsWithinBounds(x, n->y + 1) && !level.GetTile(x, n->y+1).touched && level.GetTile(x, n->y + 1).type == targetType)
+					q.insert(&level.GetTile(x, n->y + 1));				
+			}
+		}
+	}
 }
 
 Level LevelGenerator::CreateLevelWithRooms2(Level::SIZE levelSize, ROOM::SIZE maxRoomSize)
@@ -525,6 +726,7 @@ Level LevelGenerator::CreateLevelWithRooms2(Level::SIZE levelSize, ROOM::SIZE ma
 
 Level LevelGenerator::CreateLevelWithRooms1(Level::SIZE levelSize, ROOM::SIZE maxRoomSize)
 {
+
 	Level& level = Level(levelSize, levelSize);
 	
 	for(int i = 0; i < levelSize; i++)
@@ -543,7 +745,7 @@ Level LevelGenerator::CreateLevelWithRooms1(Level::SIZE levelSize, ROOM::SIZE ma
 	rooms.reserve(numRooms);
 
 	GenerateRooms(level, rooms, numRooms, maxRoomSize, levelSize);
-
+	//level.PrintToImage("level-rooms.png");
 
 	//WallUpRooms(level, rooms);
 
@@ -551,6 +753,7 @@ Level LevelGenerator::CreateLevelWithRooms1(Level::SIZE levelSize, ROOM::SIZE ma
 	//OpenDoorsOnRooms(level, rooms);
 
 	GenerateCorridors(level);
+	//level.PrintToImage("level-corr.png");
 	//generate corridors
 	//for(int x = 1; x < level.GetWidth(); x+=2)
 	//	for(int y = 1; y < level.GetWidth		(); y+=2)
@@ -564,7 +767,108 @@ Level LevelGenerator::CreateLevelWithRooms1(Level::SIZE levelSize, ROOM::SIZE ma
 	//	}
 
 	TrimTree(level);
+	//level.PrintToImage("level-trimmed.png");
+
+	//check for any rooms that cant connect to other rooms
+	multimap<int, int> roomsTried;
+	set<Tile*> flood;
+
+	for(int i = 0; i < rooms.size(); i++)
+	{
+		for(int j = i+1; j < rooms.size(); j++)
+		{
+			//if they are not the same and havent already been checked
+			bool checked = false;
+			
+			auto range = roomsTried.equal_range(i);
+			
+			for(auto itr = range.first; itr != range.second; itr++)
+				if(itr->second == j)
+					checked = true;
+
+			range = roomsTried.equal_range(j);
+			
+			for(auto itr = range.first; itr != range.second; itr++)
+				if(itr->second == i)
+					checked = true;
+
+
+			if(rooms[i] != rooms[j] && !checked)
+			{
+				//see if they can connect to each other
+				auto path = std::move(level.FindPath(level.GetTile(rooms[i].x, rooms[i].y), level.GetTile(rooms[j].x, rooms[j].y)));
+
+				if(path.size() == 0)
+				{
+					FloodFillTile(level, &level.GetTile(rooms[j].x, rooms[j].y), Tile::GROUND, flood);
+				
+					//force a connection by connecting to the nearest non-isolated tile
+					//first must see which tiles belong to the isolated room
+					auto nearestTilePath = std::move(level.FindNearestTile(&level.GetTile(rooms[j].x, rooms[j].y), flood, Tile::GROUND));
+
+					for(int i = 0; i < nearestTilePath.size(); i++)
+						level.SetTile(nearestTilePath[i]->x, nearestTilePath[i]->y, Tile::GROUND);
+				}
+				
+				roomsTried.insert(make_pair(i, j));
+				roomsTried.insert(make_pair(j, i));
+			}
+		}
+	}
+
+	for(int i = 0; i < level.GetWidth(); i++)
+		for(int j = 0; j < level.GetHeight(); j++)
+			if(level.GetTile(i, j).type == Tile::UNUSED)
+				level.SetTile(i, j, Tile::WALL);
+
 	Cleanup();
+
+	level.PrintToImage("final.png");
+
+	array<array<Tile*, 3>, 3> neighbors;
+	neighbors[0] = array<Tile*, 3>();
+	neighbors[1] = array<Tile*, 3>();
+	neighbors[2] = array<Tile*, 3>();
+
+	for(int i = 0; i < level.GetWidth(); i++)
+		for(int j = 0; j < level.GetHeight(); j++)
+		{
+			if(level.GetTile(i,j).type == Tile::GROUND)
+			{
+				level.GetAllNeighbors(&level.GetTile(i, j), neighbors);
+
+				__int8 hash = 0;
+			
+				if(neighbors[0][0] && neighbors[0][0]->type == Tile::GROUND)
+					hash += 8;
+				if(neighbors[1][0] && neighbors[1][0]->type == Tile::GROUND)
+					hash += 16;
+				if(neighbors[2][0] && neighbors[2][0]->type == Tile::GROUND)
+					hash += 1;
+				if(neighbors[0][1] && neighbors[0][1]->type == Tile::GROUND)
+					hash += 128;
+				if(neighbors[2][1] && neighbors[2][1]->type == Tile::GROUND)
+					hash += 32;
+				if(neighbors[0][2] && neighbors[0][2]->type == Tile::GROUND)
+					hash += 4;
+				if(neighbors[1][2] && neighbors[1][2]->type == Tile::GROUND)
+					hash += 64;
+				if(neighbors[2][2] && neighbors[2][2]->type == Tile::GROUND)
+					hash += 2;
+
+				int index = Tile::TileLookup(hash);
+			
+				sf::IntRect bounds(32*(index%10), int(index/10)*32, 32, 32);
+				level.GetTile(i, j).SetRect(bounds);
+			}
+			else if(level.GetTile(i,j).type == Tile::WALL)
+			{
+				int index = 30;
+				sf::IntRect bounds(32*(index%10), int(index/10)*32, 32, 32);
+				level.GetTile(i, j).SetRect(bounds);
+			}
+		}
+
 	return level;
 }
 
@@ -628,7 +932,8 @@ Level LevelGenerator::CreateLevelWithDLA(Level::SIZE levelSize)
 			if(numDirsTried >= 3)
 				break;
 
-			try{
+			if(level.IsWithinBounds(walker.x + randDirection.x, walker.y + randDirection.y))
+			{
 				if(level.GetTile(walker.x + randDirection.x, walker.y + randDirection.y).type == Tile::GROUND)
 				{				
 					level.SetTile(walker.x, walker.y, Tile::GROUND);
@@ -637,8 +942,6 @@ Level LevelGenerator::CreateLevelWithDLA(Level::SIZE levelSize)
 				else
 					walker += randDirection;
 			}
-			catch(out_of_range ex)
-			{}
 		}
 
 		numWalkers--;
@@ -890,27 +1193,29 @@ tsanhs:
 				//make sure its not blocked by a wall first
 				if(side1) //top
 				{	//check additional north tile for 'room to move'
-					try{
+					if(level.IsWithinBounds(xVal, room.y-2))
+					{
 						if(level.GetTile(xVal, room.y-2).type == Tile::UNUSED);
 							level.SetTile(xVal, room.y-1, Tile::UNUSED);
 						room.doorX = xVal;
 						room.doorY = room.y-1;
 						break;
 					}
-					catch(out_of_range ex)
+					else
 					{	side1 = false; }
 				}
 
 				if(!side1) //bottom
 				{
-					try{
+					if(level.IsWithinBounds(xVal, room.y+room.h+1))
+					{
 						if(level.GetTile(xVal, room.y+room.h+1).type == Tile::UNUSED);
 							level.SetTile(xVal, room.y+room.h, Tile::UNUSED);
 						room.doorX = xVal;
 						room.doorY = room.y+room.h;
 						break;
 					}
-					catch(out_of_range ex)
+					else
 					{	usingX = !(side1 = true);}
 				}
 			}
@@ -919,27 +1224,29 @@ tsanhs:
 			{
 				if(side1) //left			
 				{
-					try{
+					if(level.IsWithinBounds(room.x-2, yVal))
+					{
 						if(level.GetTile(room.x-2, yVal).type == Tile::UNUSED);
 							level.SetTile(room.x-1, yVal, Tile::UNUSED);
 						room.doorX = room.x-1;
 						room.doorY = yVal;
 						break;
 					}
-					catch(out_of_range ex)
+					else
 					{	side1 = false;			}
 				}
 
 				if(!side1) //right
 				{
-					try{
+					if(level.IsWithinBounds(room.x+room.w+1, yVal))
+					{
 						if(level.GetTile(room.x+room.w+1, yVal).type == Tile::UNUSED);
 							level.SetTile(room.x+room.w, yVal, Tile::UNUSED);
 						room.doorX = room.x+room.w;
 						room.doorY = yVal;
 						break;
 					}
-					catch(out_of_range ex)
+					else
 					{	usingX = (side1 = true); }
 				}
 			}
@@ -1171,13 +1478,10 @@ Level LevelGenerator::CreateLevelWithCA(int levelWidth, int levelHeight)
 				if(xx == x && yy == y)
 					continue;
 
-				try
+				if(level.IsWithinBounds(xx,yy))
 				{
 					if(level.GetTile(xx, yy).solid)
 						numSolid++;
-				}
-				catch(out_of_range e)
-				{
 				}
 			}
 		}

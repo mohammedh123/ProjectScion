@@ -12,20 +12,20 @@ const map<Tile::TYPE,Tile>& Tile::DefaultTiles()
 	{
 		m[UNUSED] = Tile();
 		//m[BLANK] = Tile(BLANK, false);
-		m[BLANK] = Tile(0, 0, ScionEngine::GetTexture("tiles.png"), sf::IntRect(0, 32, 32, 32), BLANK, false);
-		m[GROUND] = Tile(0, 0, ScionEngine::GetTexture("tiles.png"), sf::IntRect(0, 0, 32, 32), GROUND, false);
-		m[WALL] = Tile(0, 0, ScionEngine::GetTexture("tiles.png"), sf::IntRect(32, 0, 32, 32), WALL);
-		m[CORRIDOR] = Tile(0, 0, ScionEngine::GetTexture("tiles.png"), sf::IntRect(0, 32, 32, 32), CORRIDOR, false);
+		m[BLANK] = Tile(0, 0, ScionEngine::GetTexture("newtiles.png"), sf::IntRect(0, 32, 32, 32), BLANK, false);
+		m[GROUND] = Tile(0, 0, ScionEngine::GetTexture("newtiles.png"), sf::IntRect(0, 0, 32, 32), GROUND, false);
+		m[WALL] = Tile(0, 0, ScionEngine::GetTexture("newtiles.png"), sf::IntRect(32, 0, 32, 32), WALL);
+		m[CORRIDOR] = Tile(0, 0, ScionEngine::GetTexture("newtiles.png"), sf::IntRect(0, 32, 32, 32), CORRIDOR, false);
 	}
 
 	return m;
 }
 
-Tile::Tile(int x, int y, Tile::TYPE type, bool solid, const sf::Color& color) : x(x), y(y), type(type), solid(solid), color(color)
+Tile::Tile(int x, int y, Tile::TYPE type, bool solid, const sf::Color& color) : x(x), y(y), type(type), solid(solid), color(color), touched(false)
 {
 }
 
-Tile::Tile(int x, int y, sf::Texture* image, sf::IntRect rect, Tile::TYPE type, bool solid, const sf::Color& color) : x(x), y(y), baseSprite(*image, rect), type(type), solid(solid), color(color)
+Tile::Tile(int x, int y, sf::Texture* image, sf::IntRect rect, Tile::TYPE type, bool solid, const sf::Color& color) : x(x), y(y), baseSprite(*image, rect), type(type), solid(solid), color(color), touched(false)
 {
 	//baseSprite.setOrigin(Tile::SIZE/2, Tile::SIZE/2);
 }

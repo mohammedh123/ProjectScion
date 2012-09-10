@@ -11,6 +11,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <set>
 
 //https://sourceforge.net/p/dungeongen/
 
@@ -31,7 +32,9 @@ class LevelGenerator
 	static ROOM CreateRoom(std::vector<ROOM>& rooms, ROOM::TYPE type, sf::IntRect bounds);
 
 	static void TrimTree(Level& level);
-	static bool CheckBranch(Level& level, Branch* branch);
+	static void FindDeadEnd(Level& level, int x, int y);
+	static bool CheckBranchDown(Level& level, Branch* branch);
+	static void LevelGenerator::FloodFillTile(Level& level, Tile* tile, Tile::TYPE targetType, std::set<Tile*>& floods);
 public:
 	~LevelGenerator()
 	{

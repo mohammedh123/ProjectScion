@@ -4,6 +4,8 @@
 #include <vector>
 #include <unordered_map>
 #include <deque>
+#include <set>
+#include <array>
 
 #include "Tile.h"
 #include "Entity.h"
@@ -45,7 +47,7 @@ public:
 		map[y][x] = tile;
 	}
 
-	inline void SetTile(int x, int y, Tile::TYPE type, int entrance = -1)
+	inline void SetTile(int x, int y, Tile::TYPE type, int entrance = -1, sf::Vector2i outwards = sf::Vector2i())
 	{
 		auto& tile = Tile::DefaultTiles().at(type);
 		map.at(y).at(x).baseSprite = tile.baseSprite;
@@ -60,22 +62,34 @@ public:
 		return map.at(y).at(x);
 	}
 
+	inline bool IsWithinBounds(int x, int y) const
+	{
+		return x >= 0 && x <= w && y >= 0 && y <= h;
+	}
+
 	void LoadLevel();
 
 	inline Camera& GetCamera() {return camera;}
 	inline int GetWidth() const {return w;}
 	inline int GetHeight() const {return h;}
-
+	
 	void Draw(sf::RenderWindow* window);
-private:	
-	static float HeuristicForNode(const Tile& start, const Tile& end);
-	float GetDistance(const Tile& s, const Tile& e) const;
+	void PrintToImage(std::string filename);
+
+	std::deque<Tile*> FindPath(Tile* start, Tile* end);
+	std::deque<Tile>  FindPath(const Tile& start, const Tile& end);
+	std::deque<Tile*> FindNearestTile(Tile* start, std::set<Tile*>& tilesToIgnore, Tile::TYPE type);
+
 	void GetNeighbors(const Tile& n, std::deque<Tile>& neighbors);
 	void GetNeighbors(const Tile* n, std::deque<Tile*>& neighbors);
+	void GetAllNeighbors(const Tile* n, std::array<std::array<Tile*, 3>,3>& neighbors);
+private:
+	void Draw(sf::RenderTexture* window);
+	static float HeuristicForNode(const Tile& start, const Tile& end);
+	float GetDistance(const Tile& s, const Tile& e) const;
 	static std::deque<Tile>& Level::ConstructPath(std::unordered_map<Tile, Tile>& q, std::deque<Tile>& path, const Tile& t);
-	std::deque<Tile> Level::FindPath(const Tile& start, const Tile& end);
+	static std::deque<Tile*>& Level::ConstructPath(std::unordered_map<Tile*, Tile*>& q, std::deque<Tile*>& path, Tile* t);
 	std::deque<Tile*> ConstructPath(Tile* end);
-	std::deque<Tile*> FindPath(Tile* start, Tile* end);
 };
 
 #endif

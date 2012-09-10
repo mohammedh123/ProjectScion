@@ -85,5 +85,6 @@ struct ROOM
 };
 
 bool operator==(const ROOM& lhs, const ROOM& rhs);
+bool operator!=(const ROOM& lhs, const ROOM& rhs);
 
 #endif

@@ -98,12 +98,47 @@ void Level::Draw(sf::RenderWindow* window)
 	}
 }
 
+void Level::Draw(sf::RenderTexture* window)
+{  
+	auto bounds = camera.GetTileBounds();
+	auto camOffsetX = camera.GetTileOffset().x;
+	auto camOffsetY = camera.GetTileOffset().y;
+
+	for(int y = 0, tileY = bounds.top; y < bounds.height && tileY < h; y++, tileY++)
+	{
+		if(tileY < 0) continue;
+
+		for(int x = 0, tileX = bounds.left; x < bounds.width && tileX < w; x++, tileX++)
+		{
+			if(tileX < 0) continue;
+
+			GetTile(tileX, tileY).Draw(window);
+		}
+	}
+}
+
+void Level::PrintToImage(std::string filename)
+{
+	sf::RenderTexture tex;
+	tex.create(800, 600);
+	auto fstZ = float(GetWidth()*Tile::SIZE)/800;
+	auto sndZ = float(GetHeight()*Tile::SIZE)/600;
+	GetCamera().DirectZoomOfOriginal(max(fstZ, sndZ)+0.1f);
+	//level.GetCamera().MoveCenter(0, 0);
+	GetCamera().MoveCenter(GetWidth()*Tile::SIZE/2, GetHeight()*Tile::SIZE/2);
+	tex.setView(camera.GetView());
+	Draw(&tex);
+	tex.display();
+	tex.getTexture().copyToImage().saveToFile(filename);
+}
+
+
 //path finding stuff
 
 float Level::HeuristicForNode(const Tile& start, const Tile& end)
 {
 	//used euclidean distance
-	return (float)std::sqrtf(Tile::SIZE*(end.x - start.x) * Tile::SIZE*(end.x - start.x) + Tile::SIZE*(end.y - start.y) * Tile::SIZE*(end.y - start.y));
+	return start.ManhattanDistance(&end);
 }
 
 float Level::GetDistance(const Tile& s, const Tile& e) const
@@ -111,6 +146,8 @@ float Level::GetDistance(const Tile& s, const Tile& e) const
 	//returns the distance between 2 nodes
 	int xD = abs(e.x - s.x);
 	int yD = abs(e.y - s.y);
+
+	return (float)std::sqrtf((e.x - s.x) * (e.x - s.x) + (e.y - s.y) * (e.y - s.y));
 
 	if (xD > yD || yD > xD) //1,0 or 0,1
 		return 1.0f;
@@ -130,14 +167,16 @@ void Level::GetNeighbors(const Tile& n, deque<Tile>& neighbors)
 {
 	//returns the neighbors of a node
 
+	neighbors.clear();
+
 	if (n.x > 0)
 	{
 		neighbors.push_back(GetTile(n.x - 1, n.y));
 
-		if (n.y > 0)
-			neighbors.push_back(GetTile(n.x - 1, n.y - 1));
-		if (n.y < h - 1)
-			neighbors.push_back(GetTile(n.x - 1, n.y + 1));
+		//if (n.y > 0)
+		//	neighbors.push_back(GetTile(n.x - 1, n.y - 1));
+		//if (n.y < h - 1)
+		//	neighbors.push_back(GetTile(n.x - 1, n.y + 1));
 	}
 
 	if (n.y > 0)
@@ -147,10 +186,10 @@ void Level::GetNeighbors(const Tile& n, deque<Tile>& neighbors)
 	{
 		neighbors.push_back(GetTile(n.x + 1, n.y));
 
-		if (n.y > 0)
-			neighbors.push_back(GetTile(n.x + 1, n.y - 1));
-		if (n.y < h - 1)
-			neighbors.push_back(GetTile(n.x + 1, n.y + 1));
+		//if (n.y > 0)
+		//	neighbors.push_back(GetTile(n.x + 1, n.y - 1));
+		//if (n.y < h - 1)
+		//	neighbors.push_back(GetTile(n.x + 1, n.y + 1));
 	}
 
 	if (n.y < h - 1)
@@ -167,10 +206,10 @@ void Level::GetNeighbors(const Tile* n, std::deque<Tile*>& neighbors)
 	{
 		neighbors.push_back(&GetTile(n->x - 1, n->y));
 
-		if (n->y > 0)
-			neighbors.push_back(&GetTile(n->x - 1, n->y - 1));
-		if (n->y < h - 1)
-			neighbors.push_back(&GetTile(n->x - 1, n->y + 1));
+		//if (n->y > 0)
+		//	neighbors.push_back(&GetTile(n->x - 1, n->y - 1));
+		//if (n->y < h - 1)
+		//	neighbors.push_back(&GetTile(n->x - 1, n->y + 1));
 	}
 
 	if (n->y > 0)
@@ -180,14 +219,47 @@ void Level::GetNeighbors(const Tile* n, std::deque<Tile*>& neighbors)
 	{
 		neighbors.push_back(&GetTile(n->x + 1, n->y));
 
-		if (n->y > 0)
-			neighbors.push_back(&GetTile(n->x + 1, n->y - 1));
-		if (n->y < h - 1)
-			neighbors.push_back(&GetTile(n->x + 1, n->y + 1));
+		//if (n->y > 0)
+		//	neighbors.push_back(&GetTile(n->x + 1, n->y - 1));
+		//if (n->y < h - 1)
+		//	neighbors.push_back(&GetTile(n->x + 1, n->y + 1));
 	}
 
 	if (n->y < h - 1)
 		neighbors.push_back(&GetTile(n->x, n->y + 1));
+}
+
+void Level::GetAllNeighbors(const Tile* n, array<array<Tile*, 3>,3>& neighbors)
+{
+	//returns the neighbors of a node
+	
+	if (n->x > 0)
+	{
+		neighbors[0][1] = &GetTile(n->x - 1, n->y);
+
+		if (n->y > 0)
+			neighbors[0][0] = &GetTile(n->x - 1, n->y - 1);
+		if (n->y < h - 1)
+			neighbors[0][2] = &GetTile(n->x - 1, n->y + 1);
+	}
+
+	if (n->y > 0)
+		neighbors[1][0] = &GetTile(n->x, n->y - 1);
+
+	if (n->x < w - 1)
+	{
+		neighbors[2][1] = &GetTile(n->x + 1, n->y);
+
+		if (n->y > 0)
+			neighbors[2][0] = &GetTile(n->x + 1, n->y - 1);
+		if (n->y < h - 1)
+			neighbors[2][2] = &GetTile(n->x + 1, n->y + 1);
+	}
+
+	if (n->y < h - 1)
+		neighbors[1][2] = &GetTile(n->x, n->y + 1);
+
+	neighbors[1][1] = &GetTile(n->x, n->y);
 }
 
 deque<Tile>& Level::ConstructPath(std::unordered_map<Tile, Tile>& q, deque<Tile>& path, const Tile& t)
@@ -203,17 +275,30 @@ deque<Tile>& Level::ConstructPath(std::unordered_map<Tile, Tile>& q, deque<Tile>
 		return path;
 }
 
+deque<Tile*>& Level::ConstructPath(std::unordered_map<Tile*, Tile*>& q, deque<Tile*>& path, Tile* t)
+{
+	//traverses the map and constructs a path given a node
+	if (q.find(t) != q.end())
+	{
+		path = ConstructPath(q, path, q[t]);
+		path.push_back(t);
+		return path;
+	}
+	else
+		return path;
+}
+
 deque<Tile> Level::FindPath(const Tile& start, const Tile& end)
 {
 	bool newGScoreBetter = false;
-	unordered_set<Tile> closedSet;
-	unordered_set<Tile> openSet;
+	static unordered_set<Tile> closedSet; closedSet.clear();
+	static unordered_set<Tile> openSet; openSet.clear();
 	openSet.insert(start);
 
-	std::unordered_map<Tile, Tile> navigated;
-	std::unordered_map<Tile, float> gScore;
-	std::unordered_map<Tile, float> hScore;
-	std::map<float, list<Tile>> fScore; //easy way to use a structure to auto-sort for you
+	static std::unordered_map<Tile, Tile> navigated; navigated.clear();
+	static std::unordered_map<Tile, float> gScore; gScore.clear();
+	static std::unordered_map<Tile, float> hScore; hScore.clear();
+	static std::map<float, list<Tile>> fScore; fScore.clear();//easy way to use a structure to auto-sort for you
 
 	gScore[start] = 0;
 	hScore[start] = HeuristicForNode(start, end);
@@ -245,7 +330,7 @@ deque<Tile> Level::FindPath(const Tile& start, const Tile& end)
 		for(auto neighbor1 = std::begin(neighbors); neighbor1 != std::end(neighbors); neighbor1++)
 		{
 			auto& neighbor = *neighbor1;
-			if (closedSet.find(neighbor) != closedSet.end() || neighbor.solid)
+			if (closedSet.find(neighbor) != closedSet.end() || neighbor.type == Tile::UNUSED || neighbor.solid)
 				continue;
 
 			//newgscore is gscore + 1*distance
@@ -277,6 +362,86 @@ deque<Tile> Level::FindPath(const Tile& start, const Tile& end)
 
 	//failed
 	return deque<Tile>();
+}
+
+deque<Tile*> Level::FindNearestTile(Tile* start, set<Tile*>& tilesToIgnore, Tile::TYPE type)
+{
+	bool newGScoreBetter = false;
+	static unordered_set<Tile*> closedSet;
+	static unordered_set<Tile*> openSet;
+
+	closedSet.clear();
+	openSet.clear();
+
+	openSet.insert(start);
+
+	static unordered_map<Tile*, Tile*> navigated;
+	static unordered_map<Tile*, float> gScore;
+	navigated.clear();
+	gScore.clear();
+	
+	std::map<float, list<Tile*>> fScore; //easy way to use a structure to auto-sort for you
+
+	gScore[start] = 0;
+	fScore[gScore[start]].push_back(start);
+
+	deque<Tile*> neighbors;
+
+	while (openSet.size() > 0)
+	{
+		//take the lowest f-score node and dequeue it
+		auto& lowestScore = fScore.begin()->second;
+		Tile* current = lowestScore.front();
+		lowestScore.pop_front();
+
+		if (lowestScore.size() == 0)
+			fScore.erase(fScore.begin()); //just some maintenance to make sure you keep the lowest fscore with .First()
+
+		if (current->type == type && tilesToIgnore.find(current) == tilesToIgnore.end()) //reached the end
+		{
+			deque<Tile*> path;
+			path.push_back(start);
+			return ConstructPath(navigated, path, current);
+		}
+
+		openSet.erase(current); //remove current from open
+		closedSet.insert(current); //put into closed
+
+		GetNeighbors(current, neighbors);
+		for(auto neighbor1 = std::begin(neighbors); neighbor1 != std::end(neighbors); neighbor1++)
+		{
+			auto& neighbor = *neighbor1;
+			if (closedSet.find(neighbor) != closedSet.end() || neighbor->solid || tilesToIgnore.find(neighbor) != tilesToIgnore.end())
+				continue;
+
+			//newgscore is gscore + 1*distance
+			float newGScore = gScore[current] + 1*GetDistance(*current, *neighbor);
+
+			if (openSet.find(neighbor) == openSet.end())
+			{
+				openSet.insert(neighbor);
+				newGScoreBetter = true;
+			}
+			else if (newGScore < gScore[neighbor])
+				newGScoreBetter = true;
+			else
+				newGScoreBetter = false;
+
+			if (newGScoreBetter)
+			{
+				navigated[neighbor] = current;
+				gScore[neighbor] = newGScore;
+
+				if (fScore.find(gScore[neighbor]) == fScore.end())
+					fScore[gScore[neighbor]];
+
+				fScore[gScore[neighbor]].push_back(neighbor);
+			}
+		}
+	}
+
+	//failed
+	return deque<Tile*>();
 }
 
 deque<Tile*> Level::ConstructPath(Tile* end)
