@@ -59,13 +59,14 @@ void ScionEngine::Init()
 	clock->restart();
 
 	ScionEngine::events.reserve(8);
-
+		
+	currentLevel = std::move(LevelGenerator::CreateLevelWithRooms1(Level::SIZE::FINE, ROOM::SIZE::SMALL));
+	
 	auto player = CreateEntity();
-	TransformAttribute* trans = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(0, 0, 0, 0)));
+	const Tile* randTile = currentLevel.GetRandomTileOfType(Tile::GROUND);
+	TransformAttribute* trans = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(randTile->x*Tile::SIZE + Tile::SIZE*0.5f, randTile->y*Tile::SIZE + Tile::SIZE*0.5f, 0, 0)));
 	player->AddBehavior(CreateBehavior(new SpriteBehavior(*texManager->GetImage("player.png"), 16, 16, trans, window.get())));
 	player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans)));
-	
-	currentLevel = std::move(LevelGenerator::CreateLevelWithRooms1(Level::SIZE::FINE, ROOM::SIZE::SMALL));
 
 	//only for testing out proc gen
 	auto fstZ = float(currentLevel.GetWidth()*Tile::SIZE)/windowWidth;

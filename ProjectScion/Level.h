@@ -56,10 +56,15 @@ public:
 		map.at(y).at(x).color = sf::Color::White;
 		map.at(y).at(x).entrance = (entrance != -1 ? (bool)entrance : map.at(y).at(x).entrance);
 	}
-
+	
 	inline Tile& GetTile(int x, int y)
 	{
 		return map.at(y).at(x);
+	}
+
+	inline const Tile* GetTile(int x, int y) const
+	{
+		return &(map.at(y).at(x));
 	}
 
 	inline bool IsWithinBounds(int x, int y) const
@@ -74,8 +79,10 @@ public:
 	inline int GetHeight() const {return h;}
 	
 	void Draw(sf::RenderWindow* window);
+	void Draw(sf::RenderTexture* texture);
 	void PrintToImage(std::string filename);
 
+	const Tile* GetRandomTileOfType(Tile::TYPE type) const;
 	std::deque<Tile*> FindPath(Tile* start, Tile* end);
 	std::deque<Tile>  FindPath(const Tile& start, const Tile& end);
 	std::deque<Tile*> FindNearestTile(Tile* start, std::set<Tile*>& tilesToIgnore, Tile::TYPE type);
@@ -84,7 +91,6 @@ public:
 	void GetNeighbors(const Tile* n, std::deque<Tile*>& neighbors);
 	void GetAllNeighbors(const Tile* n, std::array<std::array<Tile*, 3>,3>& neighbors);
 private:
-	void Draw(sf::RenderTexture* window);
 	static float HeuristicForNode(const Tile& start, const Tile& end);
 	float GetDistance(const Tile& s, const Tile& e) const;
 	static std::deque<Tile>& Level::ConstructPath(std::unordered_map<Tile, Tile>& q, std::deque<Tile>& path, const Tile& t);

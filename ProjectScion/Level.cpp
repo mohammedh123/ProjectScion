@@ -79,6 +79,23 @@ void Level::LoadLevel()
 	//tbd
 }
 
+const Tile* Level::GetRandomTileOfType(Tile::TYPE type) const
+{
+	vector<const Tile*> tilesOfType;
+	tilesOfType.reserve(w*h);
+
+	for(int j = 0; j < h; j++)
+	{
+		for(int i = 0; i < w; i++)
+		{
+			if(GetTile(i, j)->type == type)
+				tilesOfType.push_back(GetTile(i, j));
+		}
+	}
+
+	return tilesOfType.at(ScionEngine::GetRandomNumber(0, tilesOfType.size()-1));
+}
+
 void Level::Draw(sf::RenderWindow* window)
 {  
 	auto bounds = camera.GetTileBounds();
@@ -98,7 +115,7 @@ void Level::Draw(sf::RenderWindow* window)
 	}
 }
 
-void Level::Draw(sf::RenderTexture* window)
+void Level::Draw(sf::RenderTexture* texture)
 {  
 	auto bounds = camera.GetTileBounds();
 	auto camOffsetX = camera.GetTileOffset().x;
@@ -112,7 +129,7 @@ void Level::Draw(sf::RenderTexture* window)
 		{
 			if(tileX < 0) continue;
 
-			GetTile(tileX, tileY).Draw(window);
+			GetTile(tileX, tileY).Draw(texture);
 		}
 	}
 }

@@ -21,40 +21,58 @@ void GameState::Initialize(ScionEngine* game)
 	transitionOnTime = 0.5f;
 	transitionOffTime = 0.5f;
 
-	effect = game->GetShader("Shaders/bloom.frag", sf::Shader::Type::Fragment);
+	//effect = game->GetShader("Shaders/bloom.frag", sf::Shader::Type::Fragment);
+	shadowFX = game->GetShader("Shaders/shadow.frag", sf::Shader::Type::Fragment);
+	shadowFX->setParameter("lightStrength", 4.0f);
+	shadowFX->setParameter("lightPosition", sf::Vector2f(100, 100));
+	shadowFX->setParameter("lightColor", sf::Vector3f(255, 0, 128));
+	shadowFX->setParameter("lightRadius", 100.0f);
+
+	shadowFX->setParameter("screenWidth", 800);
+	shadowFX->setParameter("screenHeight", 600);
+
+	combinedFX = game->GetShader("Shaders/combined.frag", sf::Shader::Type::Fragment);
+	combinedFX->setParameter("ambient", 1.0f);
+	combinedFX->setParameter("ambientColor", sf::Color::Red);
+ 
+    // This variable is used to boost to output of the light sources when they are combined
+    // I found 4 a good value for my lights but you can also make this dynamic if you want
+    combinedFX->setParameter("lightAmbient", 4);
 
 	//player = move(unique_ptr<Entity>(new Entity()));
 	
 	auto c = game->GetCurrentLevel().GetCamera();
+	
+	shadowMapRT = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
+	shadowMapRT->create(800,600, false);
 
-	rt = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
-	rt->create(800,600, true);
-	//rt->setView(*camera->GetView());
-	rt->setView(c.GetView());
+	colorMapRT = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
+	colorMapRT->create(800,600, false);
+
 	states = unique_ptr<sf::RenderStates>(new sf::RenderStates);
-	states->shader = effect;
+	//states->shader = effect;
 	
 	WindowTexture = unique_ptr<sf::Texture>(new sf::Texture);
 	TextureDrawer = unique_ptr<sf::Sprite>(new sf::Sprite);
 	
-	glClearDepth(1);
+	//glClearDepth(1);
 
-	glEnable(GL_DEPTH_TEST);
-	glShadeModel (GL_SMOOTH);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    
-    GLfloat light_ambient[] = { 0.0, 0.0, 0.0, 1.0 };
-    GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-    GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-    GLfloat mat_shininess[] = { 100.0 };
-    GLfloat light_position[] = { 0, 0, 0, 0.0 };
+	//glEnable(GL_DEPTH_TEST);
+	//glShadeModel (GL_SMOOTH);
+ //   glEnable(GL_LIGHTING);
+ //   glEnable(GL_LIGHT0);
+ //   
+ //   GLfloat light_ambient[] = { 0.0, 0.0, 0.0, 1.0 };
+ //   GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+ //   GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+ //   GLfloat mat_shininess[] = { 100.0 };
+ //   GLfloat light_position[] = { 0, 0, 0, 0.0 };
 
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+ //   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+ //   glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+ //   glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+ //   glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+ //   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 	
 }
 
@@ -137,9 +155,9 @@ void GameState::Draw(sf::RenderWindow* window)
 	*/
 	Camera& c = game->GetCurrentLevel().GetCamera();
 
-	//rt->clear(sf::Color::Transparent);
-	//rt->setView(*camera->GetView());
-	window->setView(c.GetView());
+	colorMapRT->clear(sf::Color::Transparent);
+	colorMapRT->setView(c.GetView());
+	//window->setView(c.GetView());
 	
 
 	//rt->display();
@@ -147,7 +165,7 @@ void GameState::Draw(sf::RenderWindow* window)
 	//effect->setParameter("bgl_RenderedTexture", rt->getTexture());
 	////TextureDrawer->setTexture(*WindowTexture.get());
  //   window->draw(*TextureDrawer.get(), *states.get());
-	game->GetCurrentLevel().Draw(window);
+	game->GetCurrentLevel().Draw(colorMapRT.get());
 
 	for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
 	{
@@ -155,23 +173,50 @@ void GameState::Draw(sf::RenderWindow* window)
 			(*it)->Process();
 	}
 
-	if(hoveredTile)
+	//colorMapRT is now drawn
+
+	//should be for_each light
+	
+	sf::Vertex rect[] = 
 	{
-		sf::RectangleShape rect;
-		rect.setSize(sf::Vector2f(100, 100));
-		rect.setFillColor(sf::Color(255,255,255,60));
-		rect.setOutlineThickness(2.0f);
-		rect.setOutlineColor(sf::Color::White);
-		rect.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE), Tile::SIZE*int(hoveredPosY / Tile::SIZE));
+		sf::Vertex(sf::Vector2f(-1, 1), sf::Vector2f(0, 0)),
+		sf::Vertex(sf::Vector2f(1, 1), sf::Vector2f(1, 0)),
+		sf::Vertex(sf::Vector2f(-1, -1), sf::Vector2f(0, 1)),
+		sf::Vertex(sf::Vector2f(1, -1), sf::Vector2f(1, 1))
+	};
 
-		window->draw(rect);
+	shadowMapRT->clear(sf::Color::Transparent);
+	states->shader = shadowFX;
+	shadowMapRT->draw(rect, 4, sf::PrimitiveType::TrianglesStrip, *states);
 
-		stringstream ss;
-		ss << int(hoveredPosX / Tile::SIZE) << ", " << int(hoveredPosY / Tile::SIZE) << endl << hoveredTile->type;
-		sf::Text t(ss.str(), *game->GetFont("Fonts/arial.ttf"), 24);
-		t.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE), Tile::SIZE*int(hoveredPosY / Tile::SIZE));
-		window->draw(t);
-	}
+	//shadowMapRT is now drawn
+
+	combinedFX->setParameter("ColorMap", colorMapRT->getTexture());
+	combinedFX->setParameter("ShadingMap", shadowMapRT->getTexture());
+ 
+	states->shader = combinedFX;
+
+	sf::Sprite cmrtTex(colorMapRT->getTexture());
+	window->draw(cmrtTex, *states);
+
+	//if(hoveredTile)
+	//{
+	//	sf::RectangleShape rect;
+	//	rect.setSize(sf::Vector2f(100, 100));
+	//	rect.setFillColor(sf::Color(255,255,255,60));
+	//	rect.setOutlineThickness(2.0f);
+	//	rect.setOutlineColor(sf::Color::White);
+	//	rect.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE), Tile::SIZE*int(hoveredPosY / Tile::SIZE));
+
+	//	window->draw(rect);
+
+	//	stringstream ss;
+	//	ss << int(hoveredPosX / Tile::SIZE) << ", " << int(hoveredPosY / Tile::SIZE) << endl << hoveredTile->type;
+	//	sf::Text t(ss.str(), *game->GetFont("Fonts/arial.ttf"), 24);
+	//	t.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE), Tile::SIZE*int(hoveredPosY / Tile::SIZE));
+	//	window->draw(t);
+	//}
+
 	//window->draw(*TextureDrawer.get());
 	
 	/*	
