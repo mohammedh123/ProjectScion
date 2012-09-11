@@ -241,7 +241,7 @@
     <None Include="Shaders\combined.frag">
       <Filter>Resource Files\Shader</Filter>
     </None>
-    <None Include="Shaders\shadow.frag">
+    <None Include="Shaders\shadowmap.frag">
       <Filter>Resource Files\Shader</Filter>
     </None>
   </ItemGroup>

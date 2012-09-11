@@ -22,18 +22,17 @@ void GameState::Initialize(ScionEngine* game)
 	transitionOffTime = 0.5f;
 
 	//effect = game->GetShader("Shaders/bloom.frag", sf::Shader::Type::Fragment);
-	shadowFX = game->GetShader("Shaders/shadow.frag", sf::Shader::Type::Fragment);
+	shadowFX = game->GetShader("Shaders/shadowmap.frag", sf::Shader::Type::Fragment);
 	shadowFX->setParameter("lightStrength", 4.0f);
-	shadowFX->setParameter("lightPosition", sf::Vector2f(100, 100));
-	shadowFX->setParameter("lightColor", sf::Vector3f(255, 0, 128));
+	shadowFX->setParameter("lightColor", sf::Vector3f(255,255,0));
 	shadowFX->setParameter("lightRadius", 100.0f);
 
 	shadowFX->setParameter("screenWidth", 800);
 	shadowFX->setParameter("screenHeight", 600);
 
 	combinedFX = game->GetShader("Shaders/combined.frag", sf::Shader::Type::Fragment);
-	combinedFX->setParameter("ambient", 1.0f);
-	combinedFX->setParameter("ambientColor", sf::Color::Red);
+	combinedFX->setParameter("ambient", 0.5f);
+	combinedFX->setParameter("ambientColor", sf::Color::White);
  
     // This variable is used to boost to output of the light sources when they are combined
     // I found 4 a good value for my lights but you can also make this dynamic if you want
@@ -118,6 +117,8 @@ void GameState::HandleInput(sf::RenderWindow* window)
 		hoveredTile = &game->GetCurrentLevel().GetTile(MousePos.x / Tile::SIZE, MousePos.y / Tile::SIZE);
 		hoveredPosX = MousePos.x;
 		hoveredPosY = MousePos.y;
+		
+		shadowFX->setParameter("lightPosition", sf::Vector3f(MousePos.x, MousePos.y, 0));
 	}
 	else
 	{
@@ -155,7 +156,7 @@ void GameState::Draw(sf::RenderWindow* window)
 	*/
 	Camera& c = game->GetCurrentLevel().GetCamera();
 
-	colorMapRT->clear(sf::Color::Transparent);
+	colorMapRT->clear(sf::Color::Black);
 	colorMapRT->setView(c.GetView());
 	//window->setView(c.GetView());
 	
@@ -167,11 +168,18 @@ void GameState::Draw(sf::RenderWindow* window)
  //   window->draw(*TextureDrawer.get(), *states.get());
 	game->GetCurrentLevel().Draw(colorMapRT.get());
 
-	for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
+	static bool savedOnce = false;
+
+	if(!savedOnce)
 	{
-		if((*it)->IsRenderingBehavior())
-			(*it)->Process();
+		colorMapRT->getTexture().copyToImage().saveToFile("colormap.png");
+		savedOnce = true;
 	}
+	//for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
+	//{
+	//	if((*it)->IsRenderingBehavior())
+	//		(*it)->Process();
+	//}
 
 	//colorMapRT is now drawn
 
@@ -185,14 +193,21 @@ void GameState::Draw(sf::RenderWindow* window)
 		sf::Vertex(sf::Vector2f(1, -1), sf::Vector2f(1, 1))
 	};
 
-	shadowMapRT->clear(sf::Color::Transparent);
+	shadowMapRT->clear(sf::Color::Black);
 	states->shader = shadowFX;
 	shadowMapRT->draw(rect, 4, sf::PrimitiveType::TrianglesStrip, *states);
+	
+	static bool savedOnce2 = false;
 
+	if(!savedOnce2)
+	{
+		shadowMapRT->getTexture().copyToImage().saveToFile("shadowmap.png");
+		savedOnce2 = true;
+	}
 	//shadowMapRT is now drawn
 
-	combinedFX->setParameter("ColorMap", colorMapRT->getTexture());
-	combinedFX->setParameter("ShadingMap", shadowMapRT->getTexture());
+	combinedFX->setParameter("ColorMapSampler", colorMapRT->getTexture());
+	combinedFX->setParameter("ShadingMapSampler", shadowMapRT->getTexture());
  
 	states->shader = combinedFX;
 

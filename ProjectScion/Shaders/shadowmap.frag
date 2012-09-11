@@ -1,14 +1,14 @@
-uniform float screenWidth;
-uniform float screenHeight;
- 
 uniform float lightStrength;
 uniform float lightRadius;
 uniform vec3 lightPosition;
 uniform vec3 lightColor;
+
+uniform float screenWidth;
+uniform float screenHeight; 
  
 void main()
 {
-	int depth = 0;
+	int depth = 1;
 
     vec3 pixelPosition;
     pixelPosition.x = screenWidth * gl_TexCoord[0].x;
@@ -28,5 +28,5 @@ void main()
         shading = distance * amount * coneAttenuation * lightColor;
     }
  
-	gl_FragColor = vec4(shading.r, shading.g, shading.b, 1.0f);
+    gl_FragColor = vec4(shading.r, shading.g, shading.b, 1.0f);
 }
