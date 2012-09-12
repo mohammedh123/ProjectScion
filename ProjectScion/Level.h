@@ -79,7 +79,7 @@ public:
 	inline int GetHeight() const {return h;}
 	
 	void Draw(sf::RenderWindow* window);
-	void Draw(sf::RenderTexture* texture);
+	void Draw(sf::RenderTexture* texture, bool shadowMap = false, sf::RenderStates* states = nullptr);
 	void PrintToImage(std::string filename);
 
 	const Tile* GetRandomTileOfType(Tile::TYPE type) const;

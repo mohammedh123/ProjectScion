@@ -4,7 +4,7 @@
 
 using namespace std;
 
-const map<Tile::TYPE,Tile>& Tile::DefaultTiles()
+map<Tile::TYPE,Tile>& Tile::DefaultTiles()
 {
 	static map<Tile::TYPE, Tile> m;
 
@@ -35,10 +35,16 @@ Tile::~Tile()
 
 }
 
-void Tile::Draw(sf::RenderTexture* rt)
+void Tile::Draw(sf::RenderTexture* rt, sf::Color c, sf::RenderStates* states)
 {
+	baseSprite.setColor(c);
 	baseSprite.setPosition((float)x*SIZE, (float)y*SIZE);
-	rt->draw(baseSprite);
+	if(states)
+	{
+		rt->draw(baseSprite, *states);
+	}
+	else
+		rt->draw(baseSprite);
 }
 
 

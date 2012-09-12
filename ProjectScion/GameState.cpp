@@ -22,31 +22,29 @@ void GameState::Initialize(ScionEngine* game)
 	transitionOffTime = 0.5f;
 
 	//effect = game->GetShader("Shaders/bloom.frag", sf::Shader::Type::Fragment);
-	shadowFX = game->GetShader("Shaders/shadowmap.frag", sf::Shader::Type::Fragment);
-	shadowFX->setParameter("lightStrength", 4.0f);
-	shadowFX->setParameter("lightColor", sf::Vector3f(255,255,0));
-	shadowFX->setParameter("lightRadius", 100.0f);
+	//lightFX = game->GetShader("Shaders/light.frag", sf::Shader::Type::Fragment);
+	darkFX = game->GetShader("Shaders/dark.frag", sf::Shader::Type::Fragment);
+	darkFX->setParameter("screenWidth", 800);
+	darkFX->setParameter("screenHeight", 600);
+	darkFX->setParameter("lightStrength", 0.5f);
+	darkFX->setParameter("lightColor", sf::Color::White);
+	darkFX->setParameter("lightRadius", 200.0f);
 
-	shadowFX->setParameter("screenWidth", 800);
-	shadowFX->setParameter("screenHeight", 600);
-
-	combinedFX = game->GetShader("Shaders/combined.frag", sf::Shader::Type::Fragment);
-	combinedFX->setParameter("ambient", 0.5f);
-	combinedFX->setParameter("ambientColor", sf::Color::White);
- 
-    // This variable is used to boost to output of the light sources when they are combined
-    // I found 4 a good value for my lights but you can also make this dynamic if you want
-    combinedFX->setParameter("lightAmbient", 4);
+	combineFX = game->GetShader("Shaders/combine.frag", sf::Shader::Type::Fragment);
+	combineFX->setParameter("lightAmbient", 4);
+	combineFX->setParameter("ambient", 0.5f);
+	combineFX->setParameter("ambientColor", sf::Color::Green);
 
 	//player = move(unique_ptr<Entity>(new Entity()));
 	
 	auto c = game->GetCurrentLevel().GetCamera();
 	
-	shadowMapRT = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
-	shadowMapRT->create(800,600, false);
-
-	colorMapRT = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
-	colorMapRT->create(800,600, false);
+	lightRT = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
+	lightRT->create(800,600, false);
+	darkRT = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
+	darkRT->create(800,600, false);
+	colorRT = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
+	colorRT->create(800,600, false);
 
 	states = unique_ptr<sf::RenderStates>(new sf::RenderStates);
 	//states->shader = effect;
@@ -110,6 +108,7 @@ void GameState::HandleInput(sf::RenderWindow* window)
 	}
 
 	sf::Vector2f MousePos = window->convertCoords(  sf::Mouse::getPosition(*window), c.GetView());
+	auto mousePos = sf::Mouse::getPosition(*window);
 	
 	sf::IntRect gameRect(0, 0, game->GetCurrentLevel().GetWidth()*Tile::SIZE, game->GetCurrentLevel().GetHeight()*Tile::SIZE);
 	if(gameRect.contains(MousePos.x, MousePos.y))
@@ -118,7 +117,7 @@ void GameState::HandleInput(sf::RenderWindow* window)
 		hoveredPosX = MousePos.x;
 		hoveredPosY = MousePos.y;
 		
-		shadowFX->setParameter("lightPosition", sf::Vector3f(MousePos.x, MousePos.y, 0));
+		darkFX->setParameter("lightPosition", sf::Vector2f(MousePos.x, MousePos.y));
 	}
 	else
 	{
@@ -146,46 +145,44 @@ void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherSta
 void GameState::Draw(sf::RenderWindow* window)
 {
 	window->setActive(true);
-	//window->setView(*camera->GetView());
-	/*
-	glBegin(GL_TRIANGLES);
-	glVertex3f( 0.0f, 300, 0.0f);		// Top
-	glVertex3f(100.0f,100.0f, 0.0f);		// Bottom Left
-	glVertex3f( 250.0f,50.0f, 0.0f);
-	glEnd();
-	*/
 	Camera& c = game->GetCurrentLevel().GetCamera();
 
-	colorMapRT->clear(sf::Color::Black);
-	colorMapRT->setView(c.GetView());
-	//window->setView(c.GetView());
-	
+	window->clear(sf::Color::Black);
+	window->setView(c.GetView());
 
-	//rt->display();
-	//TextureDrawer->setTexture(rt->getTexture());
-	//effect->setParameter("bgl_RenderedTexture", rt->getTexture());
-	////TextureDrawer->setTexture(*WindowTexture.get());
- //   window->draw(*TextureDrawer.get(), *states.get());
-	game->GetCurrentLevel().Draw(colorMapRT.get());
+	colorRT->setView(c.GetView());
+	game->GetCurrentLevel().Draw(colorRT.get());
 
-	static bool savedOnce = false;
-
-	if(!savedOnce)
+	for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
 	{
-		colorMapRT->getTexture().copyToImage().saveToFile("colormap.png");
-		savedOnce = true;
+		if((*it)->IsRenderingBehavior())
+			(*it)->Process();
 	}
-	//for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
-	//{
-	//	if((*it)->IsRenderingBehavior())
-	//		(*it)->Process();
-	//}
 
-	//colorMapRT is now drawn
-
-	//should be for_each light
+	darkRT->clear();
+	darkRT->setView(c.GetView());
+	darkFX->setParameter("texture", sf::Shader::CurrentTexture);
+	states->shader = darkFX;
+	game->GetCurrentLevel().Draw(darkRT.get(), false, states.get());
 	
-	sf::Vertex rect[] = 
+	sf::Sprite darkTex(darkRT->getTexture());
+	lightRT->clear();
+	//lightRT->setView(c.GetView());
+	lightRT->draw(darkTex);
+	
+	sf::Sprite lightTex(lightRT->getTexture());
+	lightTex.setOrigin(400,300);
+	lightTex.setPosition(400,300);
+	lightTex.setScale(1, -1);
+	darkRT->clear();
+	darkRT->setView(darkRT->getDefaultView());
+	darkRT->draw(lightTex, darkFX);
+
+	window->clear();
+	combineFX->setParameter("colorMapSampler", colorRT->getTexture());
+	combineFX->setParameter("shadingMapSampler", darkRT->getTexture());
+
+	sf::Vertex verts[] = 
 	{
 		sf::Vertex(sf::Vector2f(-1, 1), sf::Vector2f(0, 0)),
 		sf::Vertex(sf::Vector2f(1, 1), sf::Vector2f(1, 0)),
@@ -193,72 +190,35 @@ void GameState::Draw(sf::RenderWindow* window)
 		sf::Vertex(sf::Vector2f(1, -1), sf::Vector2f(1, 1))
 	};
 
-	shadowMapRT->clear(sf::Color::Black);
-	states->shader = shadowFX;
-	shadowMapRT->draw(rect, 4, sf::PrimitiveType::TrianglesStrip, *states);
-	
-	static bool savedOnce2 = false;
+	sf::Sprite colorTex(colorRT->getTexture());
+	window->draw(colorTex, combineFX);
+	//window->draw(verts, 4, sf::PrimitiveType::TrianglesStrip, combineFX);
 
-	if(!savedOnce2)
+	static bool df = false;
+	if(!df)
 	{
-		shadowMapRT->getTexture().copyToImage().saveToFile("shadowmap.png");
-		savedOnce2 = true;
+		df = true;
+		darkRT->getTexture().copyToImage().saveToFile("shadows.png");
 	}
-	//shadowMapRT is now drawn
 
-	combinedFX->setParameter("ColorMapSampler", colorMapRT->getTexture());
-	combinedFX->setParameter("ShadingMapSampler", shadowMapRT->getTexture());
- 
-	states->shader = combinedFX;
+	if(hoveredTile)
+	{
+		sf::RectangleShape rect;
+		rect.setSize(sf::Vector2f(100, 100));
+		rect.setFillColor(sf::Color(255,255,255,60));
+		rect.setOutlineThickness(2.0f);
+		rect.setOutlineColor(sf::Color::White);
+		rect.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE), Tile::SIZE*int(hoveredPosY / Tile::SIZE));
 
-	sf::Sprite cmrtTex(colorMapRT->getTexture());
-	window->draw(cmrtTex, *states);
+		window->draw(rect);
 
-	//if(hoveredTile)
-	//{
-	//	sf::RectangleShape rect;
-	//	rect.setSize(sf::Vector2f(100, 100));
-	//	rect.setFillColor(sf::Color(255,255,255,60));
-	//	rect.setOutlineThickness(2.0f);
-	//	rect.setOutlineColor(sf::Color::White);
-	//	rect.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE), Tile::SIZE*int(hoveredPosY / Tile::SIZE));
+		stringstream ss;
+		ss << int(hoveredPosX / Tile::SIZE) << ", " << int(hoveredPosY / Tile::SIZE) << endl << hoveredTile->type;
+		sf::Text t(ss.str(), *game->GetFont("Fonts/arial.ttf"), 24);
+		t.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE), Tile::SIZE*int(hoveredPosY / Tile::SIZE));
+		window->draw(t);
+	}
 
-	//	window->draw(rect);
-
-	//	stringstream ss;
-	//	ss << int(hoveredPosX / Tile::SIZE) << ", " << int(hoveredPosY / Tile::SIZE) << endl << hoveredTile->type;
-	//	sf::Text t(ss.str(), *game->GetFont("Fonts/arial.ttf"), 24);
-	//	t.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE), Tile::SIZE*int(hoveredPosY / Tile::SIZE));
-	//	window->draw(t);
-	//}
-
-	//window->draw(*TextureDrawer.get());
-	
-	/*	
-		// Set the default view back
-		sf::View defaultView = window->getDefaultView();
-		window->setView(window->getDefaultView());
-	
-		//Draw the UI
-		//Needs to be encapsulated and thought out
-
-		sf::RectangleShape rectangle;
-		rectangle.setSize(sf::Vector2f(defaultView.getSize().x, 100));
-		rectangle.setPosition(0, defaultView.getSize().y - 100);
-		window->draw(rectangle);
-
-		sf::Text text("UI");
-		text.setFont(*fonts["mainFont"]);
-		text.setCharacterSize(30);
-		text.setStyle(sf::Text::Bold);
-		text.setColor(sf::Color::Red);
-		text.setPosition(defaultView.getSize().x/2, defaultView.getSize().y - 50);
-		//Does not have a built in alignment option =/
-		window->draw(text);
-		break;
-	
-	*/
-	
 	
 	window->setActive(false);
 	if (currentState == TransitionOn)

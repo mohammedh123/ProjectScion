@@ -131,8 +131,9 @@
     <None Include="Shaders\bloom.vert" />
     <None Include="Shaders\colorize.frag" />
     <None Include="Shaders\colorize.vert" />
-    <None Include="Shaders\combined.frag" />
-    <None Include="Shaders\shadowmap.frag" />
+    <None Include="Shaders\combine.frag" />
+    <None Include="Shaders\dark.frag" />
+    <None Include="Shaders\light.frag" />
     <None Include="Sound\splash_sound.wav" />
   </ItemGroup>
   <ItemGroup>

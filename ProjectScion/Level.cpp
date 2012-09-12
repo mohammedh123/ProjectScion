@@ -115,7 +115,7 @@ void Level::Draw(sf::RenderWindow* window)
 	}
 }
 
-void Level::Draw(sf::RenderTexture* texture)
+void Level::Draw(sf::RenderTexture* texture, bool shadowMap, sf::RenderStates* states)
 {  
 	auto bounds = camera.GetTileBounds();
 	auto camOffsetX = camera.GetTileOffset().x;
@@ -129,7 +129,13 @@ void Level::Draw(sf::RenderTexture* texture)
 		{
 			if(tileX < 0) continue;
 
-			GetTile(tileX, tileY).Draw(texture);
+			if(shadowMap)
+			{
+				if(GetTile(tileX, tileY).solid)
+					GetTile(tileX, tileY).Draw(texture, sf::Color::Black);
+			}
+			else
+				GetTile(tileX, tileY).Draw(texture, sf::Color::White, states);
 		}
 	}
 }

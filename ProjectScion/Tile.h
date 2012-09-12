@@ -210,7 +210,7 @@ public:
 			return 15;
 	}
 
-    static const std::map<Tile::TYPE,Tile>& DefaultTiles();
+    static std::map<Tile::TYPE,Tile>& DefaultTiles();
 
 	sf::Sprite baseSprite;
 	bool solid;
@@ -224,7 +224,7 @@ public:
 	~Tile();
 
 	void Draw(sf::RenderWindow* rw);
-	void Draw(sf::RenderTexture* rt);
+	void Draw(sf::RenderTexture* rt, sf::Color c=sf::Color::White, sf::RenderStates* states = nullptr);
 
 	inline void SetRect(const sf::IntRect& rect) { baseSprite.setTextureRect(rect); }
 };

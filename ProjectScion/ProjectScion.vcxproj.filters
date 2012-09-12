@@ -238,10 +238,13 @@
     <None Include="Shaders\bloom.vert">
       <Filter>Resource Files\Shader</Filter>
     </None>
-    <None Include="Shaders\combined.frag">
+    <None Include="Shaders\light.frag">
       <Filter>Resource Files\Shader</Filter>
     </None>
-    <None Include="Shaders\shadowmap.frag">
+    <None Include="Shaders\combine.frag">
+      <Filter>Resource Files\Shader</Filter>
+    </None>
+    <None Include="Shaders\dark.frag">
       <Filter>Resource Files\Shader</Filter>
     </None>
   </ItemGroup>
