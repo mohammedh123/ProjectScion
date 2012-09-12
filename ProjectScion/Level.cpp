@@ -79,6 +79,60 @@ void Level::LoadLevel()
 	//tbd
 }
 
+vector<pair<sf::Vector2f, sf::Vector2f>> Level::GetPolygonFromSolidTiles()
+{
+	vector<pair<sf::Vector2f, sf::Vector2f>> walls;
+
+	for(int j = 0; j < h; j++)
+	{
+		for(int i = 0; i < w; i++)
+		{
+			auto& tile = GetTile(i,j);
+		
+			if(tile.solid)
+			{
+				walls.push_back(make_pair(sf::Vector2f(tile.x*Tile::SIZE, tile.y*Tile::SIZE),
+					sf::Vector2f((tile.x+1)*Tile::SIZE, tile.y*Tile::SIZE)));
+				walls.push_back(make_pair(sf::Vector2f((tile.x+1)*Tile::SIZE, tile.y*Tile::SIZE),
+					sf::Vector2f((tile.x+1)*Tile::SIZE, (tile.y+1)*Tile::SIZE)));
+				walls.push_back(make_pair(sf::Vector2f(tile.x*Tile::SIZE, (tile.y+1)*Tile::SIZE),
+					sf::Vector2f((tile.x+1)*Tile::SIZE, (tile.y+1)*Tile::SIZE)));
+				walls.push_back(make_pair(sf::Vector2f(tile.x*Tile::SIZE, tile.y*Tile::SIZE),
+					sf::Vector2f(tile.x*Tile::SIZE, (tile.y+1)*Tile::SIZE)));	
+			}
+		}
+	}
+	
+	sort(begin(walls), end(walls), [](pair<sf::Vector2f, sf::Vector2f>& pr1, pair<sf::Vector2f, sf::Vector2f>& pr2)
+	{
+		return pr1.first.x < pr2.first.x && pr1.first.y < pr2.first.y && pr1.second.x < pr2.second.x && pr1.second.y < pr2.second.y;
+	});
+
+	//find elements that have duplicates and remove all traces of it
+	for(int i = 0; i < walls.size(); i++)
+	{
+		bool anyFound = false;
+		auto itr = find(begin(walls) + i+1, end(walls), walls[i]);
+
+		while(itr != walls.end())
+		{
+			anyFound = true;
+
+			itr = walls.erase(itr);
+
+			itr = find(itr, end(walls), walls[i]);
+		}
+
+		if(anyFound)
+		{
+			walls.erase(begin(walls) + i);
+			i--;
+		}
+	}
+
+	return walls;
+}
+
 const Tile* Level::GetRandomTileOfType(Tile::TYPE type) const
 {
 	vector<const Tile*> tilesOfType;

@@ -123,6 +123,12 @@
     <ClCompile Include="Direction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LightManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ScionEngine.h">
@@ -215,6 +221,15 @@
     <ClInclude Include="RoomBranch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LightManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Fonts\arial.ttf">
@@ -245,6 +260,12 @@
       <Filter>Resource Files\Shader</Filter>
     </None>
     <None Include="Shaders\dark.frag">
+      <Filter>Resource Files\Shader</Filter>
+    </None>
+    <None Include="Shaders\lightAttenuationShader.frag">
+      <Filter>Resource Files\Shader</Filter>
+    </None>
+    <None Include="Shaders\blur.frag">
       <Filter>Resource Files\Shader</Filter>
     </None>
   </ItemGroup>

@@ -90,6 +90,7 @@ public:
 	void GetNeighbors(const Tile& n, std::deque<Tile>& neighbors);
 	void GetNeighbors(const Tile* n, std::deque<Tile*>& neighbors);
 	void GetAllNeighbors(const Tile* n, std::array<std::array<Tile*, 3>,3>& neighbors);
+	std::vector<std::pair<sf::Vector2f, sf::Vector2f>> GetPolygonFromSolidTiles();
 private:
 	static float HeuristicForNode(const Tile& start, const Tile& end);
 	float GetDistance(const Tile& s, const Tile& e) const;

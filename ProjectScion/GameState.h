@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "Level.h"
 #include "Entity.h"
+#include "Light.h"
 
 class GameState : public State
 {
@@ -18,13 +19,16 @@ private:
 	std::unique_ptr<sf::RenderStates> states;
 	std::unique_ptr<sf::Texture> WindowTexture;
 	std::unique_ptr<sf::Sprite> TextureDrawer;
-
+	
 	std::unique_ptr<Entity> player;
 
 	ScionEngine* game;
 
 	Tile* hoveredTile;
 	int hoveredPosX, hoveredPosY;
+
+	float lightTime;
+	Light_Entity playerLOS;
 public:
 	void Initialize(ScionEngine* game);
 	void HandleInput(sf::RenderWindow* window);

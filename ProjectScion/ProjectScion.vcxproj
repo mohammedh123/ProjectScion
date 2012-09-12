@@ -74,6 +74,8 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="LevelGenerator.cpp" />
     <ClCompile Include="LevelPartition.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="noiseutils.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="TextureManager.cpp" />
@@ -105,9 +107,12 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="LevelGenerator.h" />
     <ClInclude Include="LevelPartition.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="LightManager.h" />
     <ClInclude Include="noiseutils.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomBranch.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="PlayerInputBehavior.h" />
     <ClInclude Include="Level.h" />
@@ -129,11 +134,13 @@
     <None Include="Resources\Fonts\arial.ttf" />
     <None Include="Shaders\bloom.frag" />
     <None Include="Shaders\bloom.vert" />
+    <None Include="Shaders\blur.frag" />
     <None Include="Shaders\colorize.frag" />
     <None Include="Shaders\colorize.vert" />
     <None Include="Shaders\combine.frag" />
     <None Include="Shaders\dark.frag" />
     <None Include="Shaders\light.frag" />
+    <None Include="Shaders\lightAttenuationShader.frag" />
     <None Include="Sound\splash_sound.wav" />
   </ItemGroup>
   <ItemGroup>

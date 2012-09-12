@@ -31,8 +31,8 @@ class ScionEngine
 {
 private:
 	Level currentLevel;
+	
 	std::unique_ptr<sf::RenderWindow> window;
-
 	static StateManager* stateManager;
 	static TextureManager* texManager;
 	static SoundBufferManager* soundBufferManager;
@@ -61,6 +61,8 @@ private:
 public:
 	ScionEngine();
 	~ScionEngine();
+
+	inline sf::RenderWindow* GetWindow() { return window.get(); }
 	
 	static sf::Texture* GetTexture(const std::string& name) { return texManager->GetImage(name);}
 	static sf::SoundBuffer* GetSoundBuffer(const std::string& name) { return soundBufferManager->LoadFromFile(name);}

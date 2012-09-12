@@ -6,11 +6,14 @@
 #include <noise/noise.h>
 #include "noiseutils.h"
 #include "SFML/OpenGL.hpp"
+#include "LightManager.h"
 
 using namespace std;
 
 void GameState::Initialize(ScionEngine* game)
 {
+	lightTime = 0;
+
 	hoveredTile = nullptr;
 	hoveredPosX = -1;
 	hoveredPosY = -1;
@@ -109,7 +112,7 @@ void GameState::HandleInput(sf::RenderWindow* window)
 
 	sf::Vector2f MousePos = window->convertCoords(  sf::Mouse::getPosition(*window), c.GetView());
 	auto mousePos = sf::Mouse::getPosition(*window);
-	
+
 	sf::IntRect gameRect(0, 0, game->GetCurrentLevel().GetWidth()*Tile::SIZE, game->GetCurrentLevel().GetHeight()*Tile::SIZE);
 	if(gameRect.contains(MousePos.x, MousePos.y))
 	{
@@ -118,6 +121,11 @@ void GameState::HandleInput(sf::RenderWindow* window)
 		hoveredPosY = MousePos.y;
 		
 		darkFX->setParameter("lightPosition", sf::Vector2f(MousePos.x, MousePos.y));
+		
+		Light_Manager::GetInstance()->SetPosition(playerLOS, MousePos);//sf::Vector2f(mousePos.x, mousePos.y));
+		//lightSystem->SetView(c.GetView());
+		//testLight->SetCenter(Vec2f(400, 300));
+		//testLight->SetCenter(Vec2f(MousePos.x, MousePos.y));
 	}
 	else
 	{
@@ -127,6 +135,7 @@ void GameState::HandleInput(sf::RenderWindow* window)
 
 void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherState)
 {
+	lightTime += delta;
 	Camera& c = game->GetCurrentLevel().GetCamera();
 	State::Update(delta, isGameActive, isCoveredByOtherState);
 
@@ -140,18 +149,43 @@ void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherSta
 		if(!(*it)->IsRenderingBehavior())
 			(*it)->Process();
 	}
+
+	//lightSystem->SetView(c.GetView());
 }
 
 void GameState::Draw(sf::RenderWindow* window)
-{
+{ 
+	Light_Manager *Manager;
+    Manager=Light_Manager::GetInstance();
+ 
+    Manager->m_lightSmooth=1;
+    Manager->m_basicLight=sf::Color(10,10,10);
+
+	static bool fd = true;
+
+	if(fd)
+	{
+		fd = false; 
+		// On ajoute une lumière dynamique au Light_Manager et on dit que c'est "light" qui la représente.
+		playerLOS = Manager->Add_Dynamic_Light(sf::Vector2f(0,0),255,160,16,sf::Color(80,80,0)); 
+	}
+
 	window->setActive(true);
 	Camera& c = game->GetCurrentLevel().GetCamera();
+	
+
+	if(lightTime > 1.0f/30.0f)
+    {
+        // On re-calcule les lumières
+		Manager->Generate(c.GetView());
+        lightTime = 0;
+    }
 
 	window->clear(sf::Color::Black);
 	window->setView(c.GetView());
 
-	colorRT->setView(c.GetView());
-	game->GetCurrentLevel().Draw(colorRT.get());
+	//colorRT->setView(c.GetView());
+	game->GetCurrentLevel().Draw(window);
 
 	for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
 	{
@@ -159,46 +193,21 @@ void GameState::Draw(sf::RenderWindow* window)
 			(*it)->Process();
 	}
 
-	darkRT->clear();
-	darkRT->setView(c.GetView());
-	darkFX->setParameter("texture", sf::Shader::CurrentTexture);
-	states->shader = darkFX;
-	game->GetCurrentLevel().Draw(darkRT.get(), false, states.get());
-	
-	sf::Sprite darkTex(darkRT->getTexture());
-	lightRT->clear();
-	//lightRT->setView(c.GetView());
-	lightRT->draw(darkTex);
-	
-	sf::Sprite lightTex(lightRT->getTexture());
-	lightTex.setOrigin(400,300);
-	lightTex.setPosition(400,300);
-	lightTex.setScale(1, -1);
-	darkRT->clear();
-	darkRT->setView(darkRT->getDefaultView());
-	darkRT->draw(lightTex, darkFX);
+	window->setView(window->getDefaultView());
+	Manager->Draw(window);
+	window->setView(c.GetView());
 
-	window->clear();
-	combineFX->setParameter("colorMapSampler", colorRT->getTexture());
-	combineFX->setParameter("shadingMapSampler", darkRT->getTexture());
-
-	sf::Vertex verts[] = 
+	for(int i = 0; i < Light_Manager::GetInstance()->m_wall.size(); i++)
 	{
-		sf::Vertex(sf::Vector2f(-1, 1), sf::Vector2f(0, 0)),
-		sf::Vertex(sf::Vector2f(1, 1), sf::Vector2f(1, 0)),
-		sf::Vertex(sf::Vector2f(-1, -1), sf::Vector2f(0, 1)),
-		sf::Vertex(sf::Vector2f(1, -1), sf::Vector2f(1, 1))
-	};
+		auto& wall = Light_Manager::GetInstance()->m_wall[i];
 
-	sf::Sprite colorTex(colorRT->getTexture());
-	window->draw(colorTex, combineFX);
-	//window->draw(verts, 4, sf::PrimitiveType::TrianglesStrip, combineFX);
+		sf::Vertex verts[] = 
+		{
+			sf::Vertex(wall.pt1, sf::Color::White),
+			sf::Vertex(wall.pt2, sf::Color::Red)
+		};
 
-	static bool df = false;
-	if(!df)
-	{
-		df = true;
-		darkRT->getTexture().copyToImage().saveToFile("shadows.png");
+		window->draw(verts, 2, sf::PrimitiveType::Lines);		
 	}
 
 	if(hoveredTile)
@@ -218,7 +227,6 @@ void GameState::Draw(sf::RenderWindow* window)
 		t.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE), Tile::SIZE*int(hoveredPosY / Tile::SIZE));
 		window->draw(t);
 	}
-
 	
 	window->setActive(false);
 	if (currentState == TransitionOn)
