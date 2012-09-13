@@ -130,6 +130,37 @@ vector<pair<sf::Vector2f, sf::Vector2f>> Level::GetPolygonFromSolidTiles()
 		}
 	}
 
+	for(int i = 0; i < walls.size()-1; i++)
+	{
+		for(int j = 1; j < walls.size(); j++)
+		{
+			if(walls[i].second == walls[j].first && (walls[i].first.y == walls[j].second.y))
+			{
+				sf::Vector2f firstPt = walls[i].first, secondPt = walls[j].second;
+
+				walls.erase(walls.begin() + j);
+				j--;
+
+				walls.erase(walls.begin() + i);
+
+				walls.insert(walls.begin() + i, make_pair(firstPt, secondPt));
+				continue;
+			}
+			else if(walls[i].second == walls[j].first && (walls[i].first.x == walls[j].second.x))
+			{
+				sf::Vector2f firstPt = walls[i].first, secondPt = walls[j].second;
+
+				walls.erase(walls.begin() + j);
+				j--;
+
+				walls.erase(walls.begin() + i);
+
+				walls.insert(walls.begin() + i, make_pair(firstPt, secondPt));
+				continue;
+			}
+		}
+	}
+
 	return walls;
 }
 

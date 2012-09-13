@@ -158,7 +158,7 @@ void GameState::Draw(sf::RenderWindow* window)
 	Light_Manager *Manager;
     Manager=Light_Manager::GetInstance();
  
-    Manager->m_lightSmooth=1;
+    Manager->m_lightSmooth=0;
     Manager->m_basicLight=sf::Color(10,10,10);
 
 	static bool fd = true;
@@ -167,7 +167,7 @@ void GameState::Draw(sf::RenderWindow* window)
 	{
 		fd = false; 
 		// On ajoute une lumière dynamique au Light_Manager et on dit que c'est "light" qui la représente.
-		playerLOS = Manager->Add_Dynamic_Light(sf::Vector2f(0,0),255,160,16,sf::Color(80,80,0)); 
+		playerLOS = Manager->Add_Dynamic_Light(sf::Vector2f(0,0),500,160,32,sf::Color(80,80,0)); 
 	}
 
 	window->setActive(true);
@@ -210,6 +210,7 @@ void GameState::Draw(sf::RenderWindow* window)
 		window->draw(verts, 2, sf::PrimitiveType::Lines);		
 	}
 
+	hoveredTile = false;
 	if(hoveredTile)
 	{
 		sf::RectangleShape rect;
