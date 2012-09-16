@@ -21,6 +21,8 @@ bool Collision::CircleCollision(float radius1, sf::Vector2f position1, float rad
 //Check if the bounding box surrounding the object intersects
 bool Collision::BoundingRectCollision(const sf::Sprite& Object1, const sf::Sprite& Object2)
 {
+	sf::FloatRect obj1 = Object1.getGlobalBounds();
+	sf::FloatRect obj2 = Object2.getGlobalBounds();
 	return Object1.getGlobalBounds().intersects(Object2.getGlobalBounds());
 }
 

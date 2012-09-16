@@ -6,7 +6,7 @@
 #include <string>
 #include <sstream>
 #include <windows.h>
-
+#include "PlayerCollisionBehavior.h"
 
 
 using namespace std;
@@ -73,7 +73,7 @@ void ScionEngine::Init()
 	TransformAttribute* trans = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(randTile->x*Tile::SIZE + Tile::SIZE*0.5f, randTile->y*Tile::SIZE + Tile::SIZE*0.5f, 0, 0)));
 	player->AddBehavior(CreateBehavior(new SpriteBehavior(*texManager->GetImage("player.png"), 16, 16, trans, window.get())));
 	player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans)));
-
+	player->AddBehavior(CreateBehavior(new PlayerCollisionBehavior(*texManager->GetImage("player.png"), 16, 16, trans, currentLevel)));
 	//only for testing out proc gen
 	auto fstZ = float(currentLevel.GetWidth()*Tile::SIZE)/windowWidth;
 	auto sndZ = float(currentLevel.GetHeight()*Tile::SIZE)/windowHeight;
