@@ -46,6 +46,30 @@ void PlayerCollisionBehavior::Process()
 			//Check if there is a collision between the player and a neighbor
 			if(Collision::BoundingRectCollision(_sprite, neighbors[i][j]->baseSprite))
 			{
+				sf::FloatRect neighborRect = neighbors[i][j]->baseSprite.getGlobalBounds();
+				sf::FloatRect playerRect = _sprite.getGlobalBounds();
+
+				//left
+				if(i == 0 && j == 1)
+				{
+					_transform->Move(neighborRect.left + neighborRect.width - playerRect.left, 0);
+				}
+				//top
+				else if(i == 1 && j == 0)
+				{
+					_transform->Move(0, (neighborRect.top + neighborRect.height - playerRect.top));
+				}
+				//right
+				else if(i == 2 && j == 1)
+				{
+					_transform->Move(neighborRect.left - (playerRect.left + playerRect.width), 0);
+				}
+				//bottom
+				else if(i == 1 && j == 2)
+				{
+					_transform->Move(0, (neighborRect.top - (playerRect.top + playerRect.height)));
+				}
+				/*
 				if(Keyboard::isKeyPressed(Keyboard::Left))
 				{
 					_transform->Move(1, 0);
@@ -62,6 +86,7 @@ void PlayerCollisionBehavior::Process()
 				{
 					_transform->Move(0, -1);
 				}
+				*/
 				/*
 				sf::FloatRect neighborRect = neighbors[i][j]->baseSprite.getGlobalBounds();
 				sf::FloatRect playerRect = _sprite.getGlobalBounds();
