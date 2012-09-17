@@ -8,6 +8,7 @@
 #include "Level.h"
 #include "Entity.h"
 #include "Light\LightSystem.h"
+#include "Light\Light_Point.h"
 
 class GameState : public State
 {
@@ -28,6 +29,7 @@ private:
 	int hoveredPosX, hoveredPosY;
 
 	std::unique_ptr<ltbl::LightSystem> ls;
+	ltbl::Light_Point* testLight;
 public:
 	void Initialize(ScionEngine* game);
 	void HandleInput(sf::RenderWindow* window);

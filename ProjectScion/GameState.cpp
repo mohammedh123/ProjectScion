@@ -7,6 +7,9 @@
 #include "noiseutils.h"
 #include "SFML/OpenGL.hpp"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 using namespace std;
 
 void GameState::Initialize(ScionEngine* game)
@@ -22,9 +25,41 @@ void GameState::Initialize(ScionEngine* game)
 	transitionOffTime = 0.5f;
 
 	ls = unique_ptr<ltbl::LightSystem>(new ltbl::LightSystem(AABB(Vec2f(0.0f,0.0f), Vec2f(800,600)), game->window.get(), "lightFin.png", "Shaders/lightAttenuationShader.frag"));
-	
-	testLight = new ltbl::EmissiveLight();
+	ls->m_useBloom = false;
+
+	testLight = new ltbl::Light_Point();
 	testLight->SetCenter(Vec2f(200.0f, 200.0f));
+	testLight->SetRadius(100.0f);
+	testLight->m_size = 30.0f;
+	testLight->m_intensity = 1.0f;
+	testLight->SetSpreadAngle(2*M_PI);
+	testLight->m_softSpreadAngle = 0.0f;
+	testLight->CalculateAABB();
+
+	ls->AddLight(testLight);
+	
+
+	Level& level = game->GetCurrentLevel();
+
+	for(int j = 0; j < level.GetHeight(); j++)
+		for(int i = 0; i < level.GetWidth(); i++)
+		{
+			if(level.GetTile(i, j).type == Tile::WALL)
+			{
+				ltbl::ConvexHull* hull = new ltbl::ConvexHull();
+				hull->m_vertices.push_back(Vec2f(-Tile::SIZE*0.5f, -Tile::SIZE*0.5f));
+				hull->m_vertices.push_back(Vec2f(Tile::SIZE*0.5f, -Tile::SIZE*0.5f));
+				hull->m_vertices.push_back(Vec2f(-Tile::SIZE*0.5f, Tile::SIZE*0.5f));
+				hull->m_vertices.push_back(Vec2f(-Tile::SIZE*0.5f, Tile::SIZE*0.5f));
+
+				hull->CalculateNormals();
+				hull->CalculateAABB();
+
+				hull->SetWorldCenter(Vec2f(i*Tile::SIZE + Tile::SIZE*0.5, j*Tile::SIZE + Tile::SIZE*0.5));
+
+				ls->AddConvexHull(hull);
+			}
+		}
 
 	//effect = game->GetShader("Shaders/bloom.frag", sf::Shader::Type::Fragment);
 	//lightFX = game->GetShader("Shaders/light.frag", sf::Shader::Type::Fragment);
@@ -126,7 +161,7 @@ void GameState::HandleInput(sf::RenderWindow* window)
 		
 		//lightSystem->SetView(c.GetView());
 		//testLight->SetCenter(Vec2f(400, 300));
-		//testLight->SetCenter(Vec2f(MousePos.x, MousePos.y));
+		testLight->SetCenter(Vec2f(mousePos.x, 600-mousePos.y));
 	}
 	else
 	{
@@ -161,6 +196,7 @@ void GameState::Draw(sf::RenderWindow* window)
 
 	window->clear(sf::Color::Black);
 	window->setView(c.GetView());
+	ls->SetView(c.GetView());
 
 	//colorRT->setView(c.GetView());
 	game->GetCurrentLevel().Draw(window);
@@ -192,6 +228,9 @@ void GameState::Draw(sf::RenderWindow* window)
 		t.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE), Tile::SIZE*int(hoveredPosY / Tile::SIZE));
 		window->draw(t);
 	}
+
+	ls->RenderLights();
+	ls->RenderLightTexture();
 	
 	window->setActive(false);
 	if (currentState == TransitionOn)

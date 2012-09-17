@@ -770,6 +770,7 @@ namespace ltbl
 				if(pLight->AlwaysUpdate())
 				{
 					m_lightTempTexture.display();
+					//m_lightTempTexture.getTexture().copyToImage().saveToFile("mlighttemptexture.png");
 
 					SwitchComposition();
 					glLoadIdentity();
@@ -945,6 +946,7 @@ namespace ltbl
 		m_bloomTexture.display();
 
 		m_compositionTexture.display();
+		//m_compositionTexture.getTexture().copyToImage().saveToFile("comptex.png");
 
 		SwitchWindow();
 	}

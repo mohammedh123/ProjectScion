@@ -51,8 +51,6 @@ void ScionEngine::Init()
 	stateManager = new StateManager();
 
 	fonts["mainFont"] = fontManager->LoadFromFile("Fonts/arial.ttf");
-	stateManager->PushState(new GameState(), this);
-	//stateManager->PushState(new SplashScreenState(4.0f, texManager->GetImage("Images/splashscreen.png"), soundBufferManager->LoadFromFile("Sound/splash_sound.wav")));
 	LoadImages();
 	clock = unique_ptr<sf::Clock>(new sf::Clock());
 	clock->restart();
@@ -73,14 +71,20 @@ void ScionEngine::Init()
 	currentLevel.GetCamera().DirectZoomOfOriginal(max(fstZ, sndZ)+0.1f);
 	//currentLevel.GetCamera().MoveCenter(0, 0);
 	currentLevel.GetCamera().MoveCenter(currentLevel.GetWidth()*Tile::SIZE/2, currentLevel.GetHeight()*Tile::SIZE/2);
+
+	stateManager->PushState(new GameState(), this);
+	//stateManager->PushState(new SplashScreenState(4.0f, texManager->GetImage("Images/splashscreen.png"), soundBufferManager->LoadFromFile("Sound/splash_sound.wav")));
+	
 }
 void ScionEngine::RenderFrame()
 {
+	auto mousePos = sf::Mouse::getPosition(*window);
 	std::stringstream ss;
 	
 	ss << currentLevel.GetCamera().GetPosition().x << ", " << currentLevel.GetCamera().GetPosition().y << endl;
 	ss << currentLevel.GetCamera().GetTileBounds().left << ", " << currentLevel.GetCamera().GetTileBounds().top << " : " << currentLevel.GetCamera().GetTileBounds().width << ", " << currentLevel.GetCamera().GetTileBounds().height << endl;
-	ss << currentLevel.GetCamera().GetZoom();
+	ss << currentLevel.GetCamera().GetZoom() << endl;
+	ss << "[" << mousePos.x << ", " << mousePos.y << "]";
 
 	sf::Text text(sf::String(ss.str()), *fontManager->LoadFromFile("Fonts/arial.ttf"));
 	window->clear();
