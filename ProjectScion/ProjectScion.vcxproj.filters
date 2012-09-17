@@ -46,6 +46,15 @@
     <Filter Include="Resource Files\Shader">
       <UniqueIdentifier>{a4a954d7-4b80-4df8-a311-e6e421e5bead}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Constructs">
+      <UniqueIdentifier>{3434f5c8-67e2-4160-8894-7b1829dab5c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{6bf3956e-e912-43b3-b3ee-ccdd57305735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="QuadTree">
+      <UniqueIdentifier>{20068233-3cda-4eca-aa44-9865630761d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -123,13 +132,52 @@
     <ClCompile Include="Direction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LightManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerCollisionBehavior.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree\QuadTree.cpp">
+      <Filter>QuadTree</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree\QuadTreeOccupant.cpp">
+      <Filter>QuadTree</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree\StaticQuadTree.cpp">
+      <Filter>QuadTree</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree\QuadTreeNode.cpp">
+      <Filter>QuadTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\EmissiveLight.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\Light.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\Light_Point.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\LightSystem.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\ShadowFin.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\ConvexHull.cpp">
+      <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Constructs\AABB.cpp">
+      <Filter>Constructs</Filter>
+    </ClCompile>
+    <ClCompile Include="Constructs\Color3f.cpp">
+      <Filter>Constructs</Filter>
+    </ClCompile>
+    <ClCompile Include="Constructs\Point2i.cpp">
+      <Filter>Constructs</Filter>
+    </ClCompile>
+    <ClCompile Include="Constructs\Vec2f.cpp">
+      <Filter>Constructs</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -224,16 +272,55 @@
     <ClInclude Include="RoomBranch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LightManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Singleton.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerCollisionBehavior.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree\QuadTree.h">
+      <Filter>QuadTree</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree\QuadTreeNode.h">
+      <Filter>QuadTree</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree\QuadTreeOccupant.h">
+      <Filter>QuadTree</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree\StaticQuadTree.h">
+      <Filter>QuadTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\ConvexHull.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\EmissiveLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\Light.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\Light_Point.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\LightSystem.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\ShadowFin.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Constructs\AABB.h">
+      <Filter>Constructs</Filter>
+    </ClInclude>
+    <ClInclude Include="Constructs\Color3f.h">
+      <Filter>Constructs</Filter>
+    </ClInclude>
+    <ClInclude Include="Constructs\Point2i.h">
+      <Filter>Constructs</Filter>
+    </ClInclude>
+    <ClInclude Include="Constructs\Vec2f.h">
+      <Filter>Constructs</Filter>
+    </ClInclude>
+    <ClInclude Include="Constructs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,14 +6,11 @@
 #include <noise/noise.h>
 #include "noiseutils.h"
 #include "SFML/OpenGL.hpp"
-#include "LightManager.h"
 
 using namespace std;
 
 void GameState::Initialize(ScionEngine* game)
 {
-	lightTime = 0;
-
 	hoveredTile = nullptr;
 	hoveredPosX = -1;
 	hoveredPosY = -1;
@@ -23,6 +20,11 @@ void GameState::Initialize(ScionEngine* game)
 
 	transitionOnTime = 0.5f;
 	transitionOffTime = 0.5f;
+
+	ls = unique_ptr<ltbl::LightSystem>(new ltbl::LightSystem(AABB(Vec2f(0.0f,0.0f), Vec2f(800,600)), game->window.get(), "lightFin.png", "Shaders/lightAttenuationShader.frag"));
+	
+	testLight = new ltbl::EmissiveLight();
+	testLight->SetCenter(Vec2f(200.0f, 200.0f));
 
 	//effect = game->GetShader("Shaders/bloom.frag", sf::Shader::Type::Fragment);
 	//lightFX = game->GetShader("Shaders/light.frag", sf::Shader::Type::Fragment);
@@ -42,12 +44,12 @@ void GameState::Initialize(ScionEngine* game)
 	
 	auto c = game->GetCurrentLevel().GetCamera();
 	
-	lightRT = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
-	lightRT->create(800,600, false);
-	darkRT = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
-	darkRT->create(800,600, false);
-	colorRT = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
-	colorRT->create(800,600, false);
+	//lightRT = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
+	//lightRT->create(800,600, false);
+	//darkRT = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
+	//darkRT->create(800,600, false);
+	//colorRT = unique_ptr<sf::RenderTexture>(new sf::RenderTexture());
+	//colorRT->create(800,600, false);
 
 	states = unique_ptr<sf::RenderStates>(new sf::RenderStates);
 	//states->shader = effect;
@@ -122,7 +124,6 @@ void GameState::HandleInput(sf::RenderWindow* window)
 		
 		darkFX->setParameter("lightPosition", sf::Vector2f(MousePos.x, MousePos.y));
 		
-		Light_Manager::GetInstance()->SetPosition(playerLOS, MousePos);//sf::Vector2f(mousePos.x, mousePos.y));
 		//lightSystem->SetView(c.GetView());
 		//testLight->SetCenter(Vec2f(400, 300));
 		//testLight->SetCenter(Vec2f(MousePos.x, MousePos.y));
@@ -135,7 +136,6 @@ void GameState::HandleInput(sf::RenderWindow* window)
 
 void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherState)
 {
-	lightTime += delta;
 	Camera& c = game->GetCurrentLevel().GetCamera();
 	State::Update(delta, isGameActive, isCoveredByOtherState);
 
@@ -155,31 +155,9 @@ void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherSta
 
 void GameState::Draw(sf::RenderWindow* window)
 { 
-	Light_Manager *Manager;
-    Manager=Light_Manager::GetInstance();
- 
-    Manager->m_lightSmooth=0;
-    Manager->m_basicLight=sf::Color(10,10,10);
-
-	static bool fd = true;
-
-	if(fd)
-	{
-		fd = false; 
-		// On ajoute une lumière dynamique au Light_Manager et on dit que c'est "light" qui la représente.
-		playerLOS = Manager->Add_Dynamic_Light(sf::Vector2f(0,0),500,160,32,sf::Color(80,80,0)); 
-	}
-
 	window->setActive(true);
 	Camera& c = game->GetCurrentLevel().GetCamera();
 	
-
-	if(lightTime > 1.0f/30.0f)
-    {
-        // On re-calcule les lumières
-		Manager->Generate(c.GetView());
-        lightTime = 0;
-    }
 
 	window->clear(sf::Color::Black);
 	window->setView(c.GetView());
@@ -194,21 +172,7 @@ void GameState::Draw(sf::RenderWindow* window)
 	}
 
 	window->setView(window->getDefaultView());
-	Manager->Draw(window);
 	window->setView(c.GetView());
-
-	for(int i = 0; i < Light_Manager::GetInstance()->m_wall.size(); i++)
-	{
-		auto& wall = Light_Manager::GetInstance()->m_wall[i];
-
-		sf::Vertex verts[] = 
-		{
-			sf::Vertex(wall.pt1, sf::Color::White),
-			sf::Vertex(wall.pt2, sf::Color::Red)
-		};
-
-		window->draw(verts, 2, sf::PrimitiveType::Lines);		
-	}
 
 	hoveredTile = false;
 	if(hoveredTile)

@@ -2,7 +2,6 @@
 #include "SpriteBehavior.h"
 #include "PlayerInputBehavior.h"
 #include "LevelGenerator.h"
-#include "LightManager.h"
 #include <string>
 #include <sstream>
 #include <windows.h>
@@ -27,8 +26,6 @@ ScionEngine::ScionEngine()
 
 ScionEngine::~ScionEngine()
 {
-	Light_Manager::GetInstance()->Kill();
-
 	delete texManager;
 	delete soundBufferManager;
 	delete fontManager;
@@ -63,11 +60,7 @@ void ScionEngine::Init()
 	ScionEngine::events.reserve(8);
 		
 	currentLevel = std::move(LevelGenerator::CreateLevelWithRooms1(Level::SIZE::FINE, ROOM::SIZE::SMALL));
-	auto vecOfWalls = std::move(currentLevel.GetPolygonFromSolidTiles());
 
-	for(int j = 0; j < vecOfWalls.size(); j++)
-		Light_Manager::GetInstance()->Add_Wall(vecOfWalls[j].first, vecOfWalls[j].second);
-		
 	auto player = CreateEntity();
 	const Tile* randTile = currentLevel.GetRandomTileOfType(Tile::GROUND);
 	TransformAttribute* trans = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(randTile->x*Tile::SIZE + Tile::SIZE*0.5f, randTile->y*Tile::SIZE + Tile::SIZE*0.5f, 0, 0)));
