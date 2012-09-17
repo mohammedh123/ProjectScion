@@ -68,28 +68,15 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="Constructs\AABB.cpp" />
-    <ClCompile Include="Constructs\Color3f.cpp" />
-    <ClCompile Include="Constructs\Point2i.cpp" />
-    <ClCompile Include="Constructs\Vec2f.cpp" />
     <ClCompile Include="Direction.cpp" />
     <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="LevelGenerator.cpp" />
     <ClCompile Include="LevelPartition.cpp" />
-    <ClCompile Include="Light\ConvexHull.cpp" />
-    <ClCompile Include="Light\EmissiveLight.cpp" />
-    <ClCompile Include="Light\Light.cpp" />
-    <ClCompile Include="Light\LightSystem.cpp" />
-    <ClCompile Include="Light\Light_Point.cpp" />
-    <ClCompile Include="Light\ShadowFin.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="noiseutils.cpp" />
-    <ClCompile Include="PlayerCollisionBehavior.cpp" />
-    <ClCompile Include="QuadTree\QuadTree.cpp" />
-    <ClCompile Include="QuadTree\QuadTreeNode.cpp" />
-    <ClCompile Include="QuadTree\QuadTreeOccupant.cpp" />
-    <ClCompile Include="QuadTree\StaticQuadTree.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="PlayerInputBehavior.cpp" />
@@ -106,7 +93,6 @@
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TransformAttribute.cpp" />
-    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Attribute.h" />
@@ -114,11 +100,6 @@
     <ClInclude Include="Branch.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
-    <ClInclude Include="Constructs.h" />
-    <ClInclude Include="Constructs\AABB.h" />
-    <ClInclude Include="Constructs\Color3f.h" />
-    <ClInclude Include="Constructs\Point2i.h" />
-    <ClInclude Include="Constructs\Vec2f.h" />
     <ClInclude Include="CorridorBranch.h" />
     <ClInclude Include="Direction.h" />
     <ClInclude Include="FontManager.h" />
@@ -126,20 +107,12 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="LevelGenerator.h" />
     <ClInclude Include="LevelPartition.h" />
-    <ClInclude Include="Light\ConvexHull.h" />
-    <ClInclude Include="Light\EmissiveLight.h" />
-    <ClInclude Include="Light\Light.h" />
-    <ClInclude Include="Light\LightSystem.h" />
-    <ClInclude Include="Light\Light_Point.h" />
-    <ClInclude Include="Light\ShadowFin.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="LightManager.h" />
     <ClInclude Include="noiseutils.h" />
-    <ClInclude Include="PlayerCollisionBehavior.h" />
-    <ClInclude Include="QuadTree\QuadTree.h" />
-    <ClInclude Include="QuadTree\QuadTreeNode.h" />
-    <ClInclude Include="QuadTree\QuadTreeOccupant.h" />
-    <ClInclude Include="QuadTree\StaticQuadTree.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomBranch.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="PlayerInputBehavior.h" />
     <ClInclude Include="Level.h" />
@@ -155,7 +128,6 @@
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TransformAttribute.h" />
-    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\splashscreen.png" />

@@ -32,7 +32,6 @@ class ScionEngine
 private:
 	Level currentLevel;
 	
-	std::unique_ptr<sf::RenderWindow> window;
 	static StateManager* stateManager;
 	static TextureManager* texManager;
 	static SoundBufferManager* soundBufferManager;
@@ -59,6 +58,8 @@ private:
 	void RenderFrame();
 	void Update();  
 public:
+	std::unique_ptr<sf::RenderWindow> window;
+
 	ScionEngine();
 	~ScionEngine();
 
