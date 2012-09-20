@@ -12,9 +12,10 @@ using namespace std;
 void GameState::Initialize(ScionEngine* game)
 {
 	lm = unique_ptr<LightManager>(new LightManager(game));
-	lm->AddLight(new Light(sf::Vector2f(400,300), 100.0f, sf::Color::Red));
-	lm->AddLight(new Light(sf::Vector2f(420,320), 100.0f, sf::Color::Green));
-	lm->AddLight(new Light(sf::Vector2f(380,280), 100.0f, sf::Color::Blue));
+	lm->AddLight(new Light(sf::Vector2f(386,300), 100.0f, sf::Color::Red));
+	lm->AddLight(new Light(sf::Vector2f(0,250), 100.0f, sf::Color::Green));
+	lm->AddLight(new Light(sf::Vector2f(800,300), 100.0f, sf::Color::Green));
+	lm->AddLight(new Light(sf::Vector2f(0,600), 100.0f, sf::Color::Green));
 
 	hoveredTile = nullptr;
 	hoveredPosX = -1;
@@ -151,7 +152,6 @@ void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherSta
 	}
 
 	lm->Update();
-	//lightSystem->SetView(c.GetView());
 }
 
 void GameState::Draw(sf::RenderWindow* window)
@@ -173,8 +173,9 @@ void GameState::Draw(sf::RenderWindow* window)
 	}
 
 	window->setView(window->getDefaultView());
-	window->setView(c.GetView());
-
+	//window->setView(c.GetView());
+	
+	lm->SetView(c.GetView());
 	lm->Draw(window);
 
 	hoveredTile = false;

@@ -20,10 +20,12 @@ class LightManager
 	sf::Sprite lightSprite;
 
 	std::vector<std::unique_ptr<Light>> lights;
+	sf::View view;
 public:
 	LightManager(ScionEngine* game);
 
 	void Update();
+	void SetView(const sf::View& nview) { view = nview; }
 
 	void AddLight(Light* light);
 

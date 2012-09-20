@@ -76,11 +76,13 @@ void ScionEngine::Init()
 }
 void ScionEngine::RenderFrame()
 {
+	sf::Vector2f MousePos = window->convertCoords(  sf::Mouse::getPosition(*window), GetCurrentLevel().GetCamera().GetView());
 	std::stringstream ss;
 	
 	ss << currentLevel.GetCamera().GetPosition().x << ", " << currentLevel.GetCamera().GetPosition().y << endl;
 	ss << currentLevel.GetCamera().GetTileBounds().left << ", " << currentLevel.GetCamera().GetTileBounds().top << " : " << currentLevel.GetCamera().GetTileBounds().width << ", " << currentLevel.GetCamera().GetTileBounds().height << endl;
-	ss << currentLevel.GetCamera().GetZoom();
+	ss << currentLevel.GetCamera().GetZoom() << endl;
+	ss << MousePos.x << ", " << MousePos.y;
 
 	sf::Text text(sf::String(ss.str()), *fontManager->LoadFromFile("Fonts/arial.ttf"));
 	window->clear();
