@@ -23,9 +23,6 @@ void GameState::Initialize(ScionEngine* game)
 
 	ls = unique_ptr<ltbl::LightSystem>(new ltbl::LightSystem(AABB(Vec2f(0.0f,0.0f), Vec2f(800,600)), game->window.get(), "lightFin.png", "Shaders/lightAttenuationShader.frag"));
 	
-	testLight = new ltbl::EmissiveLight();
-	testLight->SetCenter(Vec2f(200.0f, 200.0f));
-
 	//effect = game->GetShader("Shaders/bloom.frag", sf::Shader::Type::Fragment);
 	//lightFX = game->GetShader("Shaders/light.frag", sf::Shader::Type::Fragment);
 	darkFX = game->GetShader("Shaders/dark.frag", sf::Shader::Type::Fragment);

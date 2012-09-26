@@ -8,11 +8,10 @@
 class PlayerCollisionBehavior : public Behavior
 {
 	TransformAttribute* _transform;
-	sf::Sprite _sprite;
+	sf::RectangleShape _rect;
 	Level& _level;
 public:
-	PlayerCollisionBehavior(sf::Texture& tex, float x, float y, TransformAttribute* transform, Level& level);
-	PlayerCollisionBehavior(sf::Texture& tex, sf::IntRect rect, float x, float y, TransformAttribute* transform, Level& level);
+	PlayerCollisionBehavior(float x, float y, float width, float height, TransformAttribute* transform, Level& level);
 	void Process();
 };
 
