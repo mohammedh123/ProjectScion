@@ -132,6 +132,9 @@
     <ClCompile Include="Light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SpriteAttribute.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ScionEngine.h">
@@ -231,6 +234,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteAttribute.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -79,6 +79,7 @@
     <ClCompile Include="noiseutils.cpp" />
     <ClCompile Include="PlayerCollisionBehavior.cpp" />
     <ClCompile Include="Room.cpp" />
+    <ClCompile Include="SpriteAttribute.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="PlayerInputBehavior.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="PlayerCollisionBehavior.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomBranch.h" />
+    <ClInclude Include="SpriteAttribute.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="PlayerInputBehavior.h" />
     <ClInclude Include="Level.h" />

@@ -26,7 +26,7 @@ private:
 	ScionEngine* game;
 
 	Tile* hoveredTile;
-	std::unique_ptr<LightManager> lm;
+	//std::unique_ptr<LightManager> lm;
 	int hoveredPosX, hoveredPosY;
 public:
 	void Initialize(ScionEngine* game);

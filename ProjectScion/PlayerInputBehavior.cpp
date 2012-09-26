@@ -5,8 +5,8 @@
 
 using namespace sf;
 
-PlayerInputBehavior::PlayerInputBehavior(TransformAttribute* transform)
-	: _transform(transform)
+PlayerInputBehavior::PlayerInputBehavior(TransformAttribute* transform, SpriteAttribute* sprite)
+	: _transform(transform), _sprite(sprite)
 {}
 
 void PlayerInputBehavior::Process()
@@ -20,22 +20,50 @@ void PlayerInputBehavior::Process()
 	//	case sf::Event::EventType::KeyPressed:
 	//		evt.key.code						
 	//	}
-	//});
+	//})
+
+	bool dirSet = false;
 	
 	if(Keyboard::isKeyPressed(Keyboard::Left))
 	{
 		_transform->Move(-1, 0);
+
+		if(!dirSet)
+		{
+			dirSet = true;
+
+			//change the sprite's texRect or the transform's angle
+			_sprite->GetSprite().setTextureRect(sf::IntRect(0, 32, 32, 32));
+		}
 	}
 	if(Keyboard::isKeyPressed(Keyboard::Up))
 	{
 		_transform->Move(0, -1);
+
+		if(!dirSet)
+		{
+			dirSet = true;
+			_sprite->GetSprite().setTextureRect(sf::IntRect(32, 32, 32, 32));
+		}
 	}
 	if(Keyboard::isKeyPressed(Keyboard::Right))
 	{
 		_transform->Move(1, 0);
+
+		if(!dirSet)
+		{
+			dirSet = true;
+			_sprite->GetSprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
+		}
 	}
 	if(Keyboard::isKeyPressed(Keyboard::Down))
 	{
 		_transform->Move(0, 1);
+		
+		if(!dirSet)
+		{
+			dirSet = true;
+			_sprite->GetSprite().setTextureRect(sf::IntRect(32, 0, 32, 32));
+		}
 	}
 }
