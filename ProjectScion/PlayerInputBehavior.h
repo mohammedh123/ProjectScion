@@ -3,12 +3,14 @@
 
 #include "Behavior.h"
 #include "TransformAttribute.h"
+#include "SpriteAttribute.h"
 
 class PlayerInputBehavior : public Behavior
 {
 	TransformAttribute* _transform;
+	SpriteAttribute* _sprite;
 public:
-	PlayerInputBehavior(TransformAttribute* transform);
+	PlayerInputBehavior(TransformAttribute* transform, SpriteAttribute* sprite);
 
 	void Process();
 };

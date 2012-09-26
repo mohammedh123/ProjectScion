@@ -1,13 +1,14 @@
 #ifndef _GAMESTATE_H
 #define _GAMESTATE_H
 
-#include "State.h"
 #include "SFML/Graphics.hpp"
+
+#include "State.h"
 #include "Tile.h"
 #include "Camera.h"
 #include "Level.h"
 #include "Entity.h"
-#include "Light\LightSystem.h"
+#include "LightManager.h"
 
 class GameState : public State
 {
@@ -25,9 +26,8 @@ private:
 	ScionEngine* game;
 
 	Tile* hoveredTile;
+	//std::unique_ptr<LightManager> lm;
 	int hoveredPosX, hoveredPosY;
-
-	std::unique_ptr<ltbl::LightSystem> ls;
 public:
 	void Initialize(ScionEngine* game);
 	void HandleInput(sf::RenderWindow* window);

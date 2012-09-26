@@ -5,15 +5,15 @@
 
 #include "Behavior.h"
 #include "TransformAttribute.h"
+#include "SpriteAttribute.h"
 
 class SpriteBehavior : public Behavior
 {
 	TransformAttribute* _transform;
-	sf::RenderTarget* _window;
-	sf::Sprite _sprite;
+	SpriteAttribute* _sprite;
+	sf::RenderWindow* _window;
 public:
-	SpriteBehavior(sf::Texture& tex, float x, float y, TransformAttribute* transform, sf::RenderTarget* window);
-	SpriteBehavior(sf::Texture& tex, sf::IntRect rect, float x, float y, TransformAttribute* transform, sf::RenderTarget* window);
+	SpriteBehavior(TransformAttribute* transform, SpriteAttribute* sprite, sf::RenderWindow* window);
 
 	void Process();
 	bool IsRenderingBehavior() const { return true; }

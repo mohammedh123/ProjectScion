@@ -10,14 +10,14 @@
 
 using namespace std;
 
-std::vector<sf::Event>					ScionEngine::events(8);
-StateManager*							ScionEngine::stateManager(new StateManager());
-TextureManager*						ScionEngine::texManager(new TextureManager());
-SoundBufferManager*					ScionEngine::soundBufferManager(new SoundBufferManager());
+std::vector<sf::Event>	ScionEngine::events(8);
+StateManager*			ScionEngine::stateManager(new StateManager());
+TextureManager*			ScionEngine::texManager(new TextureManager());
+SoundBufferManager*		ScionEngine::soundBufferManager(new SoundBufferManager());
 FontManager*			ScionEngine::fontManager(new FontManager());
 MusicManager*			ScionEngine::musicManager(new MusicManager());
 ShaderManager*			ScionEngine::shaderManager(new ShaderManager());
-std::mt19937							ScionEngine::randEngine(GetTickCount());
+std::mt19937			ScionEngine::randEngine(GetTickCount());
 
 ScionEngine::ScionEngine()
 {
@@ -64,23 +64,27 @@ void ScionEngine::Init()
 	auto player = CreateEntity();
 	const Tile* randTile = currentLevel.GetRandomTileOfType(Tile::GROUND);
 	TransformAttribute* trans = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(randTile->x*Tile::SIZE + Tile::SIZE*0.5f, randTile->y*Tile::SIZE + Tile::SIZE*0.5f, 0, 0)));
-	player->AddBehavior(CreateBehavior(new SpriteBehavior(*texManager->GetImage("player.png"), 16, 16, trans, window.get())));
-	player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans)));
+	SpriteAttribute* spriteAttr = static_cast<SpriteAttribute*>(CreateAttribute(new SpriteAttribute(16, 16, sf::IntRect(0, 0, 32, 32), *texManager->GetImage("player.png"))));
+	
+	player->AddBehavior(CreateBehavior(new SpriteBehavior(trans, spriteAttr, window.get())));
+	player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans, spriteAttr)));
 	player->AddBehavior(CreateBehavior(new PlayerCollisionBehavior(16, 16, 32, 32, trans, currentLevel)));
 	//only for testing out proc gen
 	auto fstZ = float(currentLevel.GetWidth()*Tile::SIZE)/windowWidth;
 	auto sndZ = float(currentLevel.GetHeight()*Tile::SIZE)/windowHeight;
-	currentLevel.GetCamera().DirectZoomOfOriginal(max(fstZ, sndZ)+0.1f);
+	//currentLevel.GetCamera().DirectZoomOfOriginal(max(fstZ, sndZ)+0.1f);
 	//currentLevel.GetCamera().MoveCenter(0, 0);
 	currentLevel.GetCamera().MoveCenter(currentLevel.GetWidth()*Tile::SIZE/2, currentLevel.GetHeight()*Tile::SIZE/2);
 }
 void ScionEngine::RenderFrame()
 {
+	sf::Vector2f MousePos = window->convertCoords(  sf::Mouse::getPosition(*window), GetCurrentLevel().GetCamera().GetView());
 	std::stringstream ss;
 	
 	ss << currentLevel.GetCamera().GetPosition().x << ", " << currentLevel.GetCamera().GetPosition().y << endl;
 	ss << currentLevel.GetCamera().GetTileBounds().left << ", " << currentLevel.GetCamera().GetTileBounds().top << " : " << currentLevel.GetCamera().GetTileBounds().width << ", " << currentLevel.GetCamera().GetTileBounds().height << endl;
-	ss << currentLevel.GetCamera().GetZoom();
+	ss << currentLevel.GetCamera().GetZoom() << endl;
+	ss << MousePos.x << ", " << MousePos.y;
 
 	sf::Text text(sf::String(ss.str()), *fontManager->LoadFromFile("Fonts/arial.ttf"));
 	window->clear();

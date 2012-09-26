@@ -11,6 +11,12 @@ using namespace std;
 
 void GameState::Initialize(ScionEngine* game)
 {
+	//lm = unique_ptr<LightManager>(new LightManager(game));
+	//lm->AddLight(new Light(sf::Vector2f(386,300), 100.0f, sf::Color::Red));
+	//lm->AddLight(new Light(sf::Vector2f(0,250), 100.0f, sf::Color::Green));
+	//lm->AddLight(new Light(sf::Vector2f(800,300), 100.0f, sf::Color::Green));
+	//lm->AddLight(new Light(sf::Vector2f(0,600), 100.0f, sf::Color::Green));
+
 	hoveredTile = nullptr;
 	hoveredPosX = -1;
 	hoveredPosY = -1;
@@ -21,8 +27,6 @@ void GameState::Initialize(ScionEngine* game)
 	transitionOnTime = 0.5f;
 	transitionOffTime = 0.5f;
 
-	ls = unique_ptr<ltbl::LightSystem>(new ltbl::LightSystem(AABB(Vec2f(0.0f,0.0f), Vec2f(800,600)), game->window.get(), "lightFin.png", "Shaders/lightAttenuationShader.frag"));
-	
 	//effect = game->GetShader("Shaders/bloom.frag", sf::Shader::Type::Fragment);
 	//lightFX = game->GetShader("Shaders/light.frag", sf::Shader::Type::Fragment);
 	darkFX = game->GetShader("Shaders/dark.frag", sf::Shader::Type::Fragment);
@@ -147,7 +151,7 @@ void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherSta
 			(*it)->Process();
 	}
 
-	//lightSystem->SetView(c.GetView());
+	//lm->Update();
 }
 
 void GameState::Draw(sf::RenderWindow* window)
@@ -169,7 +173,10 @@ void GameState::Draw(sf::RenderWindow* window)
 	}
 
 	window->setView(window->getDefaultView());
-	window->setView(c.GetView());
+	//window->setView(c.GetView());
+	
+	//lm->SetView(c.GetView());
+	//lm->Draw(window);
 
 	hoveredTile = false;
 	if(hoveredTile)
