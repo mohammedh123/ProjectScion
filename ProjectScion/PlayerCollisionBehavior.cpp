@@ -9,15 +9,16 @@ using namespace sf;
 PlayerCollisionBehavior::PlayerCollisionBehavior(float x, float y, float width, float height, TransformAttribute* transform, Level& level)
 	: _transform(transform), _level(level)
 {
-	_rect.setOrigin(x, y);
-	_rect.setSize(sf::Vector2f(width, height));
+	_rect.width = width;
+	_rect.height = height;
+	_center_x = x;
+	_center_y = y;
 }
 
 void PlayerCollisionBehavior::Process()
 {
-	_rect.setPosition(_transform->GetPosition());
-	_rect.setRotation(_transform->GetAngle());
-	_rect.setScale(_transform->GetScale());
+	_rect.left = _transform->GetPosition().x - _center_x;
+	_rect.top = _transform->GetPosition().y - _center_y;
 
 	//Get the current cell of the unit, check collision with surrounding cell
 	Tile* tile = &_level.GetTile((int)(_transform->GetPosition().x/32),(int)(_transform->GetPosition().y/32));
@@ -39,30 +40,29 @@ void PlayerCollisionBehavior::Process()
 			neighbors[i][j]->baseSprite.setPosition((float)neighbors[i][j]->x*neighbors[i][j]->SIZE, (float)neighbors[i][j]->y*neighbors[i][j]->SIZE);
 
 			sf::FloatRect neighborRect = neighbors[i][j]->baseSprite.getGlobalBounds();
-			sf::FloatRect playerRect = _rect.getGlobalBounds();
 
 			//Check if there is a collision between the player and a neighbor
-			if(playerRect.intersects(neighborRect))
+			if(_rect.intersects(neighborRect))
 			{
 				//left
 				if(i == 0 && j == 1)
 				{
-					_transform->Move(neighborRect.left + neighborRect.width - playerRect.left, 0);
+					_transform->Move(neighborRect.left + neighborRect.width - _rect.left, 0);
 				}
 				//top
 				if(i == 1 && j == 0)
 				{
-					_transform->Move(0, (neighborRect.top + neighborRect.height - playerRect.top));
+					_transform->Move(0, (neighborRect.top + neighborRect.height - _rect.top));
 				}
 				//right
 				if(i == 2 && j == 1)
 				{
-					_transform->Move(neighborRect.left - (playerRect.left + playerRect.width), 0);
+					_transform->Move(neighborRect.left - (_rect.left + _rect.width), 0);
 				}
 				//bottom
 				if(i == 1 && j == 2)
 				{
-					_transform->Move(0, (neighborRect.top - (playerRect.top + playerRect.height)));
+					_transform->Move(0, (neighborRect.top - (_rect.top + _rect.height)));
 				}
 				
 				//topleft
