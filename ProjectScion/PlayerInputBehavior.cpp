@@ -31,6 +31,7 @@ void PlayerInputBehavior::Process()
 		if(!dirSet)
 		{
 			dirSet = true;
+			_transform->Direction = LEFT;
 
 			//change the sprite's texRect or the transform's angle
 			_sprite->GetSprite().setTextureRect(sf::IntRect(0, 32, 32, 32));
@@ -43,6 +44,7 @@ void PlayerInputBehavior::Process()
 		if(!dirSet)
 		{
 			dirSet = true;
+			_transform->Direction = UP;
 			_sprite->GetSprite().setTextureRect(sf::IntRect(32, 32, 32, 32));
 		}
 	}
@@ -53,6 +55,7 @@ void PlayerInputBehavior::Process()
 		if(!dirSet)
 		{
 			dirSet = true;
+			_transform->Direction = RIGHT;
 			_sprite->GetSprite().setTextureRect(sf::IntRect(0, 0, 32, 32));
 		}
 	}
@@ -63,6 +66,7 @@ void PlayerInputBehavior::Process()
 		if(!dirSet)
 		{
 			dirSet = true;
+			_transform->Direction = DOWN;
 			_sprite->GetSprite().setTextureRect(sf::IntRect(32, 0, 32, 32));
 		}
 	}

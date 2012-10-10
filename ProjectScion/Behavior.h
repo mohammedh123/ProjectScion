@@ -10,7 +10,6 @@ class Behavior
 {
 public:
 	Behavior(){}
-	Behavior(std::map<std::string, Attribute*> attribs){}
 
 	virtual void Process() = 0;
 	virtual bool IsRenderingBehavior() const { return false; }

@@ -5,11 +5,21 @@
 
 #include <SFML\System.hpp>
 
+enum TRANS_DIR
+{
+	LEFT,
+	UP,
+	DOWN,
+	RIGHT
+};
+
 class TransformAttribute : public Attribute
 {
 	sf::Vector2f _position, _velocity, _scale;
 	float _angle, _spriteAngle;
 public:
+	TRANS_DIR Direction;
+
 	TransformAttribute(sf::Vector2f& position, 
 		sf::Vector2f& velocity, 
 		sf::Vector2f& scale = sf::Vector2f(1.0f, 1.0f), 
@@ -33,6 +43,7 @@ public:
 	inline	const	sf::Vector2f&	GetScale()		const { return _scale; }
 	inline			float			GetAngle()		const { return _angle; }
 	inline			float			GetTotalAngle() const { return _angle+_spriteAngle; }
+	inline			TRANS_DIR		GetDirection()	const { return _direction; }
 };
 
 #endif

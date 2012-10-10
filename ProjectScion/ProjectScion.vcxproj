@@ -67,6 +67,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AIBehavior.cpp" />
+    <ClCompile Include="AttackBehavior.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Direction.cpp" />
@@ -99,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AIBehavior.h" />
+    <ClInclude Include="AttackBehavior.h" />
     <ClInclude Include="Attribute.h" />
     <ClInclude Include="Behavior.h" />
     <ClInclude Include="Branch.h" />
