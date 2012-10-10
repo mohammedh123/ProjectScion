@@ -7,8 +7,8 @@ WanderBehavior::WanderBehavior(float x, float y, float width, float height, Tran
 	_rect.height = height;
 	_center_x = x;
 	_center_y = y;
-	dx = 0;
-	dy = 0;
+	dx = -2;
+	dy = -2;
 	xDist = 0; 
 	yDist = 0;
 	srand ( time(NULL) );
@@ -24,8 +24,8 @@ void WanderBehavior::Process()
 	
 	_transform->Move(( fabs(dx) <= fabs(xDist))?dx:xDist, (fabs(dy) <= fabs(yDist))?dy:yDist);
 	
-	(dx <= xDist)?(xDist -= fabs(dx)):(xDist -= xDist);
-	(dy <= yDist)?(yDist -= fabs(dy)):(yDist -= yDist);
+	(fabs(dx) <= xDist)?(xDist -= fabs(dx)):(xDist -= xDist);
+	(fabs(dy) <= yDist)?(yDist -= fabs(dy)):(yDist -= yDist);
 
 	
 	
@@ -39,6 +39,7 @@ void WanderBehavior::Process()
 
 void WanderBehavior::pickARandomDirection(array<array<Tile*, 3>,3>& neighbors)
 {
+	bool stayOnCourse = false;
 	std::vector<std::pair<int, int>> possibleDirection;
 	for(int i = 0; i < 3; i++)
 	{
@@ -46,12 +47,21 @@ void WanderBehavior::pickARandomDirection(array<array<Tile*, 3>,3>& neighbors)
 		{
 			if(neighbors[i][j]->solid || (i == 1 && j == 1))
 				continue;
+			if(i == dx + 1 && j == dy + 1)
+			{
+				int chanceToStayOnCourse = std::rand() % 4;
+				if(chanceToStayOnCourse <= 2)
+					stayOnCourse = true;
+			}
 			possibleDirection.push_back(pair<int, int>(i, j));
 		}
 	}
-	int randomInt = std::rand() % possibleDirection.size();
-	dx = possibleDirection[randomInt].first - 1;
-	dy = possibleDirection[randomInt].second - 1;
+	if(!stayOnCourse)
+	{
+		int randomInt = std::rand() % possibleDirection.size();
+		dx = possibleDirection[randomInt].first - 1;
+		dy = possibleDirection[randomInt].second - 1;
+	}
 	xDist = fabs(32 * dx);
 	yDist = fabs(32 * dy);
 }
