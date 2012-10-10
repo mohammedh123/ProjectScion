@@ -97,6 +97,7 @@
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TransformAttribute.cpp" />
+    <ClCompile Include="WanderBehavior.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AIBehavior.h" />

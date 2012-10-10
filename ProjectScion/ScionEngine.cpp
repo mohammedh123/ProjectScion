@@ -6,6 +6,7 @@
 #include <sstream>
 #include <windows.h>
 #include "PlayerCollisionBehavior.h"
+#include "WanderBehavior.h"
 
 
 using namespace std;
@@ -69,6 +70,15 @@ void ScionEngine::Init()
 	player->AddBehavior(CreateBehavior(new SpriteBehavior(trans, spriteAttr, window.get())));
 	player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans, spriteAttr)));
 	player->AddBehavior(CreateBehavior(new PlayerCollisionBehavior(16, 16, 32, 32, trans, currentLevel)));
+
+	const Tile* randTile2 = currentLevel.GetRandomTileOfType(Tile::GROUND);
+	TransformAttribute* trans2 = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(randTile2->x*Tile::SIZE + Tile::SIZE*0.5f, randTile2->y*Tile::SIZE + Tile::SIZE*0.5f, 0, 0)));
+	SpriteAttribute* spriteAttr2 = static_cast<SpriteAttribute*>(CreateAttribute(new SpriteAttribute(16, 16, sf::IntRect(0, 0, 32, 32), *texManager->GetImage("player.png"))));
+
+	auto enemy = CreateEntity();
+	enemy->AddBehavior(CreateBehavior(new SpriteBehavior(trans2, spriteAttr2, window.get())));
+	enemy->AddBehavior(CreateBehavior(new WanderBehavior(16, 16, 32, 32, trans2, currentLevel)));
+	enemy->AddBehavior(CreateBehavior(new PlayerCollisionBehavior(16, 16, 32, 32, trans2, currentLevel)));
 	//only for testing out proc gen
 	auto fstZ = float(currentLevel.GetWidth()*Tile::SIZE)/windowWidth;
 	auto sndZ = float(currentLevel.GetHeight()*Tile::SIZE)/windowHeight;
