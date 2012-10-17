@@ -2,6 +2,7 @@
 #define _TRANSFORM_ATTR_H
 
 #include "Attribute.h"
+#include "Entity.h"
 
 #include <SFML\System.hpp>
 
@@ -43,7 +44,7 @@ public:
 	inline	const	sf::Vector2f&	GetScale()		const { return _scale; }
 	inline			float			GetAngle()		const { return _angle; }
 	inline			float			GetTotalAngle() const { return _angle+_spriteAngle; }
-	inline			TRANS_DIR		GetDirection()	const { return _direction; }
+	inline			TRANS_DIR		GetDirection()	const { return Direction; }
 };
 
 #endif

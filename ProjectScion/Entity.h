@@ -19,6 +19,8 @@ class Entity
 	std::vector<Behavior*> logicalBehaviors, renderBehaviors;
 public:
 	void AddBehavior(Behavior* b) { if(b->IsRenderingBehavior()) renderBehaviors.push_back(b); else logicalBehaviors.push_back(b); }
+
+	std::vector<Attribute*> GetAttributes(
 };
 
 #endif
