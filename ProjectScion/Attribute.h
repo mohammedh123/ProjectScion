@@ -4,7 +4,7 @@
 class Attribute
 {
 public:
-	Attribute(){}
+    Attribute(){}
 };
 
 #endif

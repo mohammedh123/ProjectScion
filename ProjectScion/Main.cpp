@@ -3,10 +3,10 @@
 
 int main()
 {
-	srand(GetTickCount());
-	std::unique_ptr<ScionEngine> engine(new ScionEngine());
+    srand(GetTickCount());
+    std::unique_ptr<ScionEngine> engine(new ScionEngine());
 
-	engine->Go();
+    engine->Go();
 
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

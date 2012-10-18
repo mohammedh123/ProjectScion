@@ -7,14 +7,14 @@
 
 class PlayerCollisionBehavior : public Behavior
 {
-	TransformAttribute* _transform;
-	//sf::RectangleShape _rect;
-	sf::FloatRect _rect;
-	Level& _level;
-	float _center_x, _center_y;
+    TransformAttribute* _transform;
+    //sf::RectangleShape _rect;
+    sf::FloatRect _rect;
+    Level& _level;
+    float _center_x, _center_y;
 public:
-	PlayerCollisionBehavior(float x, float y, float width, float height, TransformAttribute* transform, Level& level);
-	void Process();
+    PlayerCollisionBehavior(float x, float y, float width, float height, TransformAttribute* transform, Level& level);
+    void Process();
 };
 
 #endif

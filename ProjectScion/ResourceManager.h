@@ -14,36 +14,36 @@ template<class T>
 class ResourceManager
 {
 private:
-	ResourceManager(const ResourceManager&);
-	ResourceManager& operator=(const ResourceManager&);
-	
+    ResourceManager(const ResourceManager&);
+    ResourceManager& operator=(const ResourceManager&);
+    
 protected:
-	std::map<std::string, std::unique_ptr<T>> contentMap;
+    std::map<std::string, std::unique_ptr<T>> contentMap;
 public:
-	ResourceManager<T>(){}
-	~ResourceManager<T>(){}
+    ResourceManager<T>(){}
+    ~ResourceManager<T>(){}
 
-	virtual T* LoadFromFile(const std::string& filename)
-	{
-		T* retVal = nullptr;
+    virtual T* LoadFromFile(const std::string& filename)
+    {
+        T* retVal = nullptr;
 
-		for(auto it = begin(contentMap); it != end(contentMap); it++)
-		{
-			if(it->first == filename)
-				retVal = it->second.get();
-		}
+        for(auto it = begin(contentMap); it != end(contentMap); it++)
+        {
+            if(it->first == filename)
+                retVal = it->second.get();
+        }
 
-		if(!retVal)
-		{
-			std::unique_ptr<T> tex(new T);
-			tex->loadFromFile(filename);
-			contentMap[filename] = std::move(tex);
+        if(!retVal)
+        {
+            std::unique_ptr<T> tex(new T);
+            tex->loadFromFile(filename);
+            contentMap[filename] = std::move(tex);
 
-			retVal = contentMap[filename].get();
-		}
+            retVal = contentMap[filename].get();
+        }
 
-		return retVal;
-	}
+        return retVal;
+    }
 };
 
 #endif

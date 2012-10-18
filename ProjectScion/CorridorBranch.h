@@ -9,19 +9,19 @@
 class CorridorBranch : public Branch
 {
 public:
-	CorridorBranch(std::vector<Tile*>& tiles, Branch* parent = nullptr) : Branch(tiles, parent)
-	{}
+    CorridorBranch(std::vector<Tile*>& tiles, Branch* parent = nullptr) : Branch(tiles, parent)
+    {}
 
-	TYPE Type() { return Branch::CORRIDOR; }
+    TYPE Type() { return Branch::CORRIDOR; }
 
-	inline bool IsFull() const
-	{
-		for(int i = 0; i < tiles.size(); i++)
-			if(tiles[i]->type != Tile::CORRIDOR)
-				return false;
+    inline bool IsFull() const
+    {
+        for(size_t i = 0; i < tiles.size(); i++)
+            if(tiles[i]->type != Tile::CORRIDOR)
+                return false;
 
-		return true;
-	}
+        return true;
+    }
 };
 
 #endif

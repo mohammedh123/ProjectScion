@@ -9,10 +9,10 @@
 class RoomBranch : public Branch
 {
 public:
-	RoomBranch(std::vector<Tile*>& tiles) : Branch(tiles)
-	{}
+    RoomBranch(std::vector<Tile*>& tiles) : Branch(tiles)
+    {}
 
-	TYPE Type() { return Branch::ROOM; }
+    TYPE Type() { return Branch::ROOM; }
 };
 
 #endif

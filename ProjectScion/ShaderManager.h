@@ -6,16 +6,16 @@
  
 class ShaderManager {
 private:
-	std::map<std::string, std::unique_ptr<sf::Shader>> shaderMap;
-	
-	ShaderManager(const ShaderManager&);
-	ShaderManager& operator=(const ShaderManager&);
+    std::map<std::string, std::unique_ptr<sf::Shader>> shaderMap;
+    
+    ShaderManager(const ShaderManager&);
+    ShaderManager& operator=(const ShaderManager&);
 public:
-	ShaderManager();
-	~ShaderManager();
+    ShaderManager();
+    ~ShaderManager();
 
-	sf::Shader* LoadFromFile(const std::string& filename, sf::Shader::Type type);
-	sf::Shader* LoadFromFile(const std::string& vertexShaderFilename, const std::string& fragmentShaderFilename);
+    sf::Shader* LoadFromFile(const std::string& filename, sf::Shader::Type type);
+    sf::Shader* LoadFromFile(const std::string& vertexShaderFilename, const std::string& fragmentShaderFilename);
 };
 
 #endif

@@ -11,45 +11,45 @@
 class Direction
 {
 public:
-	static sf::Vector2i NORTH, EAST, SOUTH, WEST;
+    static sf::Vector2i NORTH, EAST, SOUTH, WEST;
 
-	static std::unordered_map<std::string, sf::Vector2i> DIRECTIONS;
-	static std::unordered_map<std::string, std::string> OPPOSITE;
+    static std::unordered_map<std::string, sf::Vector2i> DIRECTIONS;
+    static std::unordered_map<std::string, std::string> OPPOSITE;
 
-	static void InitializeDirections()
-	{
-		DIRECTIONS.clear();
-		DIRECTIONS["north"] = NORTH;
-		DIRECTIONS["east"]	= EAST;
-		DIRECTIONS["south"] = SOUTH;
-		DIRECTIONS["west"]	= WEST;
-		
-		OPPOSITE.clear();
-		OPPOSITE["north"]	= "south";
-		OPPOSITE["east"]	= "west";
-		OPPOSITE["south"]	= "north";
-		OPPOSITE["west"]	= "east";
-	}
+    static void InitializeDirections()
+    {
+        DIRECTIONS.clear();
+        DIRECTIONS["north"] = NORTH;
+        DIRECTIONS["east"]    = EAST;
+        DIRECTIONS["south"] = SOUTH;
+        DIRECTIONS["west"]    = WEST;
+        
+        OPPOSITE.clear();
+        OPPOSITE["north"]    = "south";
+        OPPOSITE["east"]    = "west";
+        OPPOSITE["south"]    = "north";
+        OPPOSITE["west"]    = "east";
+    }
 
-	static std::deque<std::string> GetKeys()
-	{
-		std::deque<std::string> dirKeys;
+    static std::deque<std::string> GetKeys()
+    {
+        std::deque<std::string> dirKeys;
 
-		std::for_each(begin(DIRECTIONS), end(DIRECTIONS), [&](std::pair<std::string, sf::Vector2i> val)
-		{
-			dirKeys.push_back(val.first);
-		});
+        std::for_each(begin(DIRECTIONS), end(DIRECTIONS), [&](std::pair<std::string, sf::Vector2i> val)
+        {
+            dirKeys.push_back(val.first);
+        });
 
-		return dirKeys;
-	}
+        return dirKeys;
+    }
 
-	static std::deque<std::string> ShuffleKeys()
-	{
-		auto&& dirKeys = GetKeys();
+    static std::deque<std::string> ShuffleKeys()
+    {
+        auto&& dirKeys = GetKeys();
 
-		std::random_shuffle(begin(dirKeys), end(dirKeys));
-		return dirKeys;
-	}
+        std::random_shuffle(begin(dirKeys), end(dirKeys));
+        return dirKeys;
+    }
 };
 
 #endif

@@ -9,14 +9,14 @@
 
 class SpriteBehavior : public Behavior
 {
-	TransformAttribute* _transform;
-	SpriteAttribute* _sprite;
-	sf::RenderWindow* _window;
+    TransformAttribute* _transform;
+    SpriteAttribute* _sprite;
+    sf::RenderWindow* _window;
 public:
-	SpriteBehavior(TransformAttribute* transform, SpriteAttribute* sprite, sf::RenderWindow* window);
+    SpriteBehavior(TransformAttribute* transform, SpriteAttribute* sprite, sf::RenderWindow* window);
 
-	void Process();
-	bool IsRenderingBehavior() const { return true; }
+    void Process();
+    bool IsRenderingBehavior() const { return true; }
 };
 
 #endif

@@ -7,7 +7,7 @@
  
 class SoundBufferManager : public ResourceManager< sf::SoundBuffer > {
 public:
-	SoundBufferManager():ResourceManager<sf::SoundBuffer>(){}
+    SoundBufferManager():ResourceManager<sf::SoundBuffer>(){}
 };
 
 #endif

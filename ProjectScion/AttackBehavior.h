@@ -7,14 +7,14 @@
 
 class AttackBehavior : public Behavior
 {
-	sf::IntRect _rect;
-	float _delay, _cooldown;
-	TransformAttribute* _transform;
-	std::vector<std::unique_ptr<Entity>>& _entities;
+    sf::IntRect _rect;
+    float _delay, _cooldown;
+    TransformAttribute* _transform;
+    std::vector<std::unique_ptr<Entity>>& _entities;
 public:
-	AttackBehavior(sf::IntRect attackRect, float delay, float cooldown,  std::vector<std::unique_ptr<Entity>>& entities, TransformAttribute* trans);
+    AttackBehavior(sf::IntRect attackRect, float delay, float cooldown,  std::vector<std::unique_ptr<Entity>>& entities, TransformAttribute* trans);
 
-	void Process();
+    void Process();
 };
 
 #endif

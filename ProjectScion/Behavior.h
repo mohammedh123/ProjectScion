@@ -9,10 +9,10 @@
 class Behavior
 {
 public:
-	Behavior(){}
+    Behavior(){}
 
-	virtual void Process() = 0;
-	virtual bool IsRenderingBehavior() const { return false; }
+    virtual void Process() = 0;
+    virtual bool IsRenderingBehavior() const { return false; }
 };
 
 #endif

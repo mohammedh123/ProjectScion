@@ -10,17 +10,17 @@
 
 class Entity
 {
-	friend class ScionEngine;
+    friend class ScionEngine;
 
-	ScionEngine* game;
-	Entity(){}
-	
-	std::vector<Attribute*> attributes;
-	std::vector<Behavior*> logicalBehaviors, renderBehaviors;
+    ScionEngine* game;
+    Entity(){}
+    
+    std::vector<Attribute*> attributes;
+    std::vector<Behavior*> logicalBehaviors, renderBehaviors;
 public:
-	void AddBehavior(Behavior* b) { if(b->IsRenderingBehavior()) renderBehaviors.push_back(b); else logicalBehaviors.push_back(b); }
+    void AddBehavior(Behavior* b) { if(b->IsRenderingBehavior()) renderBehaviors.push_back(b); else logicalBehaviors.push_back(b); }
 
-	std::vector<Attribute*> GetAttributes(
+    inline const std::vector<Attribute*>& GetAttributes() const { return attributes; }
 };
 
 #endif

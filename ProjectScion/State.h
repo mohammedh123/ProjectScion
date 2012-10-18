@@ -21,23 +21,23 @@ private:
     double              totalTime;
     bool                isPopup;
     bool                isExiting;
-    bool				isDead;
+    bool                isDead;
     
-	
+    
 protected:
-	VisibleState        currentState;
+    VisibleState        currentState;
     double              transitionOnTime;
     double              transitionOffTime;
     float               transitionPosition;
 public:
-	State::~State(){}
-	
-	StateManager* stateManager;
+    State::~State(){}
+    
+    StateManager* stateManager;
 
-	bool IsDead() const;
-	bool IsPopup() const;
-	float GetTransitionAlpha() const;
-	VisibleState getCurrentState() const;
+    bool IsDead() const;
+    bool IsPopup() const;
+    float GetTransitionAlpha() const;
+    VisibleState getCurrentState() const;
 
     virtual void Initialize(ScionEngine* game = nullptr);
 

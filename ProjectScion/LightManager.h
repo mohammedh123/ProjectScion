@@ -13,24 +13,24 @@ class Level;
 
 class LightManager
 {
-	Level& level;
+    Level& level;
 
-	sf::Shader* lightAttenuationShader;
-	sf::RenderTexture lightTexture;
-	sf::Sprite lightSprite;
+    sf::Shader* lightAttenuationShader;
+    sf::RenderTexture lightTexture;
+    sf::Sprite lightSprite;
 
-	std::vector<std::unique_ptr<Light>> lights;
-	sf::View view;
+    std::vector<std::unique_ptr<Light>> lights;
+    sf::View view;
 public:
-	LightManager(ScionEngine* game);
+    LightManager(ScionEngine* game);
 
-	void Update();
-	void SetView(const sf::View& nview) { view = nview; }
+    void Update();
+    void SetView(const sf::View& nview) { view = nview; }
 
-	void AddLight(Light* light);
+    void AddLight(Light* light);
 
-	void Draw(sf::RenderWindow* window);
-	void DrawLights();
+    void Draw(sf::RenderWindow* window);
+    void DrawLights();
 };
 
 #endif

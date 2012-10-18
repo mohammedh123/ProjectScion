@@ -11,31 +11,31 @@ class ScionEngine;
 class StateManager
 {
 private:
-	std::list<State*> States;
-	std::list<State*> statesToUpdate;
+    std::list<State*> States;
+    std::list<State*> statesToUpdate;
 
-	
-	
-	StateManager(const StateManager&);
-	StateManager& operator=(const StateManager&);
-	//GameManager game = null;
-	sf::RectangleShape rect;
-public:	
-	StateManager() { }
-	~StateManager();
-	//State[] GetStates();
+    
+    
+    StateManager(const StateManager&);
+    StateManager& operator=(const StateManager&);
+    //GameManager game = null;
+    sf::RectangleShape rect;
+public:    
+    StateManager() { }
+    ~StateManager();
+    //State[] GetStates();
 
-	void PushState(State* state, ScionEngine* game=0);
+    void PushState(State* state, ScionEngine* game=0);
 
-	void RemoveState(State* state);
+    void RemoveState(State* state);
 
-	State* PopState();
+    State* PopState();
 
-	void Update(double delta, sf::RenderWindow* window);
+    void Update(double delta, sf::RenderWindow* window);
 
-	void Draw(sf::RenderWindow* window);
+    void Draw(sf::RenderWindow* window);
 
-	void DrawSolidColor(sf::Color color, float alpha, sf::RenderWindow* window);
+    void DrawSolidColor(sf::Color color, float alpha, sf::RenderWindow* window);
 };
 
 #endif

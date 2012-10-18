@@ -8,20 +8,20 @@
 struct Branch
 {
 public:
-	enum TYPE
-	{
-		CORRIDOR,
-		ROOM
-	};
+    enum TYPE
+    {
+        CORRIDOR,
+        ROOM
+    };
 
-	std::vector<Tile*> tiles;
-	std::vector<Branch*> children;
-	Branch* parent;
+    std::vector<Tile*> tiles;
+    std::vector<Branch*> children;
+    Branch* parent;
 
-	Branch(std::vector<Tile*>& tiles, Branch* parent=nullptr) : tiles(tiles), parent(parent)
-	{}
+    Branch(std::vector<Tile*>& tiles, Branch* parent=nullptr) : tiles(tiles), parent(parent)
+    {}
 
-	virtual TYPE Type() = 0;
+    virtual TYPE Type() = 0;
 };
 
 #endif

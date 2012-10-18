@@ -10,15 +10,15 @@
 class MusicManager
 {
 private:
-	std::map<std::string, std::unique_ptr<sf::Music>> musicMap;
-	
-	MusicManager(const MusicManager&);
-	MusicManager& operator=(const MusicManager&);
+    std::map<std::string, std::unique_ptr<sf::Music>> musicMap;
+    
+    MusicManager(const MusicManager&);
+    MusicManager& operator=(const MusicManager&);
 public:
-	MusicManager();
-	~MusicManager();
+    MusicManager();
+    ~MusicManager();
 
-	sf::Music* MusicManager::LoadFromFile(const std::string& filename);
+    sf::Music* MusicManager::LoadFromFile(const std::string& filename);
 };
 
 #endif

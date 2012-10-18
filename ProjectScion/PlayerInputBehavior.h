@@ -7,12 +7,12 @@
 
 class PlayerInputBehavior : public Behavior
 {
-	TransformAttribute* _transform;
-	SpriteAttribute* _sprite;
+    TransformAttribute* _transform;
+    SpriteAttribute* _sprite;
 public:
-	PlayerInputBehavior(TransformAttribute* transform, SpriteAttribute* sprite);
+    PlayerInputBehavior(TransformAttribute* transform, SpriteAttribute* sprite);
 
-	void Process();
+    void Process();
 };
 
 #endif

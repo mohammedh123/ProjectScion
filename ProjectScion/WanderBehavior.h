@@ -11,16 +11,16 @@
 
 class WanderBehavior : public Behavior
 {
-	TransformAttribute* _transform;
-	Level& _level;
-	float dx, dy;
-	sf::FloatRect _rect;
-	float _center_x, _center_y;
-	float xDist, yDist;
+    TransformAttribute* _transform;
+    Level& _level;
+    float dx, dy;
+    sf::FloatRect _rect;
+    float _center_x, _center_y;
+    float xDist, yDist;
 public:
-	WanderBehavior(float x, float y, float width, float height, TransformAttribute* transform, Level& level);
-	void pickARandomDirection(array<array<Tile*, 3>,3>& neighbors);
-	void Process();
+    WanderBehavior(float x, float y, float width, float height, TransformAttribute* transform, Level& level);
+    void pickARandomDirection(array<array<Tile*, 3>,3>& neighbors);
+    void Process();
 };
 
 #endif

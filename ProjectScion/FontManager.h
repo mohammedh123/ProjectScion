@@ -7,7 +7,7 @@
  
 class FontManager : public ResourceManager< sf::Font > {
 public:
-	FontManager():ResourceManager<sf::Font>(){}
+    FontManager():ResourceManager<sf::Font>(){}
 };
 
 #endif
