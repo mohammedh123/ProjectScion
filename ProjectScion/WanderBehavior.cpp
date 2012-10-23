@@ -11,7 +11,7 @@ WanderBehavior::WanderBehavior(float x, float y, float width, float height, Tran
     dy = -2;
     xDist = 0; 
     yDist = 0;
-    srand ( time(NULL) );
+    srand ( (size_t)time(NULL) );
 }
 
 void WanderBehavior::Process()
@@ -59,8 +59,8 @@ void WanderBehavior::pickARandomDirection(array<array<Tile*, 3>,3>& neighbors)
     if(!stayOnCourse)
     {
         int randomInt = std::rand() % possibleDirection.size();
-        dx = possibleDirection[randomInt].first - 1;
-        dy = possibleDirection[randomInt].second - 1;
+        dx = (float)possibleDirection[randomInt].first - 1.0f;
+        dy = (float)possibleDirection[randomInt].second - 1.0f;
     }
     xDist = fabs(32 * dx);
     yDist = fabs(32 * dy);

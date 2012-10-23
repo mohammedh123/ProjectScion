@@ -18,10 +18,10 @@ void SplashScreenState::Initialize(ScionEngine* game)
     transitionOnTime = 0.5f;
     transitionOffTime = 0.5f;
     sound.play();
-    effect = game->GetShader("Shaders/bloom.frag", sf::Shader::Type::Fragment);
+    effect = game->GetShader("Shaders/bloom.frag", sf::Shader::Fragment);
 }
 
-void SplashScreenState::Update(double delta, bool isGameActive, bool isCoveredByOtherState)
+void SplashScreenState::Update(float delta, bool isGameActive, bool isCoveredByOtherState)
 {
     
     State::Update(delta, isGameActive, isCoveredByOtherState);
@@ -36,7 +36,7 @@ void SplashScreenState::Update(double delta, bool isGameActive, bool isCoveredBy
 void SplashScreenState::Draw(sf::RenderWindow* window)
 {
     auto size = window->getSize();
-    rect.setSize(sf::Vector2f(size.x, size.y));
+    rect.setSize(sf::Vector2f((float)size.x, (float)size.y));
     effect->setParameter("bgl_RenderedTexture",*rect.getTexture());
 
     sf::RenderStates states;

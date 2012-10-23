@@ -79,9 +79,9 @@ void Level::LoadLevel()
     //tbd
 }
 
-vector<pair<sf::Vector2f, sf::Vector2f>> Level::GetPolygonFromSolidTiles()
+vector<pair<sf::Vector2i, sf::Vector2i>> Level::GetPolygonFromSolidTiles()
 {
-    vector<pair<sf::Vector2f, sf::Vector2f>> walls;
+    vector<pair<sf::Vector2i, sf::Vector2i>> walls;
 
     for(int j = 0; j < h; j++)
     {
@@ -91,19 +91,19 @@ vector<pair<sf::Vector2f, sf::Vector2f>> Level::GetPolygonFromSolidTiles()
         
             if(tile.solid)
             {
-                walls.push_back(make_pair(sf::Vector2f(tile.x*Tile::SIZE, tile.y*Tile::SIZE),
-                    sf::Vector2f((tile.x+1)*Tile::SIZE, tile.y*Tile::SIZE)));
-                walls.push_back(make_pair(sf::Vector2f((tile.x+1)*Tile::SIZE, tile.y*Tile::SIZE),
-                    sf::Vector2f((tile.x+1)*Tile::SIZE, (tile.y+1)*Tile::SIZE)));
-                walls.push_back(make_pair(sf::Vector2f(tile.x*Tile::SIZE, (tile.y+1)*Tile::SIZE),
-                    sf::Vector2f((tile.x+1)*Tile::SIZE, (tile.y+1)*Tile::SIZE)));
-                walls.push_back(make_pair(sf::Vector2f(tile.x*Tile::SIZE, tile.y*Tile::SIZE),
-                    sf::Vector2f(tile.x*Tile::SIZE, (tile.y+1)*Tile::SIZE)));    
+                walls.push_back(make_pair(sf::Vector2i(tile.x*Tile::SIZE, tile.y*Tile::SIZE),
+                    sf::Vector2i((tile.x+1)*Tile::SIZE, tile.y*Tile::SIZE)));
+                walls.push_back(make_pair(sf::Vector2i((tile.x+1)*Tile::SIZE, tile.y*Tile::SIZE),
+                    sf::Vector2i((tile.x+1)*Tile::SIZE, (tile.y+1)*Tile::SIZE)));
+                walls.push_back(make_pair(sf::Vector2i(tile.x*Tile::SIZE, (tile.y+1)*Tile::SIZE),
+                    sf::Vector2i((tile.x+1)*Tile::SIZE, (tile.y+1)*Tile::SIZE)));
+                walls.push_back(make_pair(sf::Vector2i(tile.x*Tile::SIZE, tile.y*Tile::SIZE),
+                    sf::Vector2i(tile.x*Tile::SIZE, (tile.y+1)*Tile::SIZE)));    
             }
         }
     }
     
-    sort(begin(walls), end(walls), [](pair<sf::Vector2f, sf::Vector2f>& pr1, pair<sf::Vector2f, sf::Vector2f>& pr2)
+    sort(begin(walls), end(walls), [](pair<sf::Vector2i, sf::Vector2i>& pr1, pair<sf::Vector2i, sf::Vector2i>& pr2)
     {
         return pr1.first.x < pr2.first.x && pr1.first.y < pr2.first.y && pr1.second.x < pr2.second.x && pr1.second.y < pr2.second.y;
     });
@@ -136,7 +136,7 @@ vector<pair<sf::Vector2f, sf::Vector2f>> Level::GetPolygonFromSolidTiles()
         {
             if(walls[i].second == walls[j].first && (walls[i].first.y == walls[j].second.y))
             {
-                sf::Vector2f firstPt = walls[i].first, secondPt = walls[j].second;
+                sf::Vector2i firstPt = walls[i].first, secondPt = walls[j].second;
 
                 walls.erase(walls.begin() + j);
                 j--;
@@ -148,7 +148,7 @@ vector<pair<sf::Vector2f, sf::Vector2f>> Level::GetPolygonFromSolidTiles()
             }
             else if(walls[i].second == walls[j].first && (walls[i].first.x == walls[j].second.x))
             {
-                sf::Vector2f firstPt = walls[i].first, secondPt = walls[j].second;
+                sf::Vector2i firstPt = walls[i].first, secondPt = walls[j].second;
 
                 walls.erase(walls.begin() + j);
                 j--;
@@ -233,7 +233,7 @@ void Level::PrintToImage(std::string filename)
     auto sndZ = float(GetHeight()*Tile::SIZE)/600;
     GetCamera().DirectZoomOfOriginal(max(fstZ, sndZ)+0.1f);
     //level.GetCamera().MoveCenter(0, 0);
-    GetCamera().MoveCenter(GetWidth()*Tile::SIZE/2, GetHeight()*Tile::SIZE/2);
+    GetCamera().MoveCenter(GetWidth()*Tile::SIZE/2.0f, GetHeight()*Tile::SIZE/2.0f);
     tex.setView(camera.GetView());
     Draw(&tex);
     tex.display();
@@ -255,7 +255,7 @@ float Level::GetDistance(const Tile& s, const Tile& e) const
     int xD = abs(e.x - s.x);
     int yD = abs(e.y - s.y);
 
-    return (float)std::sqrtf((e.x - s.x) * (e.x - s.x) + (e.y - s.y) * (e.y - s.y));
+    return std::sqrtf((float)((e.x - s.x) * (e.x - s.x) + (e.y - s.y) * (e.y - s.y)));
 
     if (xD > yD || yD > xD) //1,0 or 0,1
         return 1.0f;
@@ -615,8 +615,8 @@ deque<Tile*> Level::FindPath(Tile* start, Tile* end)
             {
                 neighbor->parent = current;
                 neighbor->G = newGScore;
-                double cross = abs((neighbor->x - end->x)*(start->y - end->y) - (start->x - end->x)*(neighbor->y - end->y));
-                neighbor->H = neighbor->ManhattanDistance(end) + cross*0.001;
+                auto cross = fabs((float)(neighbor->x - end->x)*(start->y - end->y) - (start->x - end->x)*(neighbor->y - end->y));
+                neighbor->H = neighbor->ManhattanDistance(end) + cross*0.001f;
             }
         }
 

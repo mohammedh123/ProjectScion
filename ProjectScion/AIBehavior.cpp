@@ -8,6 +8,9 @@ void AIBehavior::Process()
 {
     switch(_current_state)
     {
-
+    case DIE:
+        break;
+    default:
+        break;
     }
 }

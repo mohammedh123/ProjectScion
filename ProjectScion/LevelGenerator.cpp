@@ -953,7 +953,7 @@ Level LevelGenerator::CreateLevelWithDLA(Level::SIZE levelSize)
 Level LevelGenerator::CreateLevelWithBSP(Level::SIZE levelSize, ROOM::SIZE maxRoomSize)
 {
     Level& level = Level(levelSize, levelSize);
-    int numRooms =  ((levelSize)*(levelSize))/(maxRoomSize*maxRoomSize);
+    unsigned numRooms =  ((levelSize)*(levelSize))/(maxRoomSize*maxRoomSize);
     vector<ROOM> rooms;
     const int maxBSPSize = 5;
 
@@ -992,7 +992,7 @@ Level LevelGenerator::CreateLevelWithBSP(Level::SIZE levelSize, ROOM::SIZE maxRo
 
         for(int i = 0; i < oldSize; i++)
         {
-            bool hSplit = static_cast<bool>(ScionEngine::GetRandomNumber(0,1));
+            bool hSplit = ScionEngine::GetRandomNumber(0,1) > 0;
             double splitLow = 0.0;
             double splitHigh = 1.0;
 
@@ -1053,8 +1053,8 @@ tsanhs:
                     {
                         splitPos = getRandomSplitNumber(splitLow, splitHigh, hSplit, subdungeons[i]);
 
-                        int limits = !hSplit*(subdungeons[i].w*(splitHigh - splitLow)) + 
-                            hSplit*(subdungeons[i].h*(splitHigh - splitLow));
+                        unsigned limits = (unsigned)(!hSplit*(int)(subdungeons[i].w*(splitHigh - splitLow)) + 
+                            hSplit*(int)(subdungeons[i].h*(splitHigh - splitLow)));
 
                         while(triedSplitPos.find(splitPos) != triedSplitPos.end() && triedSplitPos.size() <= limits) 
                         {                        
@@ -1180,8 +1180,8 @@ tsanhs:
     {
         ROOM& room = rooms[i];
 
-        bool usingX = ScionEngine::GetRandomNumber(0,1);
-        bool side1 = ScionEngine::GetRandomNumber(0,1);
+        bool usingX = ScionEngine::GetRandomNumber(0,1) > 0;
+        bool side1 = ScionEngine::GetRandomNumber(0,1) > 0;
         int xVal = ScionEngine::GetRandomNumber(room.x, room.x + room.w - 1);
         int yVal = ScionEngine::GetRandomNumber(room.y, room.y + room.h - 1);
 
@@ -1195,7 +1195,7 @@ tsanhs:
                 {    //check additional north tile for 'room to move'
                     if(level.IsWithinBounds(xVal, room.y-2))
                     {
-                        if(level.GetTile(xVal, room.y-2).type == Tile::UNUSED);
+                        //if(level.GetTile(xVal, room.y-2).type == Tile::UNUSED);
                             level.SetTile(xVal, room.y-1, Tile::UNUSED);
                         room.doorX = xVal;
                         room.doorY = room.y-1;
@@ -1209,7 +1209,7 @@ tsanhs:
                 {
                     if(level.IsWithinBounds(xVal, room.y+room.h+1))
                     {
-                        if(level.GetTile(xVal, room.y+room.h+1).type == Tile::UNUSED);
+                        //if(level.GetTile(xVal, room.y+room.h+1).type == Tile::UNUSED);
                             level.SetTile(xVal, room.y+room.h, Tile::UNUSED);
                         room.doorX = xVal;
                         room.doorY = room.y+room.h;
@@ -1226,7 +1226,7 @@ tsanhs:
                 {
                     if(level.IsWithinBounds(room.x-2, yVal))
                     {
-                        if(level.GetTile(room.x-2, yVal).type == Tile::UNUSED);
+                        //if(level.GetTile(room.x-2, yVal).type == Tile::UNUSED);
                             level.SetTile(room.x-1, yVal, Tile::UNUSED);
                         room.doorX = room.x-1;
                         room.doorY = yVal;
@@ -1240,7 +1240,7 @@ tsanhs:
                 {
                     if(level.IsWithinBounds(room.x+room.w+1, yVal))
                     {
-                        if(level.GetTile(room.x+room.w+1, yVal).type == Tile::UNUSED);
+                        //if(level.GetTile(room.x+room.w+1, yVal).type == Tile::UNUSED);
                             level.SetTile(room.x+room.w, yVal, Tile::UNUSED);
                         room.doorX = room.x+room.w;
                         room.doorY = yVal;

@@ -13,9 +13,9 @@ bool Collision::CircleCollision(const sf::Sprite& Object1, const sf::Sprite& Obj
 }
 bool Collision::CircleCollision(float radius1, sf::Vector2f position1, float radius2, sf::Vector2f position2)
 {
-    int dx = position2.x - position1.x;
-    int dy = position2.y - position1.y;
-    int radii = radius1 + radius2;
+    auto dx = position2.x - position1.x;
+    auto dy = position2.y - position1.y;
+    auto radii = radius1 + radius2;
     return ((( dx * dx )  + ( dy * dy )) < radii * radii );
 }
 //Check if the bounding box surrounding the object intersects

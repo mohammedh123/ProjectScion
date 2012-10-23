@@ -16,7 +16,7 @@ sf::Shader* ShaderManager::LoadFromFile(const std::string & filename, sf::Shader
 {
     sf::Shader* retVal = nullptr;
     std::string key;
-    if(type == sf::Shader::Type::Vertex)
+    if(type == sf::Shader::Vertex)
     {
         key = filename + "+";
     }

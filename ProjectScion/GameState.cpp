@@ -29,14 +29,14 @@ void GameState::Initialize(ScionEngine* game)
 
     //effect = game->GetShader("Shaders/bloom.frag", sf::Shader::Type::Fragment);
     //lightFX = game->GetShader("Shaders/light.frag", sf::Shader::Type::Fragment);
-    darkFX = game->GetShader("Shaders/dark.frag", sf::Shader::Type::Fragment);
+    darkFX = game->GetShader("Shaders/dark.frag", sf::Shader::Fragment);
     darkFX->setParameter("screenWidth", 800);
     darkFX->setParameter("screenHeight", 600);
     darkFX->setParameter("lightStrength", 0.5f);
     darkFX->setParameter("lightColor", sf::Color::White);
     darkFX->setParameter("lightRadius", 200.0f);
 
-    combineFX = game->GetShader("Shaders/combine.frag", sf::Shader::Type::Fragment);
+    combineFX = game->GetShader("Shaders/combine.frag", sf::Shader::Fragment);
     combineFX->setParameter("lightAmbient", 4);
     combineFX->setParameter("ambient", 0.5f);
     combineFX->setParameter("ambientColor", sf::Color::Green);
@@ -117,11 +117,11 @@ void GameState::HandleInput(sf::RenderWindow* window)
     auto mousePos = sf::Mouse::getPosition(*window);
 
     sf::IntRect gameRect(0, 0, game->GetCurrentLevel().GetWidth()*Tile::SIZE, game->GetCurrentLevel().GetHeight()*Tile::SIZE);
-    if(gameRect.contains(MousePos.x, MousePos.y))
+    if(gameRect.contains((int)MousePos.x, (int)MousePos.y))
     {
-        hoveredTile = &game->GetCurrentLevel().GetTile(MousePos.x / Tile::SIZE, MousePos.y / Tile::SIZE);
-        hoveredPosX = MousePos.x;
-        hoveredPosY = MousePos.y;
+        hoveredTile = &game->GetCurrentLevel().GetTile((int)(MousePos.x / Tile::SIZE), (int)(MousePos.y / Tile::SIZE));
+        hoveredPosX = (int)MousePos.x;
+        hoveredPosY = (int)MousePos.y;
         
         darkFX->setParameter("lightPosition", sf::Vector2f(MousePos.x, MousePos.y));
         
@@ -135,7 +135,7 @@ void GameState::HandleInput(sf::RenderWindow* window)
     }
 }
 
-void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherState)
+void GameState::Update(float delta, bool isGameActive, bool isCoveredByOtherState)
 {
     Camera& c = game->GetCurrentLevel().GetCamera();
     State::Update(delta, isGameActive, isCoveredByOtherState);
@@ -186,14 +186,14 @@ void GameState::Draw(sf::RenderWindow* window)
         rect.setFillColor(sf::Color(255,255,255,60));
         rect.setOutlineThickness(2.0f);
         rect.setOutlineColor(sf::Color::White);
-        rect.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE), Tile::SIZE*int(hoveredPosY / Tile::SIZE));
+        rect.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE)*1.0f, Tile::SIZE*int(hoveredPosY / Tile::SIZE)*1.0f);
 
         window->draw(rect);
 
         stringstream ss;
         ss << int(hoveredPosX / Tile::SIZE) << ", " << int(hoveredPosY / Tile::SIZE) << endl << hoveredTile->type;
         sf::Text t(ss.str(), *game->GetFont("Fonts/arial.ttf"), 24);
-        t.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE), Tile::SIZE*int(hoveredPosY / Tile::SIZE));
+        t.setPosition(Tile::SIZE*int(hoveredPosX / Tile::SIZE)*1.0f, Tile::SIZE*int(hoveredPosY / Tile::SIZE)*1.0f);
         window->draw(t);
     }
     

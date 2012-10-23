@@ -108,10 +108,16 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CorridorBranch.h" />
+    <ClInclude Include="CPlayerInput.h" />
+    <ClInclude Include="CSprite.h" />
     <ClInclude Include="Direction.h" />
+    <ClInclude Include="EntitySystem.h" />
     <ClInclude Include="FontManager.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="GraphicsSystem.h" />
+    <ClInclude Include="IComponent.h" />
+    <ClInclude Include="IComponentSystem.h" />
     <ClInclude Include="LevelGenerator.h" />
     <ClInclude Include="LevelPartition.h" />
     <ClInclude Include="Light.h" />

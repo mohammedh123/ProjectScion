@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Camera::Camera(int w, int h, float speed, float depth) : originalDimensions(w, h), speed(speed), depth(depth), view(sf::FloatRect(0,0,w,h))
+Camera::Camera(int w, int h, float speed, float depth) : originalDimensions(w, h), speed(speed), depth(depth), view(sf::FloatRect(0,0,(float)w,(float)h))
 {
     zoom = 1.0f;
     inverseZoom = 1.0f / zoom;
@@ -125,8 +125,8 @@ sf::IntRect Camera::GetTileBounds() const
 {
     //0,0 is center
     auto viewSize = view.getSize();
-    int offsetX = position.x - viewSize.x*0.5;
-    int offsetY = position.y - viewSize.y*0.5;
+    int offsetX = (int)(position.x - viewSize.x*0.5);
+    int offsetY = (int)(position.y - viewSize.y*0.5);
 
     int x = (int)(offsetX / int(Tile::SIZE));
     int y = (int)(offsetY / int(Tile::SIZE));

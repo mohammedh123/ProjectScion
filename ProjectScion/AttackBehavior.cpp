@@ -47,8 +47,8 @@ void AttackBehavior::Process()
         rar.left = -rar.left - rar.width;
     }
     
-    rar.left += _transform->GetPosition().x;
-    rar.top += _transform->GetPosition().y;
+    rar.left += (int)_transform->GetPosition().x;
+    rar.top += (int)_transform->GetPosition().y;
 
     //now check against all enemies hitbox
     for(size_t i = 0; i < _entities.size(); i++)

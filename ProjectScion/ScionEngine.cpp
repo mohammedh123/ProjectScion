@@ -2,12 +2,13 @@
 #include "SpriteBehavior.h"
 #include "PlayerInputBehavior.h"
 #include "LevelGenerator.h"
+#include "PlayerCollisionBehavior.h"
+#include "WanderBehavior.h"
+#include "GraphicsSystem.h"
+
 #include <string>
 #include <sstream>
 #include <windows.h>
-#include "PlayerCollisionBehavior.h"
-#include "WanderBehavior.h"
-
 
 using namespace std;
 
@@ -60,7 +61,7 @@ void ScionEngine::Init()
 
     ScionEngine::events.reserve(8);
         
-    currentLevel = std::move(LevelGenerator::CreateLevelWithRooms1(Level::SIZE::FINE, ROOM::SIZE::SMALL));
+    currentLevel = std::move(LevelGenerator::CreateLevelWithRooms1(Level::FINE, ROOM::SMALL));
 
     auto player = CreateEntity();
     const Tile* randTile = currentLevel.GetRandomTileOfType(Tile::GROUND);
@@ -84,7 +85,12 @@ void ScionEngine::Init()
     auto sndZ = float(currentLevel.GetHeight()*Tile::SIZE)/windowHeight;
     //currentLevel.GetCamera().DirectZoomOfOriginal(max(fstZ, sndZ)+0.1f);
     //currentLevel.GetCamera().MoveCenter(0, 0);
-    currentLevel.GetCamera().MoveCenter(currentLevel.GetWidth()*Tile::SIZE/2, currentLevel.GetHeight()*Tile::SIZE/2);
+    currentLevel.GetCamera().MoveCenter(currentLevel.GetWidth()*Tile::SIZE/2.0f, currentLevel.GetHeight()*Tile::SIZE/2.0f);
+
+    auto gfxSys = new GraphicsSystem();
+    es.RegisterSystem(gfxSys);
+
+    //es.CreateEntity().AddComponent<CSprite>();
 }
 void ScionEngine::RenderFrame()
 {
@@ -130,11 +136,11 @@ void ScionEngine::ProcessInput()
 
     if(isActive)
     {
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K))
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::K))
         {
             auto oldCamera = currentLevel.GetCamera();
         
-            currentLevel = std::move(LevelGenerator::CreateLevelWithRooms1(Level::SIZE::FINE, ROOM::SIZE::SMALL));
+            currentLevel = std::move(LevelGenerator::CreateLevelWithRooms1(Level::FINE, ROOM::SMALL));
 
             currentLevel.GetCamera() = oldCamera;
         }

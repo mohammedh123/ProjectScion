@@ -23,6 +23,7 @@
 
 #include "Behavior.h"
 #include "Attribute.h"
+#include "EntitySystem.h"
 
 #include <vector>
 #include <random>
@@ -31,6 +32,7 @@ class ScionEngine
 {
 private:
     Level currentLevel;
+    EntitySystem es;
     
     static StateManager* stateManager;
     static TextureManager* texManager;
