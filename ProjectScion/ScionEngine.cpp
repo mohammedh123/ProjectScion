@@ -6,6 +6,8 @@
 #include "WanderBehavior.h"
 #include "GraphicsSystem.h"
 
+#include "CSprite.h"
+
 #include <string>
 #include <sstream>
 #include <windows.h>
@@ -90,8 +92,10 @@ void ScionEngine::Init()
     auto gfxSys = new GraphicsSystem();
     es.RegisterSystem(gfxSys);
 
-    //es.CreateEntity().AddComponent<CSprite>();
+    auto ent = es.CreateEntity();
+    ent->RegisterToSystem();
 }
+
 void ScionEngine::RenderFrame()
 {
     sf::Vector2f MousePos = window->convertCoords(  sf::Mouse::getPosition(*window), GetCurrentLevel().GetCamera().GetView());

@@ -208,6 +208,8 @@ public:
             return 20;
         else
             return 15;
+
+        return 0;
     }
 
     static std::map<Tile::TYPE,Tile>& DefaultTiles();

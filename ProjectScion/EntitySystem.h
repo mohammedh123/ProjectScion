@@ -2,6 +2,7 @@
 #define _ENTITY_SYSTEM_H
 
 #include "IComponentSystem.h"
+#include "Entity.h"
 
 #include <vector>
 
@@ -12,7 +13,7 @@ public:
     void RegisterSystem(IComponentSystem* system);
 
     void Update(float dt);
-    void CreateEntity();
+    Entity* CreateEntity();
 };
 
 #endif
