@@ -5,6 +5,7 @@
 #include "PlayerCollisionBehavior.h"
 #include "WanderBehavior.h"
 #include "GraphicsSystem.h"
+#include "CollisionSystem.h"
 
 #include "CSprite.h"
 
@@ -88,12 +89,16 @@ void ScionEngine::Init()
     //currentLevel.GetCamera().DirectZoomOfOriginal(max(fstZ, sndZ)+0.1f);
     //currentLevel.GetCamera().MoveCenter(0, 0);
     currentLevel.GetCamera().MoveCenter(currentLevel.GetWidth()*Tile::SIZE/2.0f, currentLevel.GetHeight()*Tile::SIZE/2.0f);
-
+    
     auto gfxSys = new GraphicsSystem();
     es.RegisterSystem(gfxSys);
 
+    auto colSys = new CollisionSystem();
+    es.RegisterSystem(colSys);
+
     auto ent = es.CreateEntity();
-    ent->RegisterToSystem();
+    gfxSys->RegisterEntity(ent);
+    colSys->RegisterEntity(ent, colSys->COLLISION, new CSprite);
 }
 
 void ScionEngine::RenderFrame()

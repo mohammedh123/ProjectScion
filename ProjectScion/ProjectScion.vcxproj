@@ -71,6 +71,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Direction.cpp" />
+    <ClCompile Include="EntitySystem.cpp" />
     <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameState.cpp" />
@@ -107,6 +108,7 @@
     <ClInclude Include="Branch.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="CorridorBranch.h" />
     <ClInclude Include="CPlayerInput.h" />
     <ClInclude Include="CSprite.h" />

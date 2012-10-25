@@ -3,11 +3,9 @@
 
 #include <string>
 
-class CSprite : IComponent
+class CSprite : public IComponent
 {
 public:
-    CSprite(int param1);
-    CSprite(int param1, std::string param2);
 };
 
 #endif

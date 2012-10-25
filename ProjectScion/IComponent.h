@@ -4,6 +4,7 @@
 class IComponent
 {
 public:
+    friend class IComponentSystem;
 };
 
 #endif
