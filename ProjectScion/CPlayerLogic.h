@@ -8,7 +8,7 @@ class CPlayerLogic : public CLogic
 public:
     float deltaX, deltaY;
 
-    void Process(float delta);
+    void Process(float delta, Entity* ent);
 };
 
 #endif

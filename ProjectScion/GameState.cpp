@@ -85,10 +85,7 @@ void GameState::HandleInput(sf::RenderWindow* window)
     //    camera->Zoom((evt->mouseWheel.delta > 0)?.5f:2.0f);
 
     Camera& c = game->GetCurrentLevel().GetCamera();
-
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-        ExitState();
-            
+    
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::PageUp))
         c.Zoom(-0.01f);
 
@@ -107,6 +104,10 @@ void GameState::HandleInput(sf::RenderWindow* window)
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
         c.MoveBy(0,1.0f);
     */
+
+    if(InputManager::IsWindowClosed() || InputManager::IsKeyDown(sf::Keyboard::Escape))
+        window->close();
+
     if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         sf::Vector2f MousePos = window->convertCoords(  sf::Mouse::getPosition(*window), c.GetView());

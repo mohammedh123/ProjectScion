@@ -5,10 +5,12 @@
 #include "PlayerCollisionBehavior.h"
 #include "WanderBehavior.h"
 #include "GraphicsSystem.h"
+#include "LogicSystem.h"
 #include "CollisionSystem.h"
 #include "InputManager.h"
 
 #include "CSprite.h"
+#include "CPlayerLogic.h"
 
 #include <string>
 #include <sstream>
@@ -48,7 +50,7 @@ void ScionEngine::Init()
     window = unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(windowWidth, windowHeight, 32), "Project Scion"));
     window->setFramerateLimit(60);
 
-    InputManager::Initialize();
+    InputManager::Initialize(window.get());
 
     texManager = new TextureManager();
     soundBufferManager = new SoundBufferManager();
@@ -96,8 +98,13 @@ void ScionEngine::Init()
     auto gfxSys = new GraphicsSystem(window.get());
     es.RegisterSystem(gfxSys);
 
+    auto logSys = new LogicSystem();
+    es.RegisterSystem(logSys);
+
     auto ent = es.CreateEntity(randTile->x*Tile::SIZE + Tile::SIZE*0.5f, randTile->y*Tile::SIZE + Tile::SIZE*0.5f);
     gfxSys->RegisterEntity(ent, GraphicsSystem::SPRITE, new CSprite(*texManager->GetImage("player.png"), sf::IntRect(0,0,32,32), 16, 16));
+
+    logSys->RegisterEntity(ent, LogicSystem::LOGIC, new CPlayerLogic());
 }
 
 void ScionEngine::RenderFrame()
@@ -118,33 +125,13 @@ void ScionEngine::RenderFrame()
     window->display();
 }
 
-void ScionEngine::ProcessInput()
+void ScionEngine::ProcessInput(float dt)
 {
-    //This input processor only deals with non keyboard and mouse presses
-    events.clear();
+    InputManager::Update(dt);
 
-    sf::Event evt;
-    while(window->pollEvent(evt))
+    if(InputManager::IsWindowActive())
     {
-        events.push_back(evt);
-
-        switch(evt.type)
-        {
-        case sf::Event::Closed:
-                window->close();
-                break;
-        case sf::Event::GainedFocus:
-                isActive = true;
-                break;
-        case sf::Event::LostFocus:
-                isActive = false;
-                break;
-        }
-    }
-
-    if(isActive)
-    {
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+        if(InputManager::IsKeyPressed(sf::Keyboard::K))
         {
             auto oldCamera = currentLevel.GetCamera();
         
@@ -163,25 +150,26 @@ void ScionEngine::LoadImages()
     texManager->GetImage("player.png");
 }
 
-void ScionEngine::Update()
+void ScionEngine::Update(float dt)
 {
-    float delta = clock->getElapsedTime().asSeconds();
     clock->restart();
-    InputManager::Update(*window, delta);
-    stateManager->Update(delta, window.get());
+    stateManager->Update(dt, window.get());
 }
 
 void ScionEngine::GameLoop()
 {
     while(window->isOpen())
     {
-        ProcessInput();
+        float dt = clock->getElapsedTime().asSeconds();
+        ProcessInput(dt);
 
         if(isActive)
         {
-            Update();
+            Update(dt);
             RenderFrame();
         }
+
+        InputManager::PostUpdate();
     }
 }
 
