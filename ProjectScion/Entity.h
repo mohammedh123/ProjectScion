@@ -3,28 +3,25 @@
 
 #include <SFML\Graphics.hpp>
 
-#include "Attribute.h"
-#include "Behavior.h"
-#include "IComponent.h"
-#include "IComponentSystem.h"
-
 #include <memory>
 #include <vector>
+#include <array>
+
+#include "IComponent.h"
+
+class EntitySystem;
 
 class Entity
 {
     friend class ScionEngine;
-
+	friend class EntitySystem;
+    
     ScionEngine* game;
-    Entity(){}
     
     std::vector<std::unique_ptr<IComponent>> components;
-    std::vector<Attribute*> attributes;
-    std::vector<Behavior*> logicalBehaviors, renderBehaviors;
 public:
-    void AddBehavior(Behavior* b) { if(b->IsRenderingBehavior()) renderBehaviors.push_back(b); else logicalBehaviors.push_back(b); }
-    
-    inline const std::vector<Attribute*>& GetAttributes() const { return attributes; }
+    float x, y;
+	int id;
 };
 
 #endif

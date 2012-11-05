@@ -79,6 +79,7 @@ public:
     static const std::vector<sf::Event>& GetEvents() { return ScionEngine::events;}
     static const int GetRandomNumber(int lowerBound=1, int upperBound=100) { return std::uniform_int_distribution<int>(lowerBound, upperBound)(randEngine);}
     inline const bool IsActive() const { return isActive;}
+    inline EntitySystem& GetEntitySystem() { return es; }
 
     void Go();
     Entity* CreateEntity();    

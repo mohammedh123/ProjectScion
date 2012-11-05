@@ -1,6 +1,7 @@
 #ifndef AI_BEHAVIOR_H
 #define AI_BEHAVIOR_H
 
+#include "Behavior.h"
 #include "TransformAttribute.h"
 #include "Level.h"
 

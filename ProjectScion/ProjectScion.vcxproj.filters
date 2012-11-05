@@ -153,6 +153,21 @@
     <ClCompile Include="EntitySystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerLogic.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CSprite.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="LogicSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ScionEngine.h">
@@ -281,10 +296,22 @@
     <ClInclude Include="GraphicsSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CPlayerInput.h">
+    <ClInclude Include="CollisionSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CLogic.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionSystem.h">
+    <ClInclude Include="CPlayerLogic.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LogicSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -10,6 +10,8 @@ public:
     };
 
     virtual void Update(float dt);
+    virtual void RegisterEntity(Entity* ent);
+    virtual void RegisterEntity(Entity* ent, int componentFlag, IComponent* componentPtr);
 };
 
 #endif

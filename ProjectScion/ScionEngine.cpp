@@ -6,6 +6,7 @@
 #include "WanderBehavior.h"
 #include "GraphicsSystem.h"
 #include "CollisionSystem.h"
+#include "InputManager.h"
 
 #include "CSprite.h"
 
@@ -47,6 +48,8 @@ void ScionEngine::Init()
     window = unique_ptr<sf::RenderWindow>(new sf::RenderWindow(sf::VideoMode(windowWidth, windowHeight, 32), "Project Scion"));
     window->setFramerateLimit(60);
 
+    InputManager::Initialize();
+
     texManager = new TextureManager();
     soundBufferManager = new SoundBufferManager();
     fontManager = new FontManager();
@@ -66,39 +69,35 @@ void ScionEngine::Init()
         
     currentLevel = std::move(LevelGenerator::CreateLevelWithRooms1(Level::FINE, ROOM::SMALL));
 
-    auto player = CreateEntity();
+    //auto player = CreateEntity();
     const Tile* randTile = currentLevel.GetRandomTileOfType(Tile::GROUND);
-    TransformAttribute* trans = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(randTile->x*Tile::SIZE + Tile::SIZE*0.5f, randTile->y*Tile::SIZE + Tile::SIZE*0.5f, 0, 0)));
-    SpriteAttribute* spriteAttr = static_cast<SpriteAttribute*>(CreateAttribute(new SpriteAttribute(16, 16, sf::IntRect(0, 0, 32, 32), *texManager->GetImage("player.png"))));
-    
-    player->AddBehavior(CreateBehavior(new SpriteBehavior(trans, spriteAttr, window.get())));
-    player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans, spriteAttr)));
-    player->AddBehavior(CreateBehavior(new PlayerCollisionBehavior(16, 16, 32, 32, trans, currentLevel)));
+    //TransformAttribute* trans = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(randTile->x*Tile::SIZE + Tile::SIZE*0.5f, randTile->y*Tile::SIZE + Tile::SIZE*0.5f, 0, 0)));
+    //SpriteAttribute* spriteAttr = static_cast<SpriteAttribute*>(CreateAttribute(new SpriteAttribute(16, 16, sf::IntRect(0, 0, 32, 32), *texManager->GetImage("player.png"))));
+    //
+    //player->AddBehavior(CreateBehavior(new SpriteBehavior(trans, spriteAttr, window.get())));
+    //player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans, spriteAttr)));
+    //player->AddBehavior(CreateBehavior(new PlayerCollisionBehavior(16, 16, 32, 32, trans, currentLevel)));
 
-    const Tile* randTile2 = currentLevel.GetRandomTileOfType(Tile::GROUND);
-    TransformAttribute* trans2 = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(randTile2->x*Tile::SIZE + Tile::SIZE*0.5f, randTile2->y*Tile::SIZE + Tile::SIZE*0.5f, 0, 0)));
-    SpriteAttribute* spriteAttr2 = static_cast<SpriteAttribute*>(CreateAttribute(new SpriteAttribute(16, 16, sf::IntRect(0, 0, 32, 32), *texManager->GetImage("player.png"))));
+    //const Tile* randTile2 = currentLevel.GetRandomTileOfType(Tile::GROUND);
+    //TransformAttribute* trans2 = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(randTile2->x*Tile::SIZE + Tile::SIZE*0.5f, randTile2->y*Tile::SIZE + Tile::SIZE*0.5f, 0, 0)));
+    //SpriteAttribute* spriteAttr2 = static_cast<SpriteAttribute*>(CreateAttribute(new SpriteAttribute(16, 16, sf::IntRect(0, 0, 32, 32), *texManager->GetImage("player.png"))));
 
-    auto enemy = CreateEntity();
-    enemy->AddBehavior(CreateBehavior(new SpriteBehavior(trans2, spriteAttr2, window.get())));
-    enemy->AddBehavior(CreateBehavior(new WanderBehavior(16, 16, 32, 32, trans2, currentLevel)));
-    enemy->AddBehavior(CreateBehavior(new PlayerCollisionBehavior(16, 16, 32, 32, trans2, currentLevel)));
+    //auto enemy = CreateEntity();
+    //enemy->AddBehavior(CreateBehavior(new SpriteBehavior(trans2, spriteAttr2, window.get())));
+    //enemy->AddBehavior(CreateBehavior(new WanderBehavior(16, 16, 32, 32, trans2, currentLevel)));
+    //enemy->AddBehavior(CreateBehavior(new PlayerCollisionBehavior(16, 16, 32, 32, trans2, currentLevel)));
     //only for testing out proc gen
     auto fstZ = float(currentLevel.GetWidth()*Tile::SIZE)/windowWidth;
     auto sndZ = float(currentLevel.GetHeight()*Tile::SIZE)/windowHeight;
-    //currentLevel.GetCamera().DirectZoomOfOriginal(max(fstZ, sndZ)+0.1f);
+    currentLevel.GetCamera().DirectZoomOfOriginal(max(fstZ, sndZ)+0.1f);
     //currentLevel.GetCamera().MoveCenter(0, 0);
     currentLevel.GetCamera().MoveCenter(currentLevel.GetWidth()*Tile::SIZE/2.0f, currentLevel.GetHeight()*Tile::SIZE/2.0f);
     
-    auto gfxSys = new GraphicsSystem();
+    auto gfxSys = new GraphicsSystem(window.get());
     es.RegisterSystem(gfxSys);
 
-    auto colSys = new CollisionSystem();
-    es.RegisterSystem(colSys);
-
-    auto ent = es.CreateEntity();
-    gfxSys->RegisterEntity(ent);
-    colSys->RegisterEntity(ent, colSys->COLLISION, new CSprite);
+    auto ent = es.CreateEntity(randTile->x*Tile::SIZE + Tile::SIZE*0.5f, randTile->y*Tile::SIZE + Tile::SIZE*0.5f);
+    gfxSys->RegisterEntity(ent, GraphicsSystem::SPRITE, new CSprite(*texManager->GetImage("player.png"), sf::IntRect(0,0,32,32), 16, 16));
 }
 
 void ScionEngine::RenderFrame()
@@ -168,6 +167,7 @@ void ScionEngine::Update()
 {
     float delta = clock->getElapsedTime().asSeconds();
     clock->restart();
+    InputManager::Update(*window, delta);
     stateManager->Update(delta, window.get());
 }
 

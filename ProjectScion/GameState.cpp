@@ -135,7 +135,7 @@ void GameState::HandleInput(sf::RenderWindow* window)
     }
 }
 
-void GameState::Update(float delta, bool isGameActive, bool isCoveredByOtherState)
+void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherState)
 {
     Camera& c = game->GetCurrentLevel().GetCamera();
     State::Update(delta, isGameActive, isCoveredByOtherState);
@@ -145,11 +145,13 @@ void GameState::Update(float delta, bool isGameActive, bool isCoveredByOtherStat
         c.Update();
     }
 
-    for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
-    {
-        if(!(*it)->IsRenderingBehavior())
-            (*it)->Process();
-    }
+    game->GetEntitySystem().Update((float)delta);
+
+    //for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
+    //{
+    //    if(!(*it)->IsRenderingBehavior())
+    //        (*it)->Process();
+    //}
 
     //lm->Update();
 }
@@ -166,11 +168,14 @@ void GameState::Draw(sf::RenderWindow* window)
     //colorRT->setView(c.GetView());
     game->GetCurrentLevel().Draw(window);
 
-    for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
-    {
-        if((*it)->IsRenderingBehavior())
-            (*it)->Process();
-    }
+    //for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
+    //{
+    //    if((*it)->IsRenderingBehavior())
+    //        (*it)->Process();
+    //}
+
+    
+    game->GetEntitySystem().Draw(0.0f);
 
     window->setView(window->getDefaultView());
     //window->setView(c.GetView());
