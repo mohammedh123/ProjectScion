@@ -1,6 +1,8 @@
 #include "LogicSystem.h"
 #include <exception>
 
+using namespace std;
+
 void LogicSystem::Update(float dt)
 {
 }
