@@ -22,6 +22,8 @@ class Entity
 public:
     float x, y;
 	int id;
+
+    void Move(float dx, float dy) { x += dx; y += dy; } 
 };
 
 #endif

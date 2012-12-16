@@ -15,6 +15,7 @@
 #include "SoundBufferManager.h"
 #include "MusicManager.h"
 #include "ShaderManager.h"
+#include "InputManager.h"
 
 //States
 #include "State.h"
@@ -55,10 +56,10 @@ private:
     
     void Init();
     void GameLoop();
-    void ProcessInput();
+    void ProcessInput(float dt);
     void LoadImages();
     void RenderFrame();
-    void Update();  
+    void Update(float dt);  
 public:
     std::unique_ptr<sf::RenderWindow> window;
 
