@@ -21,7 +21,7 @@ public:
     
     inline virtual bool IsRenderingSystem() const { return true; }
 
-    virtual void Update(float dt);
+    virtual void Draw();
     virtual void RegisterEntity(Entity* ent);
     virtual void RegisterEntity(Entity* ent, int componentFlag, IComponent* componentPtr);
 };

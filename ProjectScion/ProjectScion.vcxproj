@@ -69,7 +69,9 @@
   <ItemGroup>
     <ClCompile Include="AIBehavior.cpp" />
     <ClCompile Include="AttackBehavior.cpp" />
+    <ClCompile Include="AttackSystem.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CAttack.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CPlayerLogic.cpp" />
     <ClCompile Include="CSprite.cpp" />
@@ -109,10 +111,12 @@
   <ItemGroup>
     <ClInclude Include="AIBehavior.h" />
     <ClInclude Include="AttackBehavior.h" />
+    <ClInclude Include="AttackSystem.h" />
     <ClInclude Include="Attribute.h" />
     <ClInclude Include="Behavior.h" />
     <ClInclude Include="Branch.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CAttack.h" />
     <ClInclude Include="CLogic.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionSystem.h" />

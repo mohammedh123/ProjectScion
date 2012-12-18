@@ -17,15 +17,13 @@ void EntitySystem::RegisterSystem(IComponentSystem* system)
 void EntitySystem::Update(float dt)
 {
     for(size_t i = 0; i < registeredSystems.size(); i++)
-        if(!registeredSystems[i]->IsRenderingSystem())
-            registeredSystems[i]->Update(dt);
+        registeredSystems[i]->Update(dt);
 }
 
-void EntitySystem::Draw(float dt)
+void EntitySystem::Draw()
 {
     for(size_t i = 0; i < registeredSystems.size(); i++)
-        if(registeredSystems[i]->IsRenderingSystem())
-            registeredSystems[i]->Update(dt);
+        registeredSystems[i]->Draw();
 }
 
 Entity* EntitySystem::CreateEntity(float x, float y)

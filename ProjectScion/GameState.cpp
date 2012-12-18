@@ -176,7 +176,7 @@ void GameState::Draw(sf::RenderWindow* window)
     //}
 
     
-    game->GetEntitySystem().Draw(0.0f);
+    game->GetEntitySystem().Draw();
 
     window->setView(window->getDefaultView());
     //window->setView(c.GetView());

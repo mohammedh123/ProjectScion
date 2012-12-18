@@ -26,7 +26,7 @@ public:
     void RegisterSystem(IComponentSystem* system);
 
     void Update(float dt);
-    void Draw(float dt);
+    void Draw();
     Entity* CreateEntity(float x, float y);
 };
 

@@ -7,6 +7,7 @@
 #include "GraphicsSystem.h"
 #include "LogicSystem.h"
 #include "CollisionSystem.h"
+#include "AttackSystem.h"
 #include "InputManager.h"
 
 #include "CSprite.h"
@@ -98,6 +99,9 @@ void ScionEngine::Init()
     auto gfxSys = new GraphicsSystem(window.get());
     es.RegisterSystem(gfxSys);
 
+    auto atkSys = new AttackSystem(window.get());
+    es.RegisterSystem(atkSys);
+
     auto logSys = new LogicSystem();
     es.RegisterSystem(logSys);
 
@@ -105,6 +109,8 @@ void ScionEngine::Init()
     gfxSys->RegisterEntity(ent, GraphicsSystem::SPRITE, new CSprite(*texManager->GetImage("player.png"), sf::IntRect(0,0,32,32), 16, 16));
 
     logSys->RegisterEntity(ent, LogicSystem::LOGIC, new CPlayerLogic());
+
+    atkSys->RegisterEntity(ent, AttackSystem::SPRITE, new CSprite(*texManager->GetImage("atk_sword_1.png"), sf::IntRect(0,0,32,32), -16, 16)); 
 }
 
 void ScionEngine::RenderFrame()

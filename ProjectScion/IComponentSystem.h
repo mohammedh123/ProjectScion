@@ -13,8 +13,8 @@ class IComponentSystem
 public:
     virtual ~IComponentSystem() {}
 
-    inline virtual bool IsRenderingSystem() const { return false; }
-    virtual void Update(float dt) = 0;
+    virtual void Update(float dt){}
+    virtual void Draw(){}
     
     virtual void RegisterEntity(Entity* ent) = 0;
     virtual void RegisterEntity(Entity* ent, int componentFlag, IComponent* componentPtr) = 0;

@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void GraphicsSystem::Update(float)
+void GraphicsSystem::Draw()
 {
     CSprite* sprite = nullptr;
     Entity* entity = nullptr;

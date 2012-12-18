@@ -168,6 +168,12 @@
     <ClCompile Include="LogicSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AttackSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CAttack.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ScionEngine.h">
@@ -312,6 +318,12 @@
       <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="LogicSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CAttack.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AttackSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
