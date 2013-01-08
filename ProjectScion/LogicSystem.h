@@ -1,23 +1,17 @@
-#ifndef LOGIC_SYSTEM_H
-#define LOGIC_SYSTEM_H
+#ifndef _LOGIC_SYSTEM_H
+#define _LOGIC_SYSTEM_H
 
-#include <map>
+#include <ac/es.h>
 
-#include "IComponentSystem.h"
-#include "CLogic.h"
-
-class LogicSystem : public IComponentSystem
+class LogicSystem : public ac::es::EntityProcessingSystem
 {
-    std::multimap<Entity*, std::unique_ptr<CLogic>> cLogics;
-public:    
-    enum
-    {
-        LOGIC
-    };
+    AC_ES_ENTITY_SYSTEM(LogicSystem)
+
+    float* _dtProvider;
+public:
+    LogicSystem(float* dtProvider);
     
-    void Update(float dt);
-    void RegisterEntity(Entity* ent);
-    void RegisterEntity(Entity* ent, int componentFlag, IComponent* componentPtr);
+    virtual void process(ac::es::EntityPtr e);
 };
 
 #endif

@@ -3,12 +3,13 @@
 
 #include <SFML\Graphics.hpp>
 
-#include "IComponent.h"
+#include <ac/es.h>
 
 using namespace sf;
 
-class CAttack : public IComponent
+class CAttack : public ac::es::Component
 {
+    AC_ES_COMPONENT(CAttack)
 public:
     bool enabled;
     float duration, cooldown;

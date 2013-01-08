@@ -1,17 +1,14 @@
 #ifndef _ATTACK_SYSTEM_H
 #define _ATTACK_SYSTEM_H
 
-#include "IComponentSystem.h"
 #include "CAttack.h"
 #include "CSprite.h"
 
 #include <SFML\Graphics.hpp>
+#include <ac/es.h>
 
-class AttackSystem : public IComponentSystem
+class AttackSystem
 {
-    std::map<Entity*, std::unique_ptr<CAttack>> cAttacks;
-    std::map<Entity*, std::unique_ptr<CSprite>> cAttackSprites;
-
     sf::RenderWindow* _window;
 public:
     enum
@@ -24,8 +21,6 @@ public:
     
     virtual void Update(float dt);
     virtual void Draw();
-    virtual void RegisterEntity(Entity* ent);
-    virtual void RegisterEntity(Entity* ent, int componentFlag, IComponent* componentPtr);
 };
 
 #endif

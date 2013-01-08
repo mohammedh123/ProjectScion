@@ -7,8 +7,8 @@
 #include <set>
 #include <array>
 
+#include <ac/es.h>
 #include "Tile.h"
-#include "Entity.h"
 #include "Camera.h"
 #include <SFML\Graphics.hpp>
 
@@ -18,7 +18,7 @@ private:
     Camera camera;
 
     std::vector<std::vector<Tile>> map;
-    std::vector<Entity*> objects;
+    std::vector<ac::es::EntityPtr> objects;
 
     int w;
     int h;

@@ -1,29 +1,15 @@
 #ifndef _GRAPHICS_SYSTEM_H
 #define _GRAPHICS_SYSTEM_H
 
-#include "IComponentSystem.h"
-#include "CSprite.h"
+#include <ac/es.h>
 
-#include <SFML\Graphics.hpp>
-
-class GraphicsSystem : public IComponentSystem
+class GraphicsSystem : public ac::es::EntityProcessingSystem
 {
-    sf::RenderWindow* _window;
-
-    std::map<Entity*, std::unique_ptr<CSprite>> cSprites;
+    AC_ES_ENTITY_SYSTEM(GraphicsSystem)
 public:
-    enum
-    {
-        SPRITE
-    };
-
-    GraphicsSystem(sf::RenderWindow* wind) : _window(wind) {}
+    GraphicsSystem();
     
-    inline virtual bool IsRenderingSystem() const { return true; }
-
-    virtual void Draw();
-    virtual void RegisterEntity(Entity* ent);
-    virtual void RegisterEntity(Entity* ent, int componentFlag, IComponent* componentPtr);
+    virtual void process(ac::es::EntityPtr e);
 };
 
 #endif

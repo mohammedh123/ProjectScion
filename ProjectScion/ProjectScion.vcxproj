@@ -41,14 +41,14 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\C++ Libraries\libnoise\include;C:\C++ Libraries\boost_1_50_0;C:\C++ Libraries\SFML-2.0-rc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\C++ Libraries\Anax Entity System\include;C:\C++ Libraries\libnoise\include;C:\C++ Libraries\boost_1_50_0;C:\C++ Libraries\SFML-2.0-rc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;_DEBUG;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\C++ Libraries\libnoise\bin;C:\C++ Libraries\SFML-2.0-rc\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libnoise.lib;sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-audio-s-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\C++ Libraries\Anax Entity System\lib;C:\C++ Libraries\libnoise\bin;C:\C++ Libraries\SFML-2.0-rc\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Anax Entity System.lib;libnoise.lib;sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-audio-s-d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>false</Profile>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
@@ -67,18 +67,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AIBehavior.cpp" />
-    <ClCompile Include="AttackBehavior.cpp" />
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AttackSystem.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CAttack.cpp" />
     <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="CPlayerLogic.cpp" />
+    <ClCompile Include="CPlayer.cpp" />
     <ClCompile Include="CSprite.cpp" />
     <ClCompile Include="Direction.cpp" />
-    <ClCompile Include="EntitySystem.cpp" />
+    <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="FontManager.cpp" />
-    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GraphicsSystem.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -88,11 +86,9 @@
     <ClCompile Include="LightManager.cpp" />
     <ClCompile Include="LogicSystem.cpp" />
     <ClCompile Include="noiseutils.cpp" />
-    <ClCompile Include="PlayerCollisionBehavior.cpp" />
+    <ClCompile Include="PlayerSystem.cpp" />
     <ClCompile Include="Room.cpp" />
-    <ClCompile Include="SpriteAttribute.cpp" />
     <ClCompile Include="TextureManager.cpp" />
-    <ClCompile Include="PlayerInputBehavior.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MusicManager.cpp" />
@@ -101,36 +97,29 @@
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="SoundBufferManager.cpp" />
     <ClCompile Include="SplashScreenState.cpp" />
-    <ClCompile Include="SpriteBehavior.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="Tile.cpp" />
-    <ClCompile Include="TransformAttribute.cpp" />
-    <ClCompile Include="WanderBehavior.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AIBehavior.h" />
-    <ClInclude Include="AttackBehavior.h" />
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="AttackSystem.h" />
-    <ClInclude Include="Attribute.h" />
-    <ClInclude Include="Behavior.h" />
     <ClInclude Include="Branch.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CAttack.h" />
     <ClInclude Include="CLogic.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionSystem.h" />
+    <ClInclude Include="Components.h" />
     <ClInclude Include="CorridorBranch.h" />
-    <ClInclude Include="CPlayerLogic.h" />
+    <ClInclude Include="CPlayer.h" />
+    <ClInclude Include="CPosition.h" />
     <ClInclude Include="CSprite.h" />
     <ClInclude Include="Direction.h" />
-    <ClInclude Include="EntitySystem.h" />
+    <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="FontManager.h" />
-    <ClInclude Include="Entity.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GraphicsSystem.h" />
-    <ClInclude Include="IComponent.h" />
-    <ClInclude Include="IComponentSystem.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="LevelGenerator.h" />
@@ -139,12 +128,10 @@
     <ClInclude Include="LightManager.h" />
     <ClInclude Include="LogicSystem.h" />
     <ClInclude Include="noiseutils.h" />
-    <ClInclude Include="PlayerCollisionBehavior.h" />
+    <ClInclude Include="PlayerSystem.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomBranch.h" />
-    <ClInclude Include="SpriteAttribute.h" />
     <ClInclude Include="TextureManager.h" />
-    <ClInclude Include="PlayerInputBehavior.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Managers.h" />
     <ClInclude Include="MusicManager.h" />
@@ -153,12 +140,9 @@
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="SoundBufferManager.h" />
     <ClInclude Include="SplashScreenState.h" />
-    <ClInclude Include="SpriteBehavior.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="Tile.h" />
-    <ClInclude Include="TransformAttribute.h" />
-    <ClInclude Include="WanderBehavior.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\splashscreen.png" />

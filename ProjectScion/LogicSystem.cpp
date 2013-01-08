@@ -1,29 +1,18 @@
 #include "LogicSystem.h"
-#include <exception>
+
+#include "CLogic.h"
 
 using namespace std;
+using namespace ac::es;
 
-void LogicSystem::Update(float dt)
-{    
-    CLogic* logic = nullptr;
-    Entity* entity = nullptr;
-
-    for(auto itr = cLogics.begin(); itr != cLogics.end(); itr++)
-    {
-        logic = (*itr).second.get();
-        entity = (*itr).first;
-        
-        logic->Process(dt, entity);
-    }
-}
-
-void LogicSystem::RegisterEntity(Entity* ent)
+LogicSystem::LogicSystem(float* dtProvider)    
+    :   EntityProcessingSystem(ComponentFilter::Requires<CLogic>()), _dtProvider(dtProvider)
 {
-    throw exception("LogicSystem::RegisterEntity has been called without a component.");
 }
 
-void LogicSystem::RegisterEntity(Entity* ent, int componentFlag, IComponent* componentPtr)
-{    
-    if(componentFlag == LOGIC)
-        cLogics.insert(make_pair(ent, unique_ptr<CLogic>(static_cast<CLogic*>(componentPtr))));
+void LogicSystem::process(ac::es::EntityPtr e)
+{   
+    auto logic     = e->getComponent<CLogic>();
+
+    logic->logicFunc(*_dtProvider, e); //that should be dt
 }

@@ -1,17 +1,12 @@
 #include "ScionEngine.h"
-#include "SpriteBehavior.h"
-#include "PlayerInputBehavior.h"
 #include "LevelGenerator.h"
-#include "PlayerCollisionBehavior.h"
-#include "WanderBehavior.h"
 #include "GraphicsSystem.h"
 #include "LogicSystem.h"
+#include "PlayerSystem.h"
 #include "CollisionSystem.h"
 #include "AttackSystem.h"
 #include "InputManager.h"
-
-#include "CSprite.h"
-#include "CPlayerLogic.h"
+#include "EntityFactory.h"
 
 #include <string>
 #include <sstream>
@@ -27,6 +22,7 @@ FontManager*            ScionEngine::fontManager(new FontManager());
 MusicManager*            ScionEngine::musicManager(new MusicManager());
 ShaderManager*            ScionEngine::shaderManager(new ShaderManager());
 std::mt19937            ScionEngine::randEngine(GetTickCount());
+float                   ScionEngine::dt;
 
 ScionEngine::ScionEngine()
 {
@@ -45,6 +41,7 @@ ScionEngine::~ScionEngine()
 
 void ScionEngine::Init()
 {
+    EntityFactory::gameScene = &gameScene;
     const auto windowWidth = 800;
     const auto windowHeight = 600;
 
@@ -55,8 +52,7 @@ void ScionEngine::Init()
 
     texManager = new TextureManager();
     soundBufferManager = new SoundBufferManager();
-    fontManager = new FontManager();
-    
+    fontManager = new FontManager();    
     musicManager = new MusicManager();
     shaderManager = new ShaderManager();
     stateManager = new StateManager();
@@ -72,23 +68,8 @@ void ScionEngine::Init()
         
     currentLevel = std::move(LevelGenerator::CreateLevelWithRooms1(Level::FINE, ROOM::SMALL));
 
-    //auto player = CreateEntity();
     const Tile* randTile = currentLevel.GetRandomTileOfType(Tile::GROUND);
-    //TransformAttribute* trans = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(randTile->x*Tile::SIZE + Tile::SIZE*0.5f, randTile->y*Tile::SIZE + Tile::SIZE*0.5f, 0, 0)));
-    //SpriteAttribute* spriteAttr = static_cast<SpriteAttribute*>(CreateAttribute(new SpriteAttribute(16, 16, sf::IntRect(0, 0, 32, 32), *texManager->GetImage("player.png"))));
-    //
-    //player->AddBehavior(CreateBehavior(new SpriteBehavior(trans, spriteAttr, window.get())));
-    //player->AddBehavior(CreateBehavior(new PlayerInputBehavior(trans, spriteAttr)));
-    //player->AddBehavior(CreateBehavior(new PlayerCollisionBehavior(16, 16, 32, 32, trans, currentLevel)));
 
-    //const Tile* randTile2 = currentLevel.GetRandomTileOfType(Tile::GROUND);
-    //TransformAttribute* trans2 = static_cast<TransformAttribute*>(CreateAttribute(new TransformAttribute(randTile2->x*Tile::SIZE + Tile::SIZE*0.5f, randTile2->y*Tile::SIZE + Tile::SIZE*0.5f, 0, 0)));
-    //SpriteAttribute* spriteAttr2 = static_cast<SpriteAttribute*>(CreateAttribute(new SpriteAttribute(16, 16, sf::IntRect(0, 0, 32, 32), *texManager->GetImage("player.png"))));
-
-    //auto enemy = CreateEntity();
-    //enemy->AddBehavior(CreateBehavior(new SpriteBehavior(trans2, spriteAttr2, window.get())));
-    //enemy->AddBehavior(CreateBehavior(new WanderBehavior(16, 16, 32, 32, trans2, currentLevel)));
-    //enemy->AddBehavior(CreateBehavior(new PlayerCollisionBehavior(16, 16, 32, 32, trans2, currentLevel)));
     //only for testing out proc gen
     auto fstZ = float(currentLevel.GetWidth()*Tile::SIZE)/windowWidth;
     auto sndZ = float(currentLevel.GetHeight()*Tile::SIZE)/windowHeight;
@@ -96,21 +77,15 @@ void ScionEngine::Init()
     //currentLevel.GetCamera().MoveCenter(0, 0);
     currentLevel.GetCamera().MoveCenter(currentLevel.GetWidth()*Tile::SIZE/2.0f, currentLevel.GetHeight()*Tile::SIZE/2.0f);
     
-    auto gfxSys = new GraphicsSystem(window.get());
-    es.RegisterSystem(gfxSys);
+    gfxSys = new GraphicsSystem();
+    gfxSys->setIsPassive(true);
+    gameScene.insertEntitySystem(gfxSys);
+    gameScene.insertEntitySystem(new LogicSystem(&dt));
+    gameScene.insertEntitySystem(new PlayerSystem(&dt));
 
-    auto atkSys = new AttackSystem(window.get());
-    es.RegisterSystem(atkSys);
-
-    auto logSys = new LogicSystem();
-    es.RegisterSystem(logSys);
-
-    auto ent = es.CreateEntity(randTile->x*Tile::SIZE + Tile::SIZE*0.5f, randTile->y*Tile::SIZE + Tile::SIZE*0.5f);
-    gfxSys->RegisterEntity(ent, GraphicsSystem::SPRITE, new CSprite(*texManager->GetImage("player.png"), sf::IntRect(0,0,32,32), 16, 16));
-
-    logSys->RegisterEntity(ent, LogicSystem::LOGIC, new CPlayerLogic());
-
-    atkSys->RegisterEntity(ent, AttackSystem::SPRITE, new CSprite(*texManager->GetImage("atk_sword_1.png"), sf::IntRect(0,0,32,32), -16, 16)); 
+    auto player = EntityFactory::CreatePlayer(randTile->x*Tile::SIZE + Tile::SIZE*0.5f, randTile->y*Tile::SIZE + Tile::SIZE*0.5f, window.get());
+    gameScene.initialize();
+    gameScene.clean();
 }
 
 void ScionEngine::RenderFrame()
@@ -158,6 +133,7 @@ void ScionEngine::LoadImages()
 
 void ScionEngine::Update(float dt)
 {
+    ScionEngine::dt = dt;
     clock->restart();
     stateManager->Update(dt, window.get());
 }
@@ -184,24 +160,4 @@ void ScionEngine::Go()
     Init();
 
     GameLoop();
-}
-
-Entity* ScionEngine::CreateEntity()
-{
-    entitys.push_back(unique_ptr<Entity>(new Entity()));
-    entitys.back()->game = this;
-
-    return entitys.back().get();
-}
-
-Behavior* ScionEngine::CreateBehavior(Behavior* b)
-{
-    behaviors.push_back(unique_ptr<Behavior>(b));
-    return b;
-}
-    
-Attribute* ScionEngine::CreateAttribute(Attribute* a)
-{
-    attributes.push_back(unique_ptr<Attribute>(a));
-    return a;
 }

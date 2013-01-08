@@ -1,33 +1,32 @@
 #include "GraphicsSystem.h"
 
-#include <memory>
-#include <exception>
-#include <string>
+#include "CSprite.h"
+#include "CPosition.h"
+
+#include <SFML\Graphics.hpp>
 
 using namespace std;
+using namespace ac::es;
 
-void GraphicsSystem::Draw()
+GraphicsSystem::GraphicsSystem()    
+    :   EntityProcessingSystem(ComponentFilter::Requires<CSprite>().Requires<CPosition>())
 {
-    CSprite* sprite = nullptr;
-    Entity* entity = nullptr;
-    for(auto itr = cSprites.begin(); itr != cSprites.end(); itr++)
-    {
-        sprite = (*itr).second.get();
-        entity = (*itr).first;
-        
-        sprite->GetSprite().setPosition(entity->x, entity->y);
-
-        _window->draw(sprite->GetSprite());
-    }
 }
 
-void GraphicsSystem::RegisterEntity(Entity* ent)
+void GraphicsSystem::process(EntityPtr e)
 {
-    throw exception("GraphicsSystem::RegisterEntity cannot be called with a default component.");
-}
+    auto sprite     = e->getComponent<CSprite>();
+    auto position   = e->getComponent<CPosition>();
 
-void GraphicsSystem::RegisterEntity(Entity* ent, int componentFlag, IComponent* componentPtr)
-{
-    if(componentFlag == SPRITE)
-        cSprites[ent] = unique_ptr<CSprite>(static_cast<CSprite*>(componentPtr));
+    sprite->GetCurrentAnimation().setPosition(position->x, position->y);
+    sprite->windowToDrawIn->draw(sprite->GetCurrentAnimation());
+    //for(auto itr = cSprites.begin(); itr != cSprites.end(); itr++)
+    //{
+    //    sprite = (*itr).second.get();
+    //    entity = (*itr).first;
+    //    
+    //    sprite->GetCurrentAnimation().setPosition(entity->x, entity->y);
+
+    //    _window->draw(sprite->GetCurrentAnimation());
+    //}
 }

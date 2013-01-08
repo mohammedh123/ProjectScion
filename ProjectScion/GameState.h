@@ -7,8 +7,8 @@
 #include "Tile.h"
 #include "Camera.h"
 #include "Level.h"
-#include "Entity.h"
 #include "LightManager.h"
+#include <ac/es.h>
 
 class GameState : public State
 {
@@ -21,7 +21,7 @@ private:
     std::unique_ptr<sf::Texture> WindowTexture;
     std::unique_ptr<sf::Sprite> TextureDrawer;
     
-    std::unique_ptr<Entity> player;
+    std::unique_ptr<ac::es::Entity> player;
 
     ScionEngine* game;
 

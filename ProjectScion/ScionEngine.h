@@ -22,18 +22,16 @@
 #include "GameState.h"
 #include "SplashScreenState.h"
 
-#include "Behavior.h"
-#include "Attribute.h"
-#include "EntitySystem.h"
-
 #include <vector>
 #include <random>
+#include <ac/es.h>
 
+class GraphicsSystem;
 class ScionEngine
 {
 private:
     Level currentLevel;
-    EntitySystem es;
+    ac::es::Scene gameScene;
     
     static StateManager* stateManager;
     static TextureManager* texManager;
@@ -46,11 +44,8 @@ private:
     std::map<std::string, sf::Font*> fonts;
     std::unique_ptr<sf::Clock> clock;
 
-    std::vector<std::unique_ptr<Entity>> entitys;
-    
-    std::vector<std::unique_ptr<Behavior>> behaviors;
-    std::vector<std::unique_ptr<Attribute>> attributes;
-    
+    std::vector<std::unique_ptr<ac::es::Entity>> entitys;
+        
     static std::vector<sf::Event> events;
     bool isActive;
     
@@ -59,8 +54,12 @@ private:
     void ProcessInput(float dt);
     void LoadImages();
     void RenderFrame();
-    void Update(float dt);  
+    void Update(float dt);
+
+    static float dt;
 public:
+    GraphicsSystem* gfxSys;
+
     std::unique_ptr<sf::RenderWindow> window;
 
     ScionEngine();
@@ -76,16 +75,13 @@ public:
     static sf::Shader* GetShader(const std::string& name, sf::Shader::Type type) { return shaderManager->LoadFromFile(name, type);}
 
     inline Level& GetCurrentLevel() { return currentLevel;}
-    std::vector<std::unique_ptr<Behavior>>& GetBehaviors() { return behaviors;}
     static const std::vector<sf::Event>& GetEvents() { return ScionEngine::events;}
     static const int GetRandomNumber(int lowerBound=1, int upperBound=100) { return std::uniform_int_distribution<int>(lowerBound, upperBound)(randEngine);}
     inline const bool IsActive() const { return isActive;}
-    inline EntitySystem& GetEntitySystem() { return es; }
+    inline ac::es::Scene& GetScene() { return gameScene; }
+    static const float GetDt() {return dt;}
 
     void Go();
-    Entity* CreateEntity();    
-    Behavior* CreateBehavior(Behavior* b);
-    Attribute* CreateAttribute(Attribute* a);
 };
 
 #endif

@@ -6,6 +6,7 @@
 #include <noise/noise.h>
 #include "noiseutils.h"
 #include "SFML/OpenGL.hpp"
+#include "GraphicsSystem.h"
 
 using namespace std;
 
@@ -146,15 +147,7 @@ void GameState::Update(double delta, bool isGameActive, bool isCoveredByOtherSta
         c.Update();
     }
 
-    game->GetEntitySystem().Update((float)delta);
-
-    //for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
-    //{
-    //    if(!(*it)->IsRenderingBehavior())
-    //        (*it)->Process();
-    //}
-
-    //lm->Update();
+    game->GetScene().update();
 }
 
 void GameState::Draw(sf::RenderWindow* window)
@@ -168,15 +161,8 @@ void GameState::Draw(sf::RenderWindow* window)
 
     //colorRT->setView(c.GetView());
     game->GetCurrentLevel().Draw(window);
-
-    //for(auto it = game->GetBehaviors().begin(); it != game->GetBehaviors().end(); it++)
-    //{
-    //    if((*it)->IsRenderingBehavior())
-    //        (*it)->Process();
-    //}
-
     
-    game->GetEntitySystem().Draw();
+    game->gfxSys->update();
 
     window->setView(window->getDefaultView());
     //window->setView(c.GetView());

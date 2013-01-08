@@ -1,11 +1,16 @@
 #include "CSprite.h"
 
-CSprite::CSprite(sf::Texture& tex, float ox, float oy) : sprite(tex)
+CSprite::CSprite(sf::RenderWindow* window) : windowToDrawIn(window)
 {
-    sprite.setOrigin(ox,oy);
+}
+    
+CSprite& CSprite::AddAnimation(const std::string& label, sf::Animation& animation)
+{
+    animations[label] = animation;
+    return *this;
 }
 
-CSprite::CSprite(sf::Texture& tex, sf::IntRect rect, float ox, float oy) : sprite(tex, rect)
+void CSprite::SetCurrentAnimation(const std::string& label)
 {
-    sprite.setOrigin(ox,oy);
+    currentAnimation = label;
 }

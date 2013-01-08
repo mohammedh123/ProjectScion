@@ -1,20 +1,29 @@
 #ifndef _C_SPRITE_H
 #define _C_SPRITE_H
 
-#include <SFML\Graphics.hpp>
+#include "Animation.h"
 
-#include "IComponent.h"
+#include <map>
+#include <ac/es.h>
 
 using namespace sf;
 
-class CSprite : public IComponent
+class CSprite : public ac::es::Component
 {
-    sf::Sprite sprite;
+    AC_ES_COMPONENT(CSprite)
 public:
-    CSprite(sf::Texture& tex, float ox, float oy);
-    CSprite(sf::Texture& tex, sf::IntRect rect, float ox, float oy);
+    std::map<const std::string, sf::Animation> animations;
+    std::string currentAnimation;
+    sf::RenderWindow* windowToDrawIn;
 
-    inline sf::Sprite& GetSprite() { return sprite; }
+    CSprite(sf::RenderWindow* window);
+
+    CSprite& AddAnimation(const std::string& label, sf::Animation& animation);
+    void SetCurrentAnimation(const std::string& label);
+    inline sf::Animation& GetCurrentAnimation()
+    {
+        return animations[currentAnimation];
+    }
 };
 
 #endif
