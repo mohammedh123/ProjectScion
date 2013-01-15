@@ -7,9 +7,8 @@
 // CLogic is an abstract class that all logic components should update (logic components are components that update the entity's state 
 // based on input, where input is either logic or from keyboard/IO devices.
 
-class CLogic : public ac::es::Component
+class CLogic : public ac::es::Component<CLogic>
 {
-    AC_ES_COMPONENT(CLogic)
 public:
     typedef void (*ProcessFunc)(float, ac::es::Entity*);
 

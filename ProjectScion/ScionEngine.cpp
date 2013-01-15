@@ -82,8 +82,15 @@ void ScionEngine::Init()
     gameScene.insertEntitySystem(gfxSys);
     gameScene.insertEntitySystem(new LogicSystem(&dt));
     gameScene.insertEntitySystem(new PlayerSystem(&dt));
-
+    
     auto player = EntityFactory::CreatePlayer(randTile->x*Tile::SIZE + Tile::SIZE*0.5f, randTile->y*Tile::SIZE + Tile::SIZE*0.5f, window.get());
+    randTile = currentLevel.GetRandomTileOfType(Tile::GROUND);
+    EntityFactory::CreateTestEnemy(randTile->x*Tile::SIZE + Tile::SIZE*0.5f, randTile->y*Tile::SIZE + Tile::SIZE*0.5f, window.get());
+    randTile = currentLevel.GetRandomTileOfType(Tile::GROUND);
+    EntityFactory::CreateTestEnemy(randTile->x*Tile::SIZE + Tile::SIZE*0.5f, randTile->y*Tile::SIZE + Tile::SIZE*0.5f, window.get());
+    randTile = currentLevel.GetRandomTileOfType(Tile::GROUND);
+    EntityFactory::CreateTestEnemy(randTile->x*Tile::SIZE + Tile::SIZE*0.5f, randTile->y*Tile::SIZE + Tile::SIZE*0.5f, window.get());
+
     gameScene.initialize();
     gameScene.clean();
 }

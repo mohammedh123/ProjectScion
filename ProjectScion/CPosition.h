@@ -3,9 +3,8 @@
 
 #include <ac/es.h>
 
-class CPosition : public ac::es::Component
+class CPosition : public ac::es::Component<CPosition>
 {
-    AC_ES_COMPONENT(CPosition)
 public:
     float x, y;
 

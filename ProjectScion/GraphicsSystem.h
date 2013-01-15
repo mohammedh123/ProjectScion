@@ -3,9 +3,8 @@
 
 #include <ac/es.h>
 
-class GraphicsSystem : public ac::es::EntityProcessingSystem
+class GraphicsSystem : public ac::es::EntityProcessingSystem<GraphicsSystem>
 {
-    AC_ES_ENTITY_SYSTEM(GraphicsSystem)
 public:
     GraphicsSystem();
     

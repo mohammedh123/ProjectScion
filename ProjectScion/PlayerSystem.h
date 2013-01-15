@@ -3,10 +3,8 @@
 
 #include <ac/es.h>
 
-class PlayerSystem : public ac::es::EntityProcessingSystem
+class PlayerSystem : public ac::es::EntityProcessingSystem<PlayerSystem>
 {
-    AC_ES_ENTITY_SYSTEM(PlayerSystem)
-
     float* _dtProvider;
 public:
     PlayerSystem(float* dtProvider);

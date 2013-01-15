@@ -107,7 +107,9 @@
     <ClInclude Include="Branch.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CAttack.h" />
+    <ClInclude Include="CHealth.h" />
     <ClInclude Include="CLogic.h" />
+    <ClInclude Include="CDirection.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Components.h" />
@@ -116,6 +118,7 @@
     <ClInclude Include="CPosition.h" />
     <ClInclude Include="CSprite.h" />
     <ClInclude Include="Direction.h" />
+    <ClInclude Include="DirectionEnum.h" />
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="FontManager.h" />
     <ClInclude Include="GameState.h" />

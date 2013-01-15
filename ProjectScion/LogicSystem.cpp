@@ -6,7 +6,8 @@ using namespace std;
 using namespace ac::es;
 
 LogicSystem::LogicSystem(float* dtProvider)    
-    :   EntityProcessingSystem(ComponentFilter::Requires<CLogic>()), _dtProvider(dtProvider)
+    :   EntityProcessingSystem(ComponentFilter()
+    .requires<CLogic>()), _dtProvider(dtProvider)
 {
 }
 

@@ -10,8 +10,9 @@ class EntityFactory
 {
 public:
     static ac::es::Scene* gameScene;
-
+    
     static ac::es::Entity* CreatePlayer(float x, float y, sf::RenderWindow* window);
+    static ac::es::Entity* CreateTestEnemy(float x, float y, sf::RenderWindow* window);
 };
 
 #endif

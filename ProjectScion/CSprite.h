@@ -8,9 +8,8 @@
 
 using namespace sf;
 
-class CSprite : public ac::es::Component
+class CSprite : public ac::es::Component<CSprite>
 {
-    AC_ES_COMPONENT(CSprite)
 public:
     std::map<const std::string, sf::Animation> animations;
     std::string currentAnimation;

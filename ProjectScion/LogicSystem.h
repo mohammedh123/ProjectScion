@@ -3,10 +3,8 @@
 
 #include <ac/es.h>
 
-class LogicSystem : public ac::es::EntityProcessingSystem
+class LogicSystem : public ac::es::EntityProcessingSystem<LogicSystem>
 {
-    AC_ES_ENTITY_SYSTEM(LogicSystem)
-
     float* _dtProvider;
 public:
     LogicSystem(float* dtProvider);

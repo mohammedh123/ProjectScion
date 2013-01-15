@@ -3,9 +3,8 @@
 
 #include <ac/es.h>
 
-class CPlayer : public ac::es::Component
+class CPlayer : public ac::es::Component<CPlayer>
 {
-    AC_ES_COMPONENT(CPlayer)
 public:
     float deltaX, deltaY;
 

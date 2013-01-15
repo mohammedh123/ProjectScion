@@ -9,7 +9,7 @@ using namespace std;
 using namespace ac::es;
 
 GraphicsSystem::GraphicsSystem()    
-    :   EntityProcessingSystem(ComponentFilter::Requires<CSprite>().Requires<CPosition>())
+    :   EntityProcessingSystem(ComponentFilter().requires<CSprite>().requires<CPosition>())
 {
 }
 
@@ -20,13 +20,4 @@ void GraphicsSystem::process(EntityPtr e)
 
     sprite->GetCurrentAnimation().setPosition(position->x, position->y);
     sprite->windowToDrawIn->draw(sprite->GetCurrentAnimation());
-    //for(auto itr = cSprites.begin(); itr != cSprites.end(); itr++)
-    //{
-    //    sprite = (*itr).second.get();
-    //    entity = (*itr).first;
-    //    
-    //    sprite->GetCurrentAnimation().setPosition(entity->x, entity->y);
-
-    //    _window->draw(sprite->GetCurrentAnimation());
-    //}
 }

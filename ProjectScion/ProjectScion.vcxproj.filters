@@ -278,6 +278,15 @@
     <ClInclude Include="PlayerSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DirectionEnum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CDirection.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CHealth.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Fonts\arial.ttf">

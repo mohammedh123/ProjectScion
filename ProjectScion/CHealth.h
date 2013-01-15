@@ -1,5 +1,5 @@
-#ifndef _C_ATTACK_H
-#define _C_ATTACK_H
+#ifndef _C_HEALTH_H
+#define _C_HEALTH_H
 
 #include <SFML\Graphics.hpp>
 
@@ -7,14 +7,11 @@
 
 using namespace sf;
 
-class CAttack : public ac::es::Component<CAttack>
+class CHealth : public ac::es::Component<CHealth>
 {
 public:
-    bool enabled;
-    float duration, cooldown;
-    sf::IntRect dmgRect; //in relation to entity facing right
-    sf::Clock attackTimer;
-    
+    int value;
+
     CAttack(sf::IntRect dRect, float duration, float cooldown);
 
     void Begin();
